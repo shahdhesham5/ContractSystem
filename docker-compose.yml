@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:13
+    container_name: django_contracts_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .envv
+    ports:
+      - "5435:5432"
+
+
+  django:
+    build: .
+    container_name: django_contracts
+    command: >
+      sh -c "
+             python /ContractSystem/manage.py collectstatic --noinput &&
+             python /ContractSystem/manage.py makemigrations &&
+             python /ContractSystem/manage.py migrate &&
+             gunicorn ContractSystem.wsgi --bind 0.0.0.0:8000 --workers 2
+            "
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/ContractSystem
+    env_file:
+      - .envv
+    depends_on:
+      - db  # Ensure this matches the service name defined below
+
+
+
+volumes:
+  postgres_data:
