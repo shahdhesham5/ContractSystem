@@ -1,5 +1,5 @@
 from django.db import models
-from Clients.models import Company
+from Clients.models import Company, Site
 import os
 import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -96,4 +96,12 @@ class Contract(models.Model):
     )
     
     def __str__(self):
-        return f"Contract {self.id} for {self.company}"
+        return f"{self.company}"
+
+class MaintenanceSchedule(models.Model):
+    contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='schedules')
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    visit_date = models.DateField()
+
+    def __str__(self):
+        return f"Schedule for {self.site} on {self.visit_date}"

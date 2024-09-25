@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Contract
+from .models import Contract, MaintenanceSchedule
 
 @admin.register(Contract)
 class ContractAdmin(admin.ModelAdmin):
@@ -50,3 +50,9 @@ class ContractAdmin(admin.ModelAdmin):
             )
         }),
     )
+
+@admin.register(MaintenanceSchedule)
+class MaintenanceScheduleAdmin(admin.ModelAdmin):
+    list_display = ('contract', 'site', 'visit_date')
+    list_filter = ('visit_date', 'contract', 'site')
+    search_fields = ('contract__company__company_name', 'site__site_name')
