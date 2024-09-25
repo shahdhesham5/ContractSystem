@@ -31,10 +31,8 @@ SECRET_KEY = 'django-insecure-plenjkaaw9#6#i&q0$(^kua$s*z3fo^zctyz!jjt9-tne82neu
 
 DEBUG = os.getenv('DEBUG') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
-# Application definition
 
+# Application definition
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
@@ -43,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'Clients',
 ]
 
 MIDDLEWARE = [
@@ -79,14 +78,8 @@ WSGI_APPLICATION = 'ContractSystem.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-# Load environment variables from .env file
 
+# Load environment variables from .env file
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

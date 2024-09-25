@@ -1,16 +1,11 @@
 # dotenv
-.envv
+.env
 
 # virtualenv
-.env
+env
 venv/
 ENV/
 
-.vscode
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 
 # Ignore Django Migrations in Development if you are working on team
 # Only for Development only
