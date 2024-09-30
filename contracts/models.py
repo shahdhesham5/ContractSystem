@@ -1,12 +1,13 @@
 from django.db import models
-from Clients.models import Company, Site
+from Clients.models import Company, Site, SubCompany
 import os
 import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 from django.core import validators
 from django_resized import ResizedImageField
-
+from dateutil.relativedelta import relativedelta
+from datetime import timedelta
 
 # extension validations
 allowed_image_extensions = ['jpg', 'png', 'jpeg', 'gif', 'svg']
@@ -48,30 +49,37 @@ branches_site=[
     ("Alexandria","Alexandria"),
 ]
 
-
+annual_increase_percentage = [
+    (5, '5%'),
+    (10, '10%'),
+]
+invoice_date_choices = [
+    ('start', 'From the Start of the Frequency Period'),
+    ('end', 'From the End of the Frequency Period'),
+]
 class Contract(models.Model):
     id = models.CharField(primary_key=True, default=uuid.uuid4, editable=False, max_length=255)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="company_contract")
     
     start_date = models.DateField()
-    end_date = models.DateField()
+    end_date = models.DateField(null=True, blank=True)
 
     contract_price_value = models.FloatField(validators=[MinValueValidator(0.0)])
+    annual_increase = models.IntegerField(choices=annual_increase_percentage,null=True,blank=True)  
+    auto_renew = models.BooleanField(default=False)
     emergency_visit_price = models.FloatField(validators=[MinValueValidator(0.0)], default=0, null=True, blank=True)
-    annual_increase = models.FloatField(
-        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-        null=True,
-        blank=True
-    )  
     
-    invoice_frequency = models.CharField(max_length=255, choices=intervals)  # e.g., monthly, every 2 months
-    maintenance_frequency = models.CharField(max_length=255, choices=intervals)  # e.g., monthly, every 2 months
+    invoice_frequency = models.CharField(max_length=255, choices=intervals) 
+    invoice_date_calculation = models.CharField(max_length=10, choices=invoice_date_choices, default='end')
+    maintenance_frequency = models.CharField(max_length=255, choices=intervals)  
+    
     branch = models.CharField(max_length=255, choices=branches)
     branch_site = models.CharField(max_length=255, choices=branches_site, default='Cairo')
     
-    auto_renew = models.BooleanField(default=False)
+    
     damgh_date = models.DateField(null=True, blank=True)
     damgh_price = models.FloatField(validators=[MinValueValidator(0.0)], default=0, null=True, blank=True)
+    
     image = ResizedImageField(
         upload_to=get_contract_image_upload_path,
         null=True,
@@ -95,6 +103,12 @@ class Contract(models.Model):
         ],
     )
     
+    def save(self, *args, **kwargs):
+        # If end_date is not set, calculate it from start_date (1 year minus 1 day)
+        if not self.end_date and self.start_date:
+            self.end_date = self.start_date + relativedelta(years=1) - timedelta(days=1)
+        super(Contract, self).save(*args, **kwargs)
+        
     def __str__(self):
         return f"{self.company}"
 
@@ -102,6 +116,19 @@ class MaintenanceSchedule(models.Model):
     contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='schedules')
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     visit_date = models.DateField()
+    done = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return f"Schedule for {self.site} on {self.visit_date}"
+
+class InvoiceSchedule(models.Model):
+    contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name="invoices_Schedule")
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)  # Add this field if missing
+    sub_company = models.ForeignKey(SubCompany, on_delete=models.CASCADE, null=True, blank=True)
+    invoice_date = models.DateField()
+    amount = models.FloatField(validators=[MinValueValidator(0.0)])
+    is_paid = models.BooleanField(default=False)
+
+
+    def __str__(self):
+        return f"Invoice for {self.contract.company.company_name} on {self.invoice_date}"

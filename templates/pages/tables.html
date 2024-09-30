@@ -1,0 +1,131 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>Contracts</h6>
+        </div>
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Start Date</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">End Date</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contract Value</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Invoice Frequency</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Invoice Generating Date</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Maintenance Frequency</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Emergency Visit Price</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Branch</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Branch Site</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Annual increase percentage</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Auto Renew</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Gamgh Date</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Gamgh Price</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Image</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PDF</th>
+                  <th class="text-secondary opacity-7"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for contract in contracts %}
+                <tr>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <!-- <div>
+                        <img src="{% static 'img/team-2.jpg' %}" class="avatar avatar-sm me-3" alt="user1">
+                      </div> -->
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{ contract.company.company_name }}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <p class="text-xs font-weight-bold mb-0">{{ contract.start_date }}</p>
+                  </td>
+                  <td>
+                    <p class="text-xs font-weight-bold mb-0">{{ contract.end_date }}</p>
+                  </td>
+                  <td class="align-middle text-center">
+                    <span class="text-xs font-weight-bold">{{contract.contract_price_value}}</span>
+                  </td>
+                  <td class="align-middle text-center">
+                    <span class="text-xs font-weight-bold">{{contract.invoice_frequency}}</span>
+                  </td>
+                  <td class="align-middle text-center">
+                    <span class="text-xs font-weight-bold">{{contract.invoice_date_calculation}}</span>
+                  </td>
+                  <td class="align-middle text-center">
+                    <span class="text-xs font-weight-bold">{{contract.maintenance_frequency}}</span>
+                  </td>
+                  <td class="align-middle text-center">
+                    <span class=" text-xs font-weight-bold">{{contract.emergency_visit_price}}</span>
+                  </td>
+                  <td class="align-middle text-center">
+                    <span class="text-xs font-weight-bold">{{contract.branch}}</span>
+                  </td>
+                  <td class="align-middle text-center">
+                    <span class="text-xs font-weight-bold">{{contract.branch_site}}</span>
+                  </td>
+                  <td class="align-middle text-center">
+                    <span class="text-xs font-weight-bold">{{contract.annual_increase}}</span>
+                  </td>
+                  
+                  <td class="align-middle text-center text-sm">
+                    {% if contract.auto_renew %}
+                    <span class="badge badge-sm bg-gradient-success">{{contract.auto_renew}}</span>
+                    {% else %}
+                      <span class="badge badge-sm bg-gradient-danger">{{contract.auto_renew}}</span>
+                    {% endif %}
+                  </td>
+
+                  <td class="align-middle text-center text-sm">
+                    <span class=" text-xs font-weight-bold">{{contract.damgh_date}}</span>
+                  </td>
+
+                  <td class="align-middle text-center text-sm">
+                    <span class="text-xs font-weight-bold">{{contract.damgh_price}}</span>
+                  </td>
+
+                  <td class="align-middle text-center text-sm">
+                    {% if contract.image %}
+                    <a href="{{ contract.image.url }}">
+                      View Image
+                      <!-- <img src="{{ contract.image.url }}" alt="Contract Image" width="50" height="50"> -->
+                    </a>
+                    {% else %}
+                      <span>-</span>
+                    {% endif %}
+                  </td>
+                  
+                  <td class="align-middle text-center text-sm">
+                    {% if contract.pdf %}
+                      <a href="{{ contract.pdf.url }}" target="_blank">View PDF</a>
+                    {% else %}
+                      <span>-</span>
+                    {% endif %}
+                  </td>
+
+                  <td class="align-middle">
+                    <a  href="{% url 'edit-contract' contract.id %}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                      Edit
+                    </a>
+                  </td>
+
+                </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    {% endblock content %}

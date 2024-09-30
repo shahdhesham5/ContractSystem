@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Contract, MaintenanceSchedule
+from .models import Contract, MaintenanceSchedule, InvoiceSchedule
 
 @admin.register(Contract)
 class ContractAdmin(admin.ModelAdmin):
@@ -12,6 +12,7 @@ class ContractAdmin(admin.ModelAdmin):
         'emergency_visit_price',
         'annual_increase',
         'invoice_frequency',
+        'invoice_date_calculation',
         'maintenance_frequency',
         'branch',
         'branch_site',
@@ -39,6 +40,7 @@ class ContractAdmin(admin.ModelAdmin):
                 'emergency_visit_price',
                 'annual_increase',
                 'invoice_frequency',
+                'invoice_date_calculation',
                 'maintenance_frequency',
                 'branch',
                 'branch_site',
@@ -53,6 +55,12 @@ class ContractAdmin(admin.ModelAdmin):
 
 @admin.register(MaintenanceSchedule)
 class MaintenanceScheduleAdmin(admin.ModelAdmin):
-    list_display = ('contract', 'site', 'visit_date')
+    list_display = ('contract', 'site', 'visit_date', 'done')
     list_filter = ('visit_date', 'contract', 'site')
     search_fields = ('contract__company__company_name', 'site__site_name')
+    
+@admin.register(InvoiceSchedule)
+class InvoiceSchedule(admin.ModelAdmin):
+    list_display = ('contract','company','sub_company', 'amount', 'invoice_date', 'is_paid')
+    list_filter = ('invoice_date', 'contract')
+    search_fields = ('contract__company__company_name',)
