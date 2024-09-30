@@ -24,12 +24,27 @@ def image_file_size(value):
     if value.size > limit:
         raise ValidationError('File too large. Size should not exceed 5 MiB.')
     
-# path generators to upload images/files
+# path generators to upload images/files for contracts
 def get_contract_image_upload_path(instance, filename):
     return os.path.join("contacts", instance.company.company_name, filename)
 
 def get_contract_pdf_upload_path(instance, filename):
     return os.path.join("pdfs", instance.company.company_name, filename)
+
+#path generators to upload images/files for maintenance visits 
+def get_visit_image_upload_path(instance, filename):
+    return os.path.join("maintenance-visits", instance.contract.company.company_name, filename)
+
+def get_visit_pdf_upload_path(instance, filename):
+    return os.path.join("maintenance-visits-pdfs", instance.contract.company.company_name, filename)
+
+#path generators to upload images/files for invoices
+def get_invoice_image_upload_path(instance, filename):
+    return os.path.join("invoices", instance.contract.company.company_name, filename)
+
+def get_invoice_pdf_upload_path(instance, filename):
+    return os.path.join("invoices-pdfs", instance.contract.company.company_name, filename)
+
 
 
 intervals= [
@@ -116,8 +131,31 @@ class MaintenanceSchedule(models.Model):
     contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='schedules')
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     visit_date = models.DateField()
+    actual_visit_date = models.DateField(null=True, blank=True)
     done = models.BooleanField(default=False, null=True, blank=True)
-
+    image = ResizedImageField(
+        upload_to=get_visit_image_upload_path,
+        null=True,
+        blank=True,
+        validators=[
+            validators.FileExtensionValidator(
+                allowed_image_extensions,
+                f"Invalid image extension. Only the following formats are allowed: {', '.join(allowed_image_extensions)}."
+            ),
+            image_file_size,
+        ],
+    )
+    pdf = models.FileField(
+        upload_to=get_visit_pdf_upload_path,
+        null=True,
+        blank=True,
+        validators=[
+            validators.FileExtensionValidator(allowed_pdf_extensions, 
+            f"Invalid file extension. Only the following formats are allowed: {', '.join(allowed_pdf_extensions)}."),
+            pdf_file_size,
+        ],
+    )
+    
     def __str__(self):
         return f"Schedule for {self.site} on {self.visit_date}"
 
@@ -128,6 +166,28 @@ class InvoiceSchedule(models.Model):
     invoice_date = models.DateField()
     amount = models.FloatField(validators=[MinValueValidator(0.0)])
     is_paid = models.BooleanField(default=False)
+    image = ResizedImageField(
+        upload_to=get_invoice_image_upload_path,
+        null=True,
+        blank=True,
+        validators=[
+            validators.FileExtensionValidator(
+                allowed_image_extensions,
+                f"Invalid image extension. Only the following formats are allowed: {', '.join(allowed_image_extensions)}."
+            ),
+            image_file_size,
+        ],
+    )
+    pdf = models.FileField(
+        upload_to=get_invoice_pdf_upload_path,
+        null=True,
+        blank=True,
+        validators=[
+            validators.FileExtensionValidator(allowed_pdf_extensions, 
+            f"Invalid file extension. Only the following formats are allowed: {', '.join(allowed_pdf_extensions)}."),
+            pdf_file_size,
+        ],
+    )
 
 
     def __str__(self):

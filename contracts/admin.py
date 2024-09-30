@@ -55,12 +55,12 @@ class ContractAdmin(admin.ModelAdmin):
 
 @admin.register(MaintenanceSchedule)
 class MaintenanceScheduleAdmin(admin.ModelAdmin):
-    list_display = ('contract', 'site', 'visit_date', 'done')
+    list_display = ('contract', 'site', 'visit_date','actual_visit_date', 'done', 'image','pdf')
     list_filter = ('visit_date', 'contract', 'site')
     search_fields = ('contract__company__company_name', 'site__site_name')
     
 @admin.register(InvoiceSchedule)
 class InvoiceSchedule(admin.ModelAdmin):
-    list_display = ('contract','company','sub_company', 'amount', 'invoice_date', 'is_paid')
+    list_display = ('contract','company','sub_company', 'amount', 'invoice_date', 'is_paid', 'image','pdf')
     list_filter = ('invoice_date', 'contract')
     search_fields = ('contract__company__company_name',)

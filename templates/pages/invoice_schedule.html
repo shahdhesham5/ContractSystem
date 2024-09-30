@@ -5,7 +5,7 @@
 <div class="container-fluid py-4">
   <!-- Filter Form -->
   <div class="row mb-4">
-    <form method="GET" action="{% url 'maintenence-schedule' %}" class="d-flex justify-content-between w-100">
+    <form method="GET" action="{% url 'invoice-schedule' %}" class="d-flex justify-content-between w-100">
       <div class="col-md-4">
         <select name="month" class="form-select">
           <option value="">-- Select Month --</option>
@@ -41,7 +41,7 @@
     <div class="col-12">
       <div class="card mb-4">
         <div class="card-header pb-0">
-          <h6>Maintenance Schedule</h6>
+          <h6>Invoice Schedule</h6>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
@@ -49,59 +49,60 @@
               <thead>
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Site</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit Date</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit Actual Date</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Done</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sub Company</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Invoice Date</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Amount</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Is Paid</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Image</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PDF</th>
                   <th class="text-secondary opacity-7"></th>
                 </tr>
               </thead>
               <tbody>
-                {% for visit in visits %}
+                {% for invoice in invoices %}
                 <tr>
                   <td>
                     <div class="d-flex px-2 py-1">
                       <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">{{ visit.contract }}</h6>
+                        <h6 class="mb-0 text-sm">{{ invoice.contract }}</h6>
                       </div>
                     </div>
                   </td>
                   <td>
-                    <p class="text-xs font-weight-bold mb-0">{{ visit.site }}</p>
+                    <p class="text-xs font-weight-bold mb-0">{{ invoice.sub_company }}</p>
                   </td>
                   <td>
-                    <p class="text-xs font-weight-bold mb-0">{{ visit.visit_date }}</p>
+                    <p class="text-xs font-weight-bold mb-0">{{ invoice.invoice_date }}</p>
                   </td>
                   <td>
-                    <p class="text-xs font-weight-bold mb-0">{{ visit.actual_visit_date }}</p>
+                    <p class="text-xs font-weight-bold mb-0">{{ invoice.amount }}</p>
                   </td>
                   <td class="align-middle text-sm">
-                    {% if visit.done %}
-                    <span class="badge badge-sm bg-gradient-success">{{ visit.done }}</span>
+                    {% if invoice.is_paid %}
+                    <span class="badge badge-sm bg-gradient-success">{{ invoice.is_paid }}</span>
                     {% else %}
-                    <span class="badge badge-sm bg-gradient-danger">{{ visit.done }}</span>
+                    <span class="badge badge-sm bg-gradient-danger">{{ invoice.is_paid }}</span>
                     {% endif %}
                   </td>
                   <td class="align-middle text-center text-sm">
-                    {% if visit.image %}
-                    <a href="{{ visit.image.url }}"><i class="fas fa-file-image text-lg me-1"></i>Image</a>
+                    {% if invoice.image %}
+                    <a href="{{ invoice.image.url }}"><i class="fas fa-file-image text-lg me-1"></i> Image</a>
                     {% else %}
                     <span>-</span>
                     {% endif %}
                   </td>
                   <td class="align-middle text-center text-sm">
-                    {% if visit.pdf %}
-                    <a href="{{ visit.pdf.url }}" target="_blank"><i class="fas fa-file-pdf text-lg me-1"></i> PDF</a>
+                    {% if invoice.pdf %}
+                    <a href="{{ invoice.pdf.url }}" target="_blank"> <i class="fas fa-file-pdf text-lg me-1"></i> PDF
+                    </a>
                     {% else %}
                     <span>-</span>
                     {% endif %}
                   </td>
                   <td class="align-middle">
-                    <a href="{% url 'edit-visit' visit.id %}" >
-                      <i class="fas fa-pencil-alt ms-auto text-dark cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Card"></i>
-                    </a>
+                    <a href="{% url 'edit-invoice' invoice.id %}" >
+                    <i class="fas fa-pencil-alt ms-auto text-dark cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Card"></i></a>
+
                   </td>
                 </tr>
                 {% endfor %}
