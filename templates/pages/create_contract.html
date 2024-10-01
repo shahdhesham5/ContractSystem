@@ -1,0 +1,13 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h2>Create New Contract</h2>
+    <form action="{% url 'create-contract' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}  <!-- Renders the form fields -->
+      <button type="submit" class="btn btn-success">Create</button>
+      <a href="{% url 'contract-table' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+{% endblock %}
