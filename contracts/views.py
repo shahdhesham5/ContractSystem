@@ -1,14 +1,15 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+from django.http import JsonResponse
 from django.utils import timezone
 from datetime import timedelta
 import calendar
 from django.db.models import Sum, Count
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Contract, MaintenanceSchedule, InvoiceSchedule
+from .models import Contract, MaintenanceSchedule, InvoiceSchedule, Engineers, EmergencyVisits
 from Clients.models import Company
 from .serializers import ContractSerializer, MaintenanceScheduleSerializer, InvoiceScheduleSerializer
-from .forms import ContractForm, MaintenanceScheduleForm, InvoiceceScheduleForm, ContractForm
+from .forms import ContractForm, MaintenanceScheduleForm, InvoiceceScheduleForm, EmergencyForm
 # Create your views here.
 
 
@@ -50,12 +51,25 @@ def contract_table_view(request):
 #Get total contracts value and number
 def dashboard_view(request):
     contracts = Contract.objects.all()
+    engineers= Engineers.objects.all()
+    emergencyvisits = EmergencyVisits.objects.filter(
+        done=False).count()
     total_contracts = contracts.aggregate(total_count=Count('id'))['total_count']
     total_value = contracts.aggregate(total_sum=Sum('contract_price_value'))['total_sum'] or 0 
     total_companies = Company.objects.aggregate(total_count=Count('id'))['total_count']
     current_date = timezone.now()
     month_number = current_date.month
     month_name = calendar.month_name[month_number]
+    visits = MaintenanceSchedule.objects.filter(
+        done=False,
+        visit_date__year=current_date.year,
+        visit_date__month=current_date.month
+    )
+    visits_count = MaintenanceSchedule.objects.filter(
+        done=False,
+        visit_date__year=current_date.year,
+        visit_date__month=current_date.month
+    ).count()
     done_count = MaintenanceSchedule.objects.filter(
         done=True,
         visit_date__year=current_date.year,
@@ -67,7 +81,58 @@ def dashboard_view(request):
         visit_date__year=current_date.year,
         visit_date__month=current_date.month
     ).count()
-    return render(request, 'pages/dashboard.html', {'total_contracts': total_contracts,'total_value': total_value,'total_companies': total_companies, 'done_count': done_count,'not_done_count': not_done_count, 'this_month': month_name})    
+    
+    getinvoices = InvoiceSchedule.objects.filter(invoice_date__month=current_date.month) 
+    invoices_done = []
+    invoices_not_done = []
+    
+    for invoice in getinvoices:
+        if invoice.sub_company is None:
+            # Get all maintenance visits related to the parent company
+            maintenance_visits_done = MaintenanceSchedule.objects.filter(
+                site__company=invoice.company,
+                visit_date__lt=invoice.invoice_date,
+                done=True
+            )
+            maintenance_visits_not_done = MaintenanceSchedule.objects.filter(
+                site__company=invoice.company,
+                visit_date__lt=invoice.invoice_date,
+                done=False
+            )
+        else:
+            # Get all maintenance visits related to the sub-company
+            maintenance_visits_done = MaintenanceSchedule.objects.filter(
+                site__sub_company=invoice.sub_company,
+                visit_date__lt=invoice.invoice_date,
+                done=True
+            )
+            maintenance_visits_not_done = MaintenanceSchedule.objects.filter(
+                site__sub_company=invoice.sub_company,
+                visit_date__lt=invoice.invoice_date,
+                done=False
+            )
+        if maintenance_visits_done.exists():
+            invoices_done.append(invoice)
+            
+        if maintenance_visits_not_done.exists():
+            invoices_not_done.append(invoice)
+   
+
+
+        
+    return render(request, 'pages/dashboard.html', {'total_contracts': total_contracts,
+                                                    'total_value': total_value,
+                                                    'total_companies': total_companies,
+                                                    'done_count': done_count,
+                                                    'not_done_count': not_done_count,
+                                                    'this_month': month_name,
+                                                    'visits_count':visits_count,
+                                                    'visits': visits,
+                                                    'engineers': engineers,
+                                                    'emergencyvisits':emergencyvisits,
+                                                    'invoices_done': invoices_done,
+                                                    'invoices_not_done':invoices_not_done,
+                                                    'current_date':current_date})    
     
 # editing the contract 
 def edit_contract_view(request, pk):
@@ -146,6 +211,32 @@ def maintenance_visits_chart(request):
     not_done_count = MaintenanceSchedule.objects.filter(done=False).count()
     return render(request, 'pages/dashboard.html', {'done_count': done_count,'not_done_count': not_done_count,})
 
+def update_maintenance_visit(request):
+    if request.method == 'POST':
+        visit_id = request.POST.get('visit_id')
+        actual_visit_date = request.POST.get('actual_visit_date')
+        image = request.FILES.get('image')
+        pdf = request.FILES.get('pdf')
+        done_by = request.POST.get('done_by')
+        
+        visit = get_object_or_404(MaintenanceSchedule, id=visit_id)
+
+        # Update the fields
+        visit.actual_visit_date = actual_visit_date
+        visit.image = image
+        visit.pdf = pdf
+        # Retrieve the Engineer instance
+        engineer_instance = get_object_or_404(Engineers, id=done_by)
+        visit.eng = engineer_instance  # Assign the instance, not the ID
+        
+        visit.done = True  # Mark the visit as done
+        visit.save()
+
+        return JsonResponse({'success': True})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+
 #view for displaying invoices
 def invoice_schedule_table_view(request):
     invoices = InvoiceSchedule.objects.all()
@@ -164,7 +255,6 @@ def invoice_schedule_table_view(request):
 
     return render(request, 'pages/invoice_schedule.html', {'invoices': invoices})
 
-
 # editing invoice schedule
 def edit_invoice_view(request, pk):
     invoice = get_object_or_404(InvoiceSchedule, pk=pk)
@@ -180,3 +270,21 @@ def edit_invoice_view(request, pk):
     return render(request, 'pages/edit_invoice.html', {'form': form, 'invoice': invoice})
 
 
+#emergency visits
+def emergency_visits_view(request):
+    visits = EmergencyVisits.objects.all()
+    return render(request, 'pages/emergency_visits.html', {'visits': visits})
+
+#adding new contract view
+def create_emergency_visit_request_view(request):
+    if request.method == 'POST':
+        form = EmergencyForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('emergency-visits') 
+    else:
+        form = EmergencyForm()
+
+    return render(request, 'pages/create_emergency_visit.html', {'form': form})
+
+    

@@ -3,58 +3,14 @@
 
 {% block content %}
 <div class="container-fluid py-4">
-    <!-- Filter Form -->
-    <div class="row mb-4">
-    <form method="GET" action="{% url 'maintenence-schedule' %}">
-      <div class="row">
-        <!-- Month Field -->
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>Month</label>
-            <select name="month" class="form-select">
-              <option value="">Select Month</option>
-              <option value="1">January</option>
-              <option value="2">February</option>
-              <option value="3">March</option>
-              <option value="4">April</option>
-              <option value="5">May</option>
-              <option value="6">June</option>
-              <option value="7">July</option>
-              <option value="8">August</option>
-              <option value="9">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Done Status Field -->
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>Is Done</label>
-            <select name="done" class="form-select">
-              <option value="">Select Done Status</option>
-              <option value="true">Done</option>
-              <option value="false">Not Done</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Submit Button -->
-        <div class="col-md-4 d-flex align-items-end">
-          <button type="submit" class="btn btn-primary">Filter</button>
-        </div>
-      </div>
-    </form>
-  </div>
-  <!-- End of Filter Form -->
-  
   <div class="row">
+    <div class="col-md-12 text-end">
+        <a class="btn bg-gradient-dark mb-2" href="{% url 'create-emergency-visits' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Contract</a>
+      </div>
     <div class="col-12">
       <div class="card mb-4">
         <div class="card-header pb-0">
-          <h6>Maintenance Schedule</h6>
+          <h6>Emergency Visits</h6>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
@@ -63,10 +19,13 @@
                 <tr>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Site</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Price</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Within</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit Date</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit Actual Date</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Done</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Done by</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Comment</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Image</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PDF</th>
                   <th class="text-secondary opacity-7"></th>
@@ -77,29 +36,58 @@
                 <tr>
                   <td>
                     <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
+                      <div class="d-flex flex-column">
                         <h6 class="mb-0 text-sm">{{ visit.contract }}</h6>
                       </div>
                     </div>
                   </td>
-                  <td>
+                  <td class="align-middle text-center text-sm">
                     <p class="text-xs font-weight-bold mb-0">{{ visit.site }}</p>
                   </td>
-                  <td>
-                    <p class="text-xs font-weight-bold mb-0">{{ visit.visit_date }}</p>
+                  <td class="align-middle text-center text-sm">
+                    {% if visit.contract.emergency_visit_price %}
+                    <p class="text-xs font-weight-bold mb-0">{{ visit.contract.emergency_visit_price }}</p>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
                   </td>
-                  <td>
+                  <td class="align-middle text-center text-sm">
+                    {% if visit.contract.emergency_within_period %}
+                    <p class="text-xs font-weight-bold mb-0">{{ visit.contract.emergency_within_period }}</p>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    <p class="text-xs font-weight-bold mb-0">{{ visit.request_visit_date }}</p>
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    {% if visit.actual_visit_date %}
                     <p class="text-xs font-weight-bold mb-0">{{ visit.actual_visit_date }}</p>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
                   </td>
-                  <td class="align-middle text-sm">
+                  <td class="align-middle text-center text-sm">
                     {% if visit.done %}
                     <span class="badge badge-sm bg-gradient-success">{{ visit.done }}</span>
                     {% else %}
                     <span class="badge badge-sm bg-gradient-danger">{{ visit.done }}</span>
                     {% endif %}
                   </td>
-                  <td class="align-middle text-sm">
+                  <td class="align-middle text-center text-sm">
+                    {% if visit.eng.name %}
                     <span>{{visit.eng.name}}</span>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    {% if visit.comment %}
+                    <p class="text-xs font-weight-bold mb-0">{{ visit.comment }}</p>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
                   </td>
                   <td class="align-middle text-center text-sm">
                     {% if visit.image %}

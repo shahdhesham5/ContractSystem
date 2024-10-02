@@ -64,6 +64,7 @@
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Invoice Generating Date</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Maintenance Frequency</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Emergency Visit Price</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Emergency Visit within</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Branch</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Branch Site</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Annual increase percentage</th>
@@ -110,13 +111,24 @@
                     <span class=" text-xs font-weight-bold">{{contract.emergency_visit_price}}</span>
                   </td>
                   <td class="align-middle text-center">
+                    {% if contract.emergency_within_period %}
+                    <span class=" text-xs font-weight-bold">{{contract.emergency_within_period}} hours</span>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
+                  </td>
+                  <td class="align-middle text-center">
                     <span class="text-xs font-weight-bold">{{contract.branch}}</span>
                   </td>
                   <td class="align-middle text-center">
                     <span class="text-xs font-weight-bold">{{contract.branch_site}}</span>
                   </td>
                   <td class="align-middle text-center">
-                    <span class="text-xs font-weight-bold">{{contract.annual_increase}}</span>
+                    {% if contract.annual_increase %}
+                    <span class="text-xs font-weight-bold">{{contract.annual_increase}} %</span>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
                   </td>
                   
                   <td class="align-middle text-center text-sm">
@@ -128,11 +140,19 @@
                   </td>
 
                   <td class="align-middle text-center text-sm">
+                    {% if contract.damgh_date %}
                     <span class=" text-xs font-weight-bold">{{contract.damgh_date}}</span>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
                   </td>
 
                   <td class="align-middle text-center text-sm">
+                    {% if contract.damgh_price %}
                     <span class="text-xs font-weight-bold">{{contract.damgh_price}}</span>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
                   </td>
 
                   <td class="align-middle text-center text-sm">

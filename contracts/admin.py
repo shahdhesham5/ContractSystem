@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Contract, MaintenanceSchedule, InvoiceSchedule
+from .models import Contract, MaintenanceSchedule, InvoiceSchedule, Engineers, EmergencyVisits
 
 @admin.register(Contract)
 class ContractAdmin(admin.ModelAdmin):
@@ -10,6 +10,7 @@ class ContractAdmin(admin.ModelAdmin):
         'end_date',
         'contract_price_value',
         'emergency_visit_price',
+        'emergency_within_period',
         'annual_increase',
         'invoice_frequency',
         'invoice_date_calculation',
@@ -38,6 +39,7 @@ class ContractAdmin(admin.ModelAdmin):
                 'end_date',
                 'contract_price_value',
                 'emergency_visit_price',
+                'emergency_within_period',
                 'annual_increase',
                 'invoice_frequency',
                 'invoice_date_calculation',
@@ -55,7 +57,7 @@ class ContractAdmin(admin.ModelAdmin):
 
 @admin.register(MaintenanceSchedule)
 class MaintenanceScheduleAdmin(admin.ModelAdmin):
-    list_display = ('contract', 'site', 'visit_date','actual_visit_date', 'done', 'image','pdf')
+    list_display = ('contract', 'site', 'visit_date','actual_visit_date', 'done','eng', 'image','pdf')
     list_filter = ('visit_date', 'contract', 'site')
     search_fields = ('contract__company__company_name', 'site__site_name')
     
@@ -64,3 +66,15 @@ class InvoiceSchedule(admin.ModelAdmin):
     list_display = ('contract','company','sub_company', 'amount', 'invoice_date', 'is_paid', 'image','pdf')
     list_filter = ('invoice_date', 'contract')
     search_fields = ('contract__company__company_name',)
+    
+@admin.register(Engineers)
+class Engineers(admin.ModelAdmin):
+    list_display =('name',)
+    
+    
+@admin.register(EmergencyVisits)
+class EmergencyVisitsAdmin(admin.ModelAdmin):
+    list_display = ('contract', 'site', 'request_visit_date','actual_visit_date', 'done','eng', 'image','pdf','comment')
+    list_filter = ('request_visit_date', 'contract', 'site')
+    search_fields = ('contract__company__company_name', 'site__site_name')
+  

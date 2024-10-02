@@ -45,6 +45,13 @@ def get_invoice_image_upload_path(instance, filename):
 def get_invoice_pdf_upload_path(instance, filename):
     return os.path.join("invoices-pdfs", instance.contract.company.company_name, filename)
 
+#path generators to upload images/files for invoices
+def get_emergency_visit_image_upload_path(instance, filename):
+    return os.path.join("emergency", instance.contract.company.company_name, filename)
+
+def get_emergency_visit_pdf_upload_path(instance, filename):
+    return os.path.join("emergency-pdfs", instance.contract.company.company_name, filename)
+
 
 
 intervals= [
@@ -72,6 +79,10 @@ invoice_date_choices = [
     ('start', 'From the Start of the Frequency Period'),
     ('end', 'From the End of the Frequency Period'),
 ]
+within_period =[
+    (48, '48'),
+    (72, '72'),
+]
 class Contract(models.Model):
     id = models.CharField(primary_key=True, default=uuid.uuid4, editable=False, max_length=255)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="company_contract")
@@ -83,6 +94,7 @@ class Contract(models.Model):
     annual_increase = models.IntegerField(choices=annual_increase_percentage,null=True,blank=True)  
     auto_renew = models.BooleanField(default=False)
     emergency_visit_price = models.FloatField(validators=[MinValueValidator(0.0)], default=0, null=True, blank=True)
+    emergency_within_period = models.IntegerField(choices=within_period,null=True,blank=True)
     
     invoice_frequency = models.CharField(max_length=255, choices=intervals) 
     invoice_date_calculation = models.CharField(max_length=10, choices=invoice_date_choices, default='end')
@@ -127,9 +139,14 @@ class Contract(models.Model):
     def __str__(self):
         return f"{self.company}"
 
+class Engineers(models.Model):
+    name = models.CharField(max_length=255)
+    
 class MaintenanceSchedule(models.Model):
     contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='schedules')
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    eng = models.ForeignKey(Engineers, on_delete=models.CASCADE, null=True, blank=True)
+    
     visit_date = models.DateField()
     actual_visit_date = models.DateField(null=True, blank=True)
     done = models.BooleanField(default=False, null=True, blank=True)
@@ -158,7 +175,7 @@ class MaintenanceSchedule(models.Model):
     
     def __str__(self):
         return f"Schedule for {self.site} on {self.visit_date}"
-
+    
 class InvoiceSchedule(models.Model):
     contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name="invoices_Schedule")
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)  # Add this field if missing
@@ -192,3 +209,39 @@ class InvoiceSchedule(models.Model):
 
     def __str__(self):
         return f"Invoice for {self.contract.company.company_name} on {self.invoice_date}"
+
+class EmergencyVisits(models.Model):
+    contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='emergency')
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
+    eng = models.ForeignKey(Engineers, on_delete=models.CASCADE, null=True, blank=True)
+    
+    request_visit_date = models.DateField()
+    actual_visit_date = models.DateField(null=True, blank=True)
+    done = models.BooleanField(default=False, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+    image = ResizedImageField(
+        upload_to=get_emergency_visit_image_upload_path,
+        null=True,
+        blank=True,
+        validators=[
+            validators.FileExtensionValidator(
+                allowed_image_extensions,
+                f"Invalid image extension. Only the following formats are allowed: {', '.join(allowed_image_extensions)}."
+            ),
+            image_file_size,
+        ],
+    )
+    pdf = models.FileField(
+        upload_to=get_emergency_visit_pdf_upload_path,
+        null=True,
+        blank=True,
+        validators=[
+            validators.FileExtensionValidator(allowed_pdf_extensions, 
+            f"Invalid file extension. Only the following formats are allowed: {', '.join(allowed_pdf_extensions)}."),
+            pdf_file_size,
+        ],
+    )
+    
+    def __str__(self):
+        return f"Schedule for {self.site} on {self.visit_date}"
+    
