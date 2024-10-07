@@ -57,13 +57,13 @@ def dashboard_view(request):
     total_contracts = contracts.aggregate(total_count=Count('id'))['total_count']
     total_value = contracts.aggregate(total_sum=Sum('contract_price_value'))['total_sum'] or 0 
     total_companies = Company.objects.aggregate(total_count=Count('id'))['total_count']
-    current_date = timezone.now()
+    current_date = timezone.now().date()
     month_number = current_date.month
     month_name = calendar.month_name[month_number]
     visits = MaintenanceSchedule.objects.filter(
         done=False,
-        visit_date__year=current_date.year,
-        visit_date__month=current_date.month
+        visit_date__lte=current_date,  # Include visits with a visit date on or before the current date
+        due_date__gte=current_date     # Ensure the due_date is on or after the current date
     )
     visits_count = MaintenanceSchedule.objects.filter(
         done=False,
@@ -116,7 +116,7 @@ def dashboard_view(request):
             
         if maintenance_visits_not_done.exists():
             invoices_not_done.append(invoice)
-   
+    
 
 
         
@@ -214,7 +214,7 @@ def maintenance_visits_chart(request):
 def update_maintenance_visit(request):
     if request.method == 'POST':
         visit_id = request.POST.get('visit_id')
-        actual_visit_date = request.POST.get('actual_visit_date')
+        completed_date = request.POST.get('actual_visit_date')  # Get the completed visit date
         image = request.FILES.get('image')
         pdf = request.FILES.get('pdf')
         done_by = request.POST.get('done_by')
@@ -222,9 +222,10 @@ def update_maintenance_visit(request):
         visit = get_object_or_404(MaintenanceSchedule, id=visit_id)
 
         # Update the fields
-        visit.actual_visit_date = actual_visit_date
+        visit.completed_date = completed_date  # Assign the completed visit date
         visit.image = image
         visit.pdf = pdf
+        
         # Retrieve the Engineer instance
         engineer_instance = get_object_or_404(Engineers, id=done_by)
         visit.eng = engineer_instance  # Assign the instance, not the ID

@@ -4,10 +4,11 @@ from .models import Contract, MaintenanceSchedule, InvoiceSchedule, EmergencyVis
 class MaintenanceScheduleForm(forms.ModelForm):
     class Meta:
         model = MaintenanceSchedule
-        fields = ['contract', 'site', 'visit_date', 'actual_visit_date', 'done', 'eng', 'image', 'pdf']
+        fields = ['contract', 'site', 'visit_date', 'due_date','completed_date', 'done', 'eng', 'image', 'pdf']
         widgets = {
             'visit_date': forms.DateInput(attrs={'type': 'date'}),
-            'actual_visit_date': forms.DateInput(attrs={'type': 'date'}),
+            'due_date': forms.DateInput(attrs={'type': 'date'}),
+            'completed_date': forms.DateInput(attrs={'type': 'date'}),
         }
 
 

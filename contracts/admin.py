@@ -57,7 +57,7 @@ class ContractAdmin(admin.ModelAdmin):
 
 @admin.register(MaintenanceSchedule)
 class MaintenanceScheduleAdmin(admin.ModelAdmin):
-    list_display = ('contract', 'site', 'visit_date','actual_visit_date', 'done','eng', 'image','pdf')
+    list_display = ('contract', 'site', 'visit_date','due_date','completed_date', 'done','eng', 'image','pdf')
     list_filter = ('visit_date', 'contract', 'site')
     search_fields = ('contract__company__company_name', 'site__site_name')
     

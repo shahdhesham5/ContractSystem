@@ -120,39 +120,38 @@
               </div>
             </div>
           </div>
-          <div class="card-body px-0 pb-2">
-            <div class="table-responsive">
-              <table class="table align-items-center mb-0">
-                <thead>
-                  <tr>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Site</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit Date</th>
-                    <th class="text-secondary opacity-7"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for visit in visits %}
-                  <tr>
-                    <td>
-                    <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">{{visit.site}}</h6>
-                      </div>
+
+          <div class="card-body pt-4 p-3">
+            <ul class="list-group">
+              {% for visit in visits %}
+                {% if visit.visit_date.month != current_date.month %}
+                  <li style="background-color: #FFFF99;" class="list-group-item border-0 d-flex p-4 mb-2 bg-red-100 border-radius-lg">
+                    <div class="d-flex flex-column">
+                      <h6 class="mb-3 text-sm">{{visit.site}}</h6>
+                      <span class="mb-2 text-xs">Visit Date:  <span class="text-dark ms-sm-2 font-weight-bold">{{visit.visit_date}}</span></span>
                     </div>
-                    </td>
-                    <td class="align-middle text-sm">
-                      <span class="text-xs font-weight-bold"> {{visit.visit_date}}</span>
-                    </td>
-                    <td class="text-end text-sm">
+                    <div class="ms-auto text-end">
                       <button type="button" class="btn btn-success btn-sm" onclick="openCard('{{ visit.id }}')">
-                          <i class="fa fa-plus"></i>
-                      </button>
-                  </td>                
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
+                        <i class="fa fa-plus"></i>
+                    </button>               
+                  </div>
+                  </li>
+                {% else %}
+                  <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                    <div class="d-flex flex-column">
+                      <h6 class="mb-3 text-sm">{{visit.site}}</h6>
+                      <span class="mb-2 text-xs">Visit Date:  <span class="text-dark ms-sm-2 font-weight-bold">{{visit.visit_date}}</span></span>
+                    </div>
+                    <div class="ms-auto text-end">
+                      <button type="button" class="btn btn-success btn-sm" onclick="openCard('{{ visit.id }}')">
+                        <i class="fa fa-plus"></i>
+                    </button>               
+                  </div>
+                  </li>
+                {% endif %}
+
+              {% endfor %}
+            </ul>
           </div>
         </div>
       </div>
@@ -300,76 +299,74 @@
         </div>
       </div>
       <div class="col-lg-7 mb-lg-0 mb-4">
-      
-          <div class="card h-100 mb-4">
-            <div class="card-header pb-0 px-3">
-              <div class="row">
-                <div class="col-md-6">
-                  <h6 class="mb-0">Invoices Of The Month</h6>
-                </div>
-                <div class="col-md-6 d-flex justify-content-end align-items-center">
-                  <i class="far fa-calendar-alt me-2"></i>
-                  <small>{{current_date}}</small>
-                </div>
+        <div class="card h-100 mb-4">
+          <div class="card-header pb-0 px-3">
+            <div class="row">
+              <div class="col-md-6">
+                <h6 class="mb-0">Invoices Of The Month</h6>
+              </div>
+              <div class="col-md-6 d-flex justify-content-end align-items-center">
+                <i class="far fa-calendar-alt me-2"></i>
+                <small>{{current_date}}</small>
               </div>
             </div>
-            <div class="card-body pt-4 p-3">
-              <h6 class="text-uppercase text-body text-xs font-weight-bolder mb-3">Invoices Ready</h6>
-              <ul class="list-group">
-                {% for invoice in invoices_done %}
-                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                  <div class="d-flex align-items-center">
-                    <button class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center"><i class="fas fa-arrow-up"></i></button>
-                    <div class="d-flex flex-column">
-                      <!-- Check if the company exists -->
-                      {% if invoice.contract and not invoice.sub_company %}
-                      <h6 class="mb-1 text-dark text-sm">{{ invoice.contract}}</h6>
-                      <!-- Check if both company and sub-company exist -->
-                      {% elif invoice.contract and invoice.sub_company %}
-                      <h6 class="mb-1 text-dark text-sm">{{ invoice.sub_company}}</h6>
-                      <!-- Fallback if no company or sub-company -->
-                      {% else %}
-                      <h6 class="mb-1 text-dark text-sm">No Company Data</h6>
-                      {% endif %}
-                      <span class="text-xs">{{invoice.invoice_date}}</span>
-                    </div>
-                  </div>
-                  <div class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold">
-                    {{invoice.amount}}
-                  </div>
-                </li>
-                {% endfor %}
-              </ul>
-              <h6 class="text-uppercase text-body text-xs font-weight-bolder my-3">Invoices Not Ready </h6>
-              <ul class="list-group">
-                {% for invoicee in invoices_not_done %}
-                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                  <div class="d-flex align-items-center">
-                    <button class="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-3 btn-sm d-flex align-items-center justify-content-center"><i class="fas fa-arrow-down"></i></button>
-                    <div class="d-flex flex-column">
-                      <!-- Check if the company exists -->
-                      {% if invoicee.contract and not invoicee.sub_company %}
-                      <h6 class="mb-1 text-dark text-sm">{{ invoicee.contract}}</h6>
-                      <!-- Check if both company and sub-company exist -->
-                      {% elif invoicee.contract and invoicee.sub_company %}
-                      <h6 class="mb-1 text-dark text-sm">{{ invoicee.sub_company}}</h6>
-                      <!-- Fallback if no company or sub-company -->
-                      {% else %}
-                      <h6 class="mb-1 text-dark text-sm">No Company Data</h6>
-                      {% endif %}
-                      <span class="text-xs">{{ invoicee.invoice_date }}</span>
-                    </div>
-                  </div>
-                  <div class="d-flex align-items-center text-danger text-gradient text-sm font-weight-bold">
-                    {{invoicee.amount}}
-                  </div>
-                </li>
-                {% endfor %}
-       
-              </ul>
-            </div>
           </div>
-     
+          <div class="card-body pt-4 p-3">
+            <h6 class="text-uppercase text-body text-xs font-weight-bolder mb-3">Invoices Ready</h6>
+            <ul class="list-group">
+              {% for invoice in invoices_done %}
+              <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                <div class="d-flex align-items-center">
+                  <button class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center"><i class="fas fa-arrow-up"></i></button>
+                  <div class="d-flex flex-column">
+                    <!-- Check if the company exists -->
+                    {% if invoice.contract and not invoice.sub_company %}
+                    <h6 class="mb-1 text-dark text-sm">{{ invoice.contract}}</h6>
+                    <!-- Check if both company and sub-company exist -->
+                    {% elif invoice.contract and invoice.sub_company %}
+                    <h6 class="mb-1 text-dark text-sm">{{ invoice.sub_company}}</h6>
+                    <!-- Fallback if no company or sub-company -->
+                    {% else %}
+                    <h6 class="mb-1 text-dark text-sm">No Company Data</h6>
+                    {% endif %}
+                    <span class="text-xs">{{invoice.invoice_date}}</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold">
+                  {{invoice.amount}}
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            <h6 class="text-uppercase text-body text-xs font-weight-bolder my-3">Invoices Not Ready </h6>
+            <ul class="list-group">
+              {% for invoicee in invoices_not_done %}
+              <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                <div class="d-flex align-items-center">
+                  <button class="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-3 btn-sm d-flex align-items-center justify-content-center"><i class="fas fa-arrow-down"></i></button>
+                  <div class="d-flex flex-column">
+                    <!-- Check if the company exists -->
+                    {% if invoicee.contract and not invoicee.sub_company %}
+                    <h6 class="mb-1 text-dark text-sm">{{ invoicee.contract}}</h6>
+                    <!-- Check if both company and sub-company exist -->
+                    {% elif invoicee.contract and invoicee.sub_company %}
+                    <h6 class="mb-1 text-dark text-sm">{{ invoicee.sub_company}}</h6>
+                    <!-- Fallback if no company or sub-company -->
+                    {% else %}
+                    <h6 class="mb-1 text-dark text-sm">No Company Data</h6>
+                    {% endif %}
+                    <span class="text-xs">{{ invoicee.invoice_date }}</span>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center text-danger text-gradient text-sm font-weight-bold">
+                  {{invoicee.amount}}
+                </div>
+              </li>
+              {% endfor %}
+      
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
 <!-- end -->
@@ -388,7 +385,7 @@
           {% csrf_token %}
           <input type="hidden" id="visitId" name="visit_id">
           <div class="form-group">
-            <label for="actual_visit_date">Actual Visit Date</label>
+            <label for="actual_visit_date">Completed Visit Date</label>
             <input type="date" class="form-control" id="actual_visit_date" name="actual_visit_date" required>
           </div>
           <div class="form-group">
@@ -547,7 +544,7 @@ function submitVisitForm() {
   function redirectToDashboard() {
     window.location.href = "{% url 'dashboard' %}";  // Replace 'dashboard_url' with your actual Django URL name
   }
-  var ctx = document.getElementById("chart-bars").getContext("2d");
+var ctx = document.getElementById("chart-bars").getContext("2d");
 
 new Chart(ctx, {
   type: "bar",

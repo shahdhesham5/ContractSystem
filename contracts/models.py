@@ -148,7 +148,8 @@ class MaintenanceSchedule(models.Model):
     eng = models.ForeignKey(Engineers, on_delete=models.CASCADE, null=True, blank=True)
     
     visit_date = models.DateField()
-    actual_visit_date = models.DateField(null=True, blank=True)
+    due_date = models.DateField(null=True, blank=True)
+    completed_date = models.DateField(null=True, blank=True)
     done = models.BooleanField(default=False, null=True, blank=True)
     image = ResizedImageField(
         upload_to=get_visit_image_upload_path,
@@ -173,6 +174,17 @@ class MaintenanceSchedule(models.Model):
         ],
     )
     
+    def complete_visit(self, completed_date):
+        self.completed_date = completed_date
+        if self.is_valid_visit():
+            self.is_done = True
+        else:
+            self.is_done = False
+        self.save()
+
+    def is_valid_visit(self):
+        return self.visit_date <= self.completed_date < self.due_date
+
     def __str__(self):
         return f"Schedule for {self.site} on {self.visit_date}"
     
@@ -243,5 +255,5 @@ class EmergencyVisits(models.Model):
     )
     
     def __str__(self):
-        return f"Schedule for {self.site} on {self.visit_date}"
+        return f"Schedule for {self.site} on {self.request_visit_date}"
     

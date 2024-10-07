@@ -5,7 +5,7 @@
 <div class="container-fluid py-4">
   <div class="row">
     <div class="col-md-12 text-end">
-        <a class="btn bg-gradient-dark mb-2" href="{% url 'create-emergency-visits' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Contract</a>
+        <a class="btn bg-gradient-dark mb-2" href="{% url 'create-emergency-visits' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Emergency Visit request</a>
       </div>
     <div class="col-12">
       <div class="card mb-4">
@@ -22,7 +22,8 @@
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Price</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Within</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit Date</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit Actual Date</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit Due Date</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit completed Date</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Done</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Done by</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Comment</th>
@@ -62,8 +63,15 @@
                     <p class="text-xs font-weight-bold mb-0">{{ visit.request_visit_date }}</p>
                   </td>
                   <td class="align-middle text-center text-sm">
-                    {% if visit.actual_visit_date %}
-                    <p class="text-xs font-weight-bold mb-0">{{ visit.actual_visit_date }}</p>
+                    {% if visit.due_date %}
+                    <p class="text-xs font-weight-bold mb-0">{{ visit.due_date }}</p>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    {% if visit.completed_date %}
+                    <p class="text-xs font-weight-bold mb-0">{{ visit.completed_date }}</p>
                     {% else %}
                     <span>-</span>
                     {% endif %}

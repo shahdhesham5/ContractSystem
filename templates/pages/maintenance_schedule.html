@@ -64,8 +64,8 @@
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Site</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit Date</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit Actual Date</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Done</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit Due Date</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit completed Date</th>                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Done</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Done by</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Image</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PDF</th>
@@ -88,8 +88,19 @@
                   <td>
                     <p class="text-xs font-weight-bold mb-0">{{ visit.visit_date }}</p>
                   </td>
-                  <td>
-                    <p class="text-xs font-weight-bold mb-0">{{ visit.actual_visit_date }}</p>
+                  <td class="align-middle text-center text-sm">
+                    {% if visit.due_date %}
+                    <p class="text-xs font-weight-bold mb-0">{{ visit.due_date }}</p>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    {% if visit.completed_date %}
+                    <p class="text-xs font-weight-bold mb-0">{{ visit.completed_date }}</p>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
                   </td>
                   <td class="align-middle text-sm">
                     {% if visit.done %}
