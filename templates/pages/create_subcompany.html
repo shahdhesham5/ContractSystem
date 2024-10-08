@@ -1,0 +1,13 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h2>Create New SubCompany</h2>
+    <form action="{% url 'subcompany-create' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}  <!-- Renders the form fields -->
+      <button type="submit" class="btn btn-success">Create</button>
+      <a href="{% url 'subcompanies-list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+{% endblock %}

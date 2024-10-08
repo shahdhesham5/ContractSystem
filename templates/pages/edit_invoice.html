@@ -5,7 +5,7 @@
     <form action="{% url 'edit-invoice' invoice.id %}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit" class="btn btn-success">Update Contract</button>
+      <button type="submit" class="btn btn-success">Update Invoice</button>
       <a href="{% url 'invoice-schedule' %}" class="btn btn-secondary">Cancel</a>
     </form>
   </div>

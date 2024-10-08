@@ -1,0 +1,13 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h2>Create New Site</h2>
+    <form action="{% url 'site-create' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}  <!-- Renders the form fields -->
+      <button type="submit" class="btn btn-success">Create</button>
+      <a href="{% url 'site-list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+{% endblock %}

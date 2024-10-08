@@ -5,7 +5,7 @@
     <form action="{% url 'edit-visit' visit.id %}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit" class="btn btn-success">Update Contract</button>
+      <button type="submit" class="btn btn-success">Update Maintenance visit</button>
       <a href="{% url 'maintenence-schedule' %}" class="btn btn-secondary">Cancel</a>
     </form>
   </div>
