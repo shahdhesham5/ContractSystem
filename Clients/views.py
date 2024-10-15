@@ -6,7 +6,7 @@ from django.db.models import Sum, Count
 from .models import City, Area, Company, SubCompany, Site
 from .forms import CompanyForm, SubCompanyForm, SiteForm
 from .serializers import CitySerializer, AreaSerializer, CompanySerializer, SubCompanySerializer, SiteSerializer
-
+from contracts.models import Contract, MaintenanceSchedule, InvoiceSchedule, EmergencyVisits
 
 def company_list_view(request):
     companies = Company.objects.all()
@@ -44,6 +44,26 @@ def create_company_view(request):
 
     return render(request, 'pages/create_company.html', {'form': form})
 
+def company_profile_view(request, pk):
+    company = get_object_or_404(Company, id=pk)
+    subcompanies = SubCompany.objects.filter(parent_company=company)
+    company_sites = Site.objects.filter(company=company)
+    subcompany_sites = Site.objects.filter(sub_company__parent_company=company)
+    all_sites = company_sites.union(subcompany_sites)
+    
+    contracts = Contract.objects.filter(company=company)  
+    invoices_done = InvoiceSchedule.objects.filter(company=company, is_paid=True)  
+    emergency = EmergencyVisits.objects.filter(contract__company=company, done=True)
+    
+    context = {
+        'company': company,
+        'subcompanies':subcompanies,
+        'all_sites':all_sites,
+        'contracts': contracts,
+        'invoices_done':invoices_done,
+        'emergency':emergency,
+    }
+    return render(request, 'pages/company_profile.html', context)
 
 
 

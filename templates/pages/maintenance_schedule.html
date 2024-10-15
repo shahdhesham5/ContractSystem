@@ -5,51 +5,90 @@
 <div class="container-fluid py-4">
     <!-- Filter Form -->
     <div class="row mb-4">
-    <form method="GET" action="{% url 'maintenence-schedule' %}">
-      <div class="row">
-        <!-- Month Field -->
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>Month</label>
-            <select name="month" class="form-select">
-              <option value="">Select Month</option>
-              <option value="1">January</option>
-              <option value="2">February</option>
-              <option value="3">March</option>
-              <option value="4">April</option>
-              <option value="5">May</option>
-              <option value="6">June</option>
-              <option value="7">July</option>
-              <option value="8">August</option>
-              <option value="9">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
-            </select>
-          </div>
+      <form method="GET" action="{% url 'maintenence-schedule' %}">
+        <div class="row">
+          <!-- Branch Field -->
+          <div class="col-md-3">
+            <div class="form-group">
+                <label for="branch">Branch</label>
+                <select id="branch" name="branch" class="form-control" onchange="submitFilterForm()">
+                    <option value="">All Branches</option>
+                    {% for branch in branches %}
+                        <option value="{{ branch }}" {% if branch == selected_branch %}selected{% endif %}>{{ branch }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
 
-        <!-- Done Status Field -->
-        <div class="col-md-4">
-          <div class="form-group">
-            <label>Is Done</label>
-            <select name="done" class="form-select">
-              <option value="">Select Done Status</option>
-              <option value="true">Done</option>
-              <option value="false">Not Done</option>
-            </select>
+        <!-- Branch Site Field -->
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="branch_site">Branch Site</label>
+                <select id="branch_site" name="branch_site" class="form-control" onchange="submitFilterForm()">
+                    <option value="">All Branch Sites</option>
+                    {% for site in branch_sites %}
+                        <option value="{{ site }}" {% if site == selected_branch_site %}selected{% endif %}>{{ site }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+          <!-- Site Name -->
+          <div class="col-md-3 mb-3">
+          <label for="site_name">Site Name</label>
+          <select id="site_name" name="site_name" class="form-control" onchange="submitFilterForm()">
+              <option value="">All Sites</option>
+              {% for site in site_names %}
+                  <option value="{{ site.id }}" {% if site.id == selected_site_name %}selected{% endif %}>
+                      {{ site.site_name }}
+                  </option>
+              {% endfor %}
+          </select>
+        </div>
+          <!-- Month Field -->
+          <div class="col-md-2">
+            <div class="form-group">
+              <label>Month</label>
+              <select name="month" class="form-select">
+                <option value="">Month</option>
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Done Status Field -->
+          <div class="col-md-2">
+            <div class="form-group">
+              <label>Is Done</label>
+              <select name="done" class="form-select">
+                <option value="">Done Status</option>
+                <option value="true">Done</option>
+                <option value="false">Not Done</option>
+              </select>
+            </div>
+          </div>
+
+            <!-- Submit Button -->
+            <div class="col-md-12 d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary mb-2">
+                  <i class="fas fa-filter"></i>&nbsp; Apply Filters
+              </button>
           </div>
         </div>
-
-        <!-- Submit Button -->
-        <div class="col-md-4 d-flex align-items-end">
-          <button type="submit" class="btn btn-primary">Filter</button>
-        </div>
-      </div>
-    </form>
-  </div>
-  <!-- End of Filter Form -->
-  
+      </form>
+    </div>
+    <!-- End of Filter Form -->
+ 
   <div class="row">
     <div class="col-12">
       <div class="card mb-4">
@@ -149,3 +188,4 @@
   </div>
 </div>
 {% endblock content %}
+

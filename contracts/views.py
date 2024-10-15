@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+import json
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
@@ -10,7 +11,7 @@ import calendar
 from django.db.models import Sum, Count
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Contract, MaintenanceSchedule, InvoiceSchedule, Engineers, EmergencyVisits
-from Clients.models import Company
+from Clients.models import Company, Site
 from .serializers import ContractSerializer, MaintenanceScheduleSerializer, InvoiceScheduleSerializer
 from .forms import ContractForm, MaintenanceScheduleForm, InvoiceceScheduleForm, EmergencyForm
 # Create your views here.
@@ -130,7 +131,8 @@ def dashboard_view(request):
 
 
         
-    return render(request, 'pages/dashboard.html', {'total_contracts': total_contracts,
+    return render(request, 'pages/dashboard.html', {'segment':'dashboard',
+                                                    'total_contracts': total_contracts,
                                                     'total_value': total_value,
                                                     'total_companies': total_companies,
                                                     'done_count': done_count,
@@ -149,28 +151,35 @@ def dashboard_view(request):
                                                     'invoices_done': invoices_done,
                                                     'invoices_not_done':invoices_not_done,
                                                     'current_date':current_date})    
- 
-    
+
+
 # New view for displaying contracts in an HTML table
 def contract_table_view(request):
     branch = request.GET.get('branch')
     branch_site = request.GET.get('branch_site')
+    company_id = request.GET.get('company_name') 
     contracts = Contract.objects.all()
     
     if branch:
         contracts = contracts.filter(branch=branch)
     if branch_site:
         contracts = contracts.filter(branch_site=branch_site)
+    if company_id:
+        contracts = contracts.filter(company__id=company_id)  
+
         
     branches = Contract.objects.values_list('branch', flat=True).distinct()
     branch_sites = Contract.objects.values_list('branch_site', flat=True).distinct()
-
+    company_names = Company.objects.values('id', 'company_name').distinct() 
+    
     return render(request, 'pages/contracts.html', {
         'contracts': contracts,
         'branches': branches,
         'branch_sites': branch_sites,
+        'company_names': company_names, 
         'selected_branch': branch,
         'selected_branch_site': branch_site,
+        'selected_company_name': company_id,
         'segment':'contracts'
     })
 # editing the contract 
@@ -222,10 +231,18 @@ def contracts_expiring_soon_view(request):
 
 #view for displaying maintenance scheduled visits 
 def maintenence_schedule_table_view(request):
-    visits = MaintenanceSchedule.objects.all()
     month = request.GET.get('month')  # Expecting '1' for January, '10' for October, etc.
     done_filter = request.GET.get('done')  # Expecting 'true' or 'false'
-    
+    visits = MaintenanceSchedule.objects.all()
+    site_id = request.GET.get('site_name') 
+    branch = request.GET.get('branch')
+    branch_site = request.GET.get('branch_site')
+    if branch:
+        visits = visits.filter(contract__branch=branch)
+    if branch_site:
+        visits = visits.filter(contract__branch_site=branch_site)
+    if site_id:
+        visits = visits.filter(site__id=site_id)  
     if month:
         month = int(month)  
         visits = visits.filter(visit_date__month=month)
@@ -236,7 +253,19 @@ def maintenence_schedule_table_view(request):
         elif done_filter.lower() == 'false':
             visits = visits.filter(done=False)
 
-    return render(request, 'pages/maintenance_schedule.html', {'visits': visits, 'segment':'visits'})
+    branches = Contract.objects.values_list('branch', flat=True).distinct()
+    branch_sites = Contract.objects.values_list('branch_site', flat=True).distinct()
+    site_names = Site.objects.values('id', 'site_name').distinct() 
+
+
+    return render(request, 'pages/maintenance_schedule.html', {'visits': visits,
+        'segment':'visits',
+        'branches': branches,
+        'branch_sites': branch_sites,
+        'site_names': site_names, 
+        'selected_branch': branch,
+        'selected_branch_site': branch_site,
+        'selected_site_name': site_id,})
 # editing maintenance schedule
 def edit_visit_view(request, pk):
     visit = get_object_or_404(MaintenanceSchedule, pk=pk)
@@ -291,13 +320,21 @@ def delete_Visit_view(request, pk):
 
 
 
-
 #view for displaying invoices
 def invoice_schedule_table_view(request):
     invoices = InvoiceSchedule.objects.all()
     month = request.GET.get('month')  
-    done_filter = request.GET.get('done') 
+    done_filter = request.GET.get('done')
+    company_id = request.GET.get('company_name')  
+    branch = request.GET.get('branch')
+    branch_site = request.GET.get('branch_site')
     
+    if branch:
+        invoices = invoices.filter(contract__branch=branch)
+    if branch_site:
+        invoices = invoices.filter(contract__branch_site=branch_site)
+    if company_id:
+        invoices = invoices.filter(company__id=company_id)  
     if month:
         month = int(month) 
         invoices = invoices.filter(invoice_date__month=month)
@@ -308,7 +345,21 @@ def invoice_schedule_table_view(request):
         elif done_filter.lower() == 'false':
             invoices = invoices.filter(is_paid=False)
 
-    return render(request, 'pages/invoice_schedule.html', {'invoices': invoices, 'segment':'invoices'})
+    branches = Contract.objects.values_list('branch', flat=True).distinct()
+    branch_sites = Contract.objects.values_list('branch_site', flat=True).distinct()
+    company_names = Company.objects.values('id', 'company_name').distinct() 
+
+    
+
+    return render(request, 'pages/invoice_schedule.html', {'invoices': invoices, 
+        'segment':'invoices',
+        'branches': branches,
+        'branch_sites': branch_sites,
+        'company_names': company_names, 
+        'selected_branch': branch,
+        'selected_branch_site': branch_site,
+        'selected_company_name': company_id,
+        })
 # editing invoice schedule
 def edit_invoice_view(request, pk):
     invoice = get_object_or_404(InvoiceSchedule, pk=pk)
@@ -356,7 +407,15 @@ def delete_Invoice_view(request, pk):
 def emergency_visits_view(request):
     visits = EmergencyVisits.objects.all()
     return render(request, 'pages/emergency_visits.html', {'visits': visits, 'segment':'emergency'})
-#adding new contract view
+# Deleting emergency visit
+def delete_emergency_visit_view(request, pk):
+    visit = get_object_or_404(EmergencyVisits, pk=pk)
+    
+    if request.method == 'POST':
+        visit.delete()
+        messages.success(request, 'Emergency Visit deleted successfully.')
+        return redirect('emergency-visits')
+
 def create_emergency_visit_request_view(request):
     if request.method == 'POST':
         form = EmergencyForm(request.POST, request.FILES)
@@ -368,4 +427,3 @@ def create_emergency_visit_request_view(request):
 
     return render(request, 'pages/create_emergency_visit.html', {'form': form})
 
-    

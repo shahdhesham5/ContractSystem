@@ -63,10 +63,10 @@ def generate_invoice_schedule(sender, instance, created, **kwargs):
 
         if sub_companies.exists():
             companies_to_invoice = sub_companies  
-            total_invoices = ((end_date.year - start_date.year) * 12 + end_date.month - start_date.month) // visit_interval + 1
+            total_invoices = ((end_date.year - start_date.year) * 12 + end_date.month - start_date.month) // visit_interval
         else:
             companies_to_invoice = [instance.company] 
-            total_invoices = ((end_date.year - start_date.year) * 12 + end_date.month - start_date.month) // visit_interval
+            total_invoices = ((end_date.year - start_date.year) * 12 + end_date.month - start_date.month) // visit_interval +1
 
         num_companies = len(companies_to_invoice)
         invoice_amount_per_invoice = contract_price_value / (total_invoices * num_companies)
@@ -81,6 +81,7 @@ def generate_invoice_schedule(sender, instance, created, **kwargs):
                 if isinstance(company, SubCompany):
                     InvoiceSchedule.objects.create(
                         contract=instance,
+                        company=instance.company,
                         sub_company=company,  
                         invoice_date=current_date,
                         amount=invoice_amount_per_invoice  

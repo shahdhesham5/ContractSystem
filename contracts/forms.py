@@ -36,11 +36,20 @@ class ContractForm(forms.ModelForm):
 class EmergencyForm(forms.ModelForm):
     class Meta:
         model = EmergencyVisits
-        fields = ['contract', 'site', 'request_visit_date', 'actual_visit_date', 'done', 'eng', 'image', 'pdf', 'comment']
+        fields = ['contract', 'site', 'request_visit_date', 'actual_visit_date','price','done', 'eng', 'image', 'pdf', 'comment']
         widgets = {
             'request_visit_date': forms.DateInput(attrs={'type': 'date'}),
             'actual_visit_date': forms.DateInput(attrs={'type': 'date'}),
         }
+        def clean(self):
+            cleaned_data = super().clean()
+            price = cleaned_data.get('price')
+            contract = cleaned_data.get('contract')
 
+            # Custom validation
+            if price is None and contract and contract.emergency_visit_price is None:
+                raise forms.ValidationError("Price is required when the contract's emergency_visit_price is null.")
 
+            return cleaned_data
+    
 

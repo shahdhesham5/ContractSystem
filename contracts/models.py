@@ -229,6 +229,7 @@ class EmergencyVisits(models.Model):
     
     request_visit_date = models.DateField()
     actual_visit_date = models.DateField(null=True, blank=True)
+    price = models.FloatField(validators=[MinValueValidator(0.0)], default=0, null=True, blank=True)
     done = models.BooleanField(default=False, null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
     image = ResizedImageField(
@@ -253,7 +254,17 @@ class EmergencyVisits(models.Model):
             pdf_file_size,
         ],
     )
-    
+    def save(self, *args, **kwargs):
+        # Inherit city and area from the parent company if not set
+        if not self.price:
+            self.price = self.contract.emergency_visit_price
+        super().save(*args, **kwargs)
+        
+    def clean(self):
+        super().clean()  # Call the parent's clean method
+        if not self.price and self.contract.emergency_visit_price is None:
+            raise ValidationError("Price is required.")
+
     def __str__(self):
         return f"Schedule for {self.site} on {self.request_visit_date}"
     

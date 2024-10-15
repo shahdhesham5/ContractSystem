@@ -9,40 +9,49 @@
     </div>
     <!-- Filter Form -->
     <form method="GET" action="{% url 'contract-table' %}">
-      <div class="row mb-4">
-          <!-- Branch Field -->
-          <div class="col-md-4">
-              <div class="form-group">
-                  <label for="branch">Branch</label>
-                  <select id="branch" name="branch" class="form-control">
-                      <option value="">All Branches</option>
-                      {% for branch in branches %}
-                          <option value="{{ branch }}" {% if branch == selected_branch %}selected{% endif %}>{{ branch }}</option>
-                      {% endfor %}
-                  </select>
-              </div>
+      <div class="row">
+          <!-- Branch and Branch Site -->
+          <div class="col-lg-4 col-md-6 mb-3">
+              <label for="branch">Branch</label>
+              <select id="branch" name="branch" class="form-control">
+                  <option value="">All Branches</option>
+                  {% for branch in branches %}
+                      <option value="{{ branch }}" {% if branch == selected_branch %}selected{% endif %}>{{ branch }}</option>
+                  {% endfor %}
+              </select>
           </div>
-  
-          <!-- Branch Site Field -->
-          <div class="col-md-4">
-              <div class="form-group">
-                  <label for="branch_site">Branch Site</label>
-                  <select id="branch_site" name="branch_site" class="form-control">
-                      <option value="">All Branch Sites</option>
-                      {% for site in branch_sites %}
-                          <option value="{{ site }}" {% if site == selected_branch_site %}selected{% endif %}>{{ site }}</option>
-                      {% endfor %}
-                  </select>
-              </div>
+          
+          <div class="col-lg-4 col-md-6 mb-3">
+              <label for="branch_site">Branch Site</label>
+              <select id="branch_site" name="branch_site" class="form-control">
+                  <option value="">All Branch Sites</option>
+                  {% for site in branch_sites %}
+                      <option value="{{ site }}" {% if site == selected_branch_site %}selected{% endif %}>{{ site }}</option>
+                  {% endfor %}
+              </select>
           </div>
-  
+
+          <!-- Company Name -->
+          <div class="col-lg-4 col-md-6 mb-3">
+              <label for="company_name">Company Name</label>
+              <select id="company_name" name="company_name" class="form-control" onchange="submitFilterForm()">
+                  <option value="">All Companies</option>
+                  {% for company in company_names %}
+                      <option value="{{ company.id }}" {% if company.id == selected_company_name %}selected{% endif %}>
+                          {{ company.company_name }}
+                      </option>
+                  {% endfor %}
+              </select>
+          </div>
+
           <!-- Submit Button -->
-          <div class="col-md-4 d-flex align-items-end">
-              <button type="submit" class="btn btn-primary">Filter</button>
+          <div class="col-md-12 d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary mb-2">
+                  <i class="fas fa-filter"></i>&nbsp; Apply Filters
+              </button>
           </div>
       </div>
-  </form>
-    <!-- End of Filter Form -->
+    </form>
   </div>
   
   <div class="row">

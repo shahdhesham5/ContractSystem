@@ -74,7 +74,7 @@ class Engineers(admin.ModelAdmin):
     
 @admin.register(EmergencyVisits)
 class EmergencyVisitsAdmin(admin.ModelAdmin):
-    list_display = ('contract', 'site', 'request_visit_date','actual_visit_date', 'done','eng', 'image','pdf','comment')
+    list_display = ('contract', 'site', 'request_visit_date','actual_visit_date','price', 'done','eng', 'image','pdf','comment')
     list_filter = ('request_visit_date', 'contract', 'site')
     search_fields = ('contract__company__company_name', 'site__site_name')
   
