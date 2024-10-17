@@ -34,7 +34,7 @@ LOGIN_REDIRECT_URL = 'dashboard'  # Redirect to dashboard after login
 LOGOUT_REDIRECT_URL = 'accounts/login/'  # Redirect to login after logout
 
 DEBUG = os.getenv('DEBUG') == 'True'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+ALLOWED_HOSTS = ['ictcoegyptstock.com', 'www.ictcoegyptstock.com', '195.35.38.155']
 
 # Application definition
 INSTALLED_APPS = [
