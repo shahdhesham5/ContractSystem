@@ -5,7 +5,7 @@
     <h2>Create New Contract</h2>
     <form action="{% url 'create-contract' %}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
-      {{ form.as_p }}  <!-- Renders the form fields -->
+      {{ form.as_p }} 
       <button type="submit" class="btn btn-success">Create</button>
       <a href="{% url 'contract-table' %}" class="btn btn-secondary">Cancel</a>
     </form>

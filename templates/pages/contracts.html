@@ -3,10 +3,12 @@
 
 {% block content %}
 <div class="container-fluid py-4">
-  <div class="row">
-    <div class="col-md-12 text-end">
-      <a class="btn bg-gradient-dark mb-2" href="{% url 'create-contract' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Contract</a>
-    </div>
+    {% if request.user.is_superuser  %}
+      <div class="row">
+          <div class="col-md-12 text-end">
+          <a class="btn bg-gradient-dark mb-2" href="{% url 'create-contract' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Contract</a>
+          </div>
+    {% endif %}
     <!-- Filter Form -->
     <form method="GET" action="{% url 'contract-table' %}">
       <div class="row">
@@ -182,7 +184,7 @@
                       <span>-</span>
                     {% endif %}
                   </td>
-
+                  {% if request.user.is_superuser  %}
                   <td class="align-middle">
                     <a  href="{% url 'edit-contract' contract.id %}" class="font-weight-bold text-xs" >
                       <i class="fas fa-pencil-alt ms-auto text-dark cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Card"></i>
@@ -195,7 +197,7 @@
                         </button>
                       </form>
                   </td>
-
+                  {% endif %}
                 </tr>
                 {% endfor %}
 

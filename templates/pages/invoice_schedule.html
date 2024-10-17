@@ -148,6 +148,7 @@
                     <span>-</span>
                     {% endif %}
                   </td>
+                  {% if request.user.is_superuser  %}
                   <td class="align-middle">
                     <a href="{% url 'edit-invoice' invoice.id %}" >
                     <i class="fas fa-pencil-alt ms-auto text-dark cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Card"></i></a>
@@ -160,6 +161,7 @@
                     </form>
                   </td>
                 </tr>
+                {% endif %}
                 {% endfor %}
               </tbody>
             </table>

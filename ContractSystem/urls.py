@@ -17,12 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views  # Import auth views
 from .settings import  STATIC_URL, STATIC_ROOT, MEDIA_URL, MEDIA_ROOT
-
 urlpatterns = (
     [
     path('', include('home.urls')),
     path('admin/', admin.site.urls),
+    path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='accounts/login.html'), name='logout'),
     path("", include('admin_soft.urls')),
     path('clients/', include('Clients.urls')),
     path('contracts/', include('contracts.urls'))

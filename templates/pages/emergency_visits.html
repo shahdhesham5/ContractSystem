@@ -103,6 +103,7 @@
                     <span>-</span>
                     {% endif %}
                   </td>
+                  {% if request.user.is_superuser  %}
                   <td class="align-middle">
                     <a href="{% url 'edit-visit' visit.id %}" >
                       <i class="fas fa-pencil-alt ms-auto text-dark cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Card"></i>
@@ -115,6 +116,7 @@
                         </button>
                       </form>
                   </td>
+                  {% endif %}
                 </tr>
                 {% endfor %}
               </tbody>

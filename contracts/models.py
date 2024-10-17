@@ -263,7 +263,7 @@ class EmergencyVisits(models.Model):
     def clean(self):
         super().clean()  # Call the parent's clean method
         if not self.price and self.contract.emergency_visit_price is None:
-            raise ValidationError("Price is required.")
+            raise ValidationError("Price is required. Please Enter the price.")
 
     def __str__(self):
         return f"Schedule for {self.site} on {self.request_visit_date}"

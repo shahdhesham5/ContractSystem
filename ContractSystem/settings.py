@@ -28,7 +28,11 @@ SECRET_KEY = 'django-insecure-plenjkaaw9#6#i&q0$(^kua$s*z3fo^zctyz!jjt9-tne82neu
 
 
 
-LOGIN_REDIRECT_URL = '/'
+# LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_URL = 'accounts/login/'
+LOGIN_REDIRECT_URL = 'dashboard'  # Redirect to dashboard after login
+LOGOUT_REDIRECT_URL = 'accounts/login/'  # Redirect to login after logout
+
 DEBUG = os.getenv('DEBUG') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 

@@ -3,10 +3,12 @@
 
 {% block content %}
 <div class="container-fluid py-4">
+  {% if request.user.is_superuser  %}
   <div class="row">
     <div class="col-md-12 text-end">
       <a class="btn bg-gradient-dark mb-2" href="{% url 'subcompany-create' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New SubCompany</a>
     </div>
+    {% endif %}
     <div class="col-12">
       <div class="card mb-4">
         <div class="card-header pb-0">
@@ -60,7 +62,7 @@
                   <td class="align-middle text-center">
                     <span class="text-xs font-weight-bold">{{company.area}}</span>
                   </td>
-
+                  {% if request.user.is_superuser  %}
                   <td class="align-middle">
                     <a  href="{% url 'subcompany-edit' company.id %}" class="font-weight-bold text-xs" >
                       <i class="fas fa-pencil-alt ms-auto text-dark cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Card"></i>
@@ -73,7 +75,7 @@
                         </button>
                       </form>
                   </td>
-
+                  {% endif %}
                 </tr>
                 {% endfor %}
 

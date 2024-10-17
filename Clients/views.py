@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Sum, Count
@@ -7,11 +8,11 @@ from .models import City, Area, Company, SubCompany, Site
 from .forms import CompanyForm, SubCompanyForm, SiteForm
 from .serializers import CitySerializer, AreaSerializer, CompanySerializer, SubCompanySerializer, SiteSerializer
 from contracts.models import Contract, MaintenanceSchedule, InvoiceSchedule, EmergencyVisits
-
+@login_required
 def company_list_view(request):
     companies = Company.objects.all()
     return render(request, 'pages/companies.html', {'companies': companies, 'segment': 'company'})
-
+@login_required
 def company_delete_view(request, pk):
     company = get_object_or_404(Company, pk=pk)
     
@@ -19,7 +20,7 @@ def company_delete_view(request, pk):
         company.delete()
         messages.success(request, 'Company deleted successfully.')
         return redirect('companies-list')
-      
+@login_required     
 def company_edit_view(request, pk):
     company = get_object_or_404(Company, pk=pk)
 
@@ -32,7 +33,7 @@ def company_edit_view(request, pk):
         form = CompanyForm(instance=company)
 
     return render(request, 'pages/edit_company.html', {'form': form, 'company': company})
-
+@login_required
 def create_company_view(request):
     if request.method == 'POST':
         form = CompanyForm(request.POST, request.FILES)
@@ -43,7 +44,7 @@ def create_company_view(request):
         form = CompanyForm()
 
     return render(request, 'pages/create_company.html', {'form': form})
-
+@login_required
 def company_profile_view(request, pk):
     company = get_object_or_404(Company, id=pk)
     subcompanies = SubCompany.objects.filter(parent_company=company)
@@ -67,11 +68,11 @@ def company_profile_view(request, pk):
 
 
 
-
+@login_required
 def subcompany_list_view(request):
     subcompanies = SubCompany.objects.all()
     return render(request, 'pages/subcompanies.html', {'subcompanies': subcompanies, 'segment': 'subcompany'})
-
+@login_required
 def subcompany_delete_view(request, pk):
     subcompany = get_object_or_404(SubCompany, pk=pk)
     
@@ -79,7 +80,7 @@ def subcompany_delete_view(request, pk):
         subcompany.delete()
         messages.success(request, 'SubCompany deleted successfully.')
         return redirect('subcompanies-list')
-      
+@login_required    
 def subcompany_edit_view(request, pk):
     subcompany = get_object_or_404(SubCompany, pk=pk)
 
@@ -92,7 +93,7 @@ def subcompany_edit_view(request, pk):
         form = SubCompanyForm(instance=subcompany)
 
     return render(request, 'pages/edit_subcompany.html', {'form': form, 'subcompany': subcompany})
-
+@login_required
 def create_subcompany_view(request):
     if request.method == 'POST':
         form = SubCompanyForm(request.POST, request.FILES)

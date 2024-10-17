@@ -36,10 +36,9 @@ class ContractForm(forms.ModelForm):
 class EmergencyForm(forms.ModelForm):
     class Meta:
         model = EmergencyVisits
-        fields = ['contract', 'site', 'request_visit_date', 'actual_visit_date','price','done', 'eng', 'image', 'pdf', 'comment']
+        fields = ['contract', 'site', 'request_visit_date', 'price','comment']
         widgets = {
             'request_visit_date': forms.DateInput(attrs={'type': 'date'}),
-            'actual_visit_date': forms.DateInput(attrs={'type': 'date'}),
         }
         def clean(self):
             cleaned_data = super().clean()

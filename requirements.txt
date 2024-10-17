@@ -13,4 +13,3 @@ python-dateutil==2.9.0.post0
 six==1.16.0
 django-admin-soft-dashboard==1.0.14
 str2bool==1.1
-mysqlclient==2.2.4
