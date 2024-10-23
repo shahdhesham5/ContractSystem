@@ -34,8 +34,8 @@ LOGIN_REDIRECT_URL = 'dashboard'  # Redirect to dashboard after login
 LOGOUT_REDIRECT_URL = 'login'
 
 DEBUG = os.getenv('DEBUG') == 'True'
-# ALLOWED_HOSTS = ['ictcoegyptstock.com', 'www.ictcoegyptstock.com', '195.35.38.155']
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(",")
+ALLOWED_HOSTS = ['ictcoegyptstock.com', 'www.ictcoegyptstock.com', '195.35.38.155']
+# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(",")
 # Application definition
 INSTALLED_APPS = [
     'admin_soft.apps.AdminSoftDashboardConfig',
@@ -99,7 +99,7 @@ WSGI_APPLICATION = 'ContractSystem.wsgi.application'
 # }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
