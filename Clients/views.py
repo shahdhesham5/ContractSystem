@@ -1,18 +1,20 @@
 from django.shortcuts import render
-from rest_framework import viewsets
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Sum, Count
 from .models import City, Area, Company, SubCompany, Site
 from .forms import CompanyForm, SubCompanyForm, SiteForm
-from .serializers import CitySerializer, AreaSerializer, CompanySerializer, SubCompanySerializer, SiteSerializer
 from contracts.models import Contract, MaintenanceSchedule, InvoiceSchedule, EmergencyVisits
-@login_required
+
+
+@login_required(login_url='login')
 def company_list_view(request):
     companies = Company.objects.all()
     return render(request, 'pages/companies.html', {'companies': companies, 'segment': 'company'})
-@login_required
+
+
+@login_required(login_url='login')
 def company_delete_view(request, pk):
     company = get_object_or_404(Company, pk=pk)
     
@@ -20,7 +22,9 @@ def company_delete_view(request, pk):
         company.delete()
         messages.success(request, 'Company deleted successfully.')
         return redirect('companies-list')
-@login_required     
+
+
+@login_required(login_url='accounts/login/')       
 def company_edit_view(request, pk):
     company = get_object_or_404(Company, pk=pk)
 
@@ -33,7 +37,9 @@ def company_edit_view(request, pk):
         form = CompanyForm(instance=company)
 
     return render(request, 'pages/edit_company.html', {'form': form, 'company': company})
-@login_required
+
+
+@login_required(login_url='login')
 def create_company_view(request):
     if request.method == 'POST':
         form = CompanyForm(request.POST, request.FILES)
@@ -44,7 +50,9 @@ def create_company_view(request):
         form = CompanyForm()
 
     return render(request, 'pages/create_company.html', {'form': form})
-@login_required
+
+
+@login_required(login_url='login')
 def company_profile_view(request, pk):
     company = get_object_or_404(Company, id=pk)
     subcompanies = SubCompany.objects.filter(parent_company=company)
@@ -68,11 +76,13 @@ def company_profile_view(request, pk):
 
 
 
-@login_required
+@login_required(login_url='login')
 def subcompany_list_view(request):
     subcompanies = SubCompany.objects.all()
     return render(request, 'pages/subcompanies.html', {'subcompanies': subcompanies, 'segment': 'subcompany'})
-@login_required
+
+
+@login_required(login_url='login')
 def subcompany_delete_view(request, pk):
     subcompany = get_object_or_404(SubCompany, pk=pk)
     
@@ -80,7 +90,9 @@ def subcompany_delete_view(request, pk):
         subcompany.delete()
         messages.success(request, 'SubCompany deleted successfully.')
         return redirect('subcompanies-list')
-@login_required    
+
+
+@login_required(login_url='accounts/login/')        
 def subcompany_edit_view(request, pk):
     subcompany = get_object_or_404(SubCompany, pk=pk)
 
@@ -93,7 +105,9 @@ def subcompany_edit_view(request, pk):
         form = SubCompanyForm(instance=subcompany)
 
     return render(request, 'pages/edit_subcompany.html', {'form': form, 'subcompany': subcompany})
-@login_required
+
+
+@login_required(login_url='login')
 def create_subcompany_view(request):
     if request.method == 'POST':
         form = SubCompanyForm(request.POST, request.FILES)
@@ -108,11 +122,13 @@ def create_subcompany_view(request):
 
 
 
-
+@login_required(login_url='login')
 def site_list_view(request):
     sites = Site.objects.all()
     return render(request, 'pages/sites.html', {'sites': sites, 'segment': 'site'})
 
+
+@login_required(login_url='login')
 def site_delete_view(request, pk):
     site = get_object_or_404(Site, pk=pk)
     
@@ -120,7 +136,9 @@ def site_delete_view(request, pk):
         site.delete()
         messages.success(request, 'Site deleted successfully.')
         return redirect('site-list')
-      
+
+
+@login_required(login_url='login')
 def site_edit_view(request, pk):
     site = get_object_or_404(Site, pk=pk)
 
@@ -134,6 +152,8 @@ def site_edit_view(request, pk):
 
     return render(request, 'pages/edit_site.html', {'form': form, 'site': site})
 
+
+@login_required(login_url='accounts/login/')
 def create_site_view(request):
     if request.method == 'POST':
         form = SiteForm(request.POST, request.FILES)
@@ -145,30 +165,3 @@ def create_site_view(request):
 
     return render(request, 'pages/create_site.html', {'form': form})
 
-
-
-
-
-class CityViewSet(viewsets.ModelViewSet):
-    queryset = City.objects.all()
-    serializer_class = CitySerializer
-
-
-class AreaViewSet(viewsets.ModelViewSet):
-    queryset = Area.objects.all()
-    serializer_class = AreaSerializer
-
-
-class CompanyViewSet(viewsets.ModelViewSet):
-    queryset = Company.objects.all()
-    serializer_class = CompanySerializer
-
-
-class SubCompanyViewSet(viewsets.ModelViewSet):
-    queryset = SubCompany.objects.all()
-    serializer_class = SubCompanySerializer
-
-
-class SiteViewSet(viewsets.ModelViewSet):
-    queryset = Site.objects.all()
-    serializer_class = SiteSerializer

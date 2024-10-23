@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from rest_framework import viewsets
 from django.db.models import Count, Q
 import json
 from django.http import JsonResponse
@@ -13,25 +12,12 @@ from django.db.models import Sum, Count
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Contract, MaintenanceSchedule, InvoiceSchedule, Engineers, EmergencyVisits
 from Clients.models import Company, Site
-from .serializers import ContractSerializer, MaintenanceScheduleSerializer, InvoiceScheduleSerializer
 from .forms import ContractForm, MaintenanceScheduleForm, InvoiceceScheduleForm, EmergencyForm
-# Create your views here.
+from .decorators import allowed_users
 
-
-class ContractViewSet(viewsets.ModelViewSet):
-    queryset = Contract.objects.all()
-    serializer_class = ContractSerializer
-
-class MaintenanceScheduleViewSet(viewsets.ModelViewSet):
-    queryset = MaintenanceSchedule.objects.all()
-    serializer_class = MaintenanceScheduleSerializer
-    
-class InvoiceScheduleViewSet(viewsets.ModelViewSet):
-    queryset = InvoiceSchedule.objects.all()
-    serializer_class = InvoiceScheduleSerializer
 
 #Get total contracts value and number
-@login_required
+@login_required(login_url='login')
 def dashboard_view(request):
     # Get branch and branch_site from URL parameters
     # branch = request.GET.get('branch')
@@ -174,8 +160,60 @@ def dashboard_view(request):
 
 
 # New view for displaying contracts in an HTML table
-@login_required
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin','alex','cairo'])
+# def contract_table_view(request):
+#     is_admin = request.user.groups.filter(name='admin').exists()  # Check if user is in the 'admin' group    group = None
+#     if request.user.groups.exists():
+#         group = request.user.groups.all()[0].name
+
+#     # Initialize the contracts queryset
+#     contracts = Contract.objects.all()
+
+#     if group == 'admin':
+#         branch = request.GET.get('branch')
+#         branch_site = request.GET.get('branch_site')
+#         company_id = request.GET.get('company_name') 
+#         contracts = Contract.objects.all()
+        
+#         if branch:
+#             contracts = contracts.filter(branch=branch)
+#         if branch_site:
+#             contracts = contracts.filter(branch_site=branch_site)
+#         if company_id:
+#             contracts = contracts.filter(company__id=company_id)  
+
+            
+#         branches = Contract.objects.values_list('branch', flat=True).distinct()
+#         branch_sites = Contract.objects.values_list('branch_site', flat=True).distinct()
+#         company_names = Company.objects.values('id', 'company_name').distinct() 
+    
+#         return render(request, 'pages/contracts.html', {
+#             'contracts': contracts,
+#             'branches': branches,
+#             'branch_sites': branch_sites,
+#             'company_names': company_names, 
+#             'selected_branch': branch,
+#             'selected_branch_site': branch_site,
+#             'selected_company_name': company_id,
+#             'segment':'contracts',
+#             'is_admin': is_admin,
+#         })
+        
+#     elif group == 'alex':
+#            contracts = Contract.objects.filter(branch_site="Alexandria")
+#            return render(request, 'pages/contracts.html', {'contracts': contracts, 'segment':'contracts', 'is_admin': is_admin,})
+       
+#     elif group == 'cairo':
+#            contracts = Contract.objects.filter(branch_site="Cairo")
+#            return render(request, 'pages/contracts.html', {'contracts': contracts, 'segment':'contracts', 'is_admin': is_admin,})
+    
+
+@login_required(login_url='login')
 def contract_table_view(request):
+  
+    # Initialize the contracts queryset
+    contracts = Contract.objects.all()
     branch = request.GET.get('branch')
     branch_site = request.GET.get('branch_site')
     company_id = request.GET.get('company_name') 
@@ -192,7 +230,7 @@ def contract_table_view(request):
     branches = Contract.objects.values_list('branch', flat=True).distinct()
     branch_sites = Contract.objects.values_list('branch_site', flat=True).distinct()
     company_names = Company.objects.values('id', 'company_name').distinct() 
-    
+
     return render(request, 'pages/contracts.html', {
         'contracts': contracts,
         'branches': branches,
@@ -201,10 +239,13 @@ def contract_table_view(request):
         'selected_branch': branch,
         'selected_branch_site': branch_site,
         'selected_company_name': company_id,
-        'segment':'contracts'
+        'segment':'contracts',
     })
+
+
+
 # editing the contract 
-@login_required
+@login_required(login_url='login')
 def edit_contract_view(request, pk):
     contract = get_object_or_404(Contract, pk=pk)
 
@@ -217,8 +258,10 @@ def edit_contract_view(request, pk):
         form = ContractForm(instance=contract)
 
     return render(request, 'pages/edit_contract.html', {'form': form, 'contract': contract})
+
+
 #adding new contract view
-@login_required
+@login_required(login_url='login')
 def create_contract_view(request):
     if request.method == 'POST':
         form = ContractForm(request.POST, request.FILES)
@@ -229,8 +272,10 @@ def create_contract_view(request):
         form = ContractForm()
 
     return render(request, 'pages/create_contract.html', {'form': form})
+
+
 # Deleting contract
-@login_required
+@login_required(login_url='login')
 def delete_contract_view(request, pk):
     contract = get_object_or_404(Contract, pk=pk)
     
@@ -238,8 +283,11 @@ def delete_contract_view(request, pk):
         contract.delete()
         messages.success(request, 'Contract deleted successfully.')
         return redirect('contract-table')
+
+
+
 # listing the contract almost expired 
-@login_required
+@login_required(login_url='login')
 def contracts_expiring_soon_view(request):
     today = timezone.now().date()  # Get today's date
     one_month_later = today + timedelta(days=30) # Calculate the date one month from today
@@ -255,7 +303,7 @@ def contracts_expiring_soon_view(request):
 
 
 #view for displaying maintenance scheduled visits 
-@login_required
+@login_required(login_url='login')
 def maintenence_schedule_table_view(request):
     month = request.GET.get('month')  # Expecting '1' for January, '10' for October, etc.
     done_filter = request.GET.get('done')  # Expecting 'true' or 'false'
@@ -292,8 +340,10 @@ def maintenence_schedule_table_view(request):
         'selected_branch': branch,
         'selected_branch_site': branch_site,
         'selected_site_name': site_id,})
+
+
 # editing maintenance schedule
-@login_required
+@login_required(login_url='login')
 def edit_visit_view(request, pk):
     visit = get_object_or_404(MaintenanceSchedule, pk=pk)
 
@@ -306,13 +356,17 @@ def edit_visit_view(request, pk):
         form = MaintenanceScheduleForm(instance=visit)
 
     return render(request, 'pages/edit_visit.html', {'form': form, 'visit': visit})
-@login_required
+
+
+@login_required(login_url='login')
 def maintenance_visits_chart(request):
     done_count = MaintenanceSchedule.objects.filter(done=True).count()
     not_done_count = MaintenanceSchedule.objects.filter(done=False).count()
     return render(request, 'pages/dashboard.html', {'done_count': done_count,'not_done_count': not_done_count,})
+
+
 #Modal update
-@login_required
+@login_required(login_url='login')
 def update_maintenance_visit(request):
     if request.method == 'POST':
         visit_id = request.POST.get('visit_id')
@@ -338,8 +392,10 @@ def update_maintenance_visit(request):
         return JsonResponse({'success': True})
 
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+
 # Deleting Visit
-@login_required
+@login_required(login_url='login')
 def delete_Visit_view(request, pk):
     visit = get_object_or_404(MaintenanceSchedule, pk=pk)
     
@@ -351,7 +407,7 @@ def delete_Visit_view(request, pk):
 
 
 #view for displaying invoices
-@login_required
+@login_required(login_url='login')
 def invoice_schedule_table_view(request):
     invoices = InvoiceSchedule.objects.all()
     month = request.GET.get('month')  
@@ -391,8 +447,10 @@ def invoice_schedule_table_view(request):
         'selected_branch_site': branch_site,
         'selected_company_name': company_id,
         })
+
+
 # editing invoice schedule
-@login_required
+@login_required(login_url='login')
 def edit_invoice_view(request, pk):
     invoice = get_object_or_404(InvoiceSchedule, pk=pk)
 
@@ -405,8 +463,10 @@ def edit_invoice_view(request, pk):
         form = InvoiceceScheduleForm(instance=invoice)
 
     return render(request, 'pages/edit_invoice.html', {'form': form, 'invoice': invoice})
+
+
 #Modal update
-@login_required
+@login_required(login_url='login')
 def update_invoice_view(request):
     if request.method == 'POST':
         invoice_id = request.POST.get('invoice_id')
@@ -425,8 +485,10 @@ def update_invoice_view(request):
         return JsonResponse({'success': True})
 
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+
 # Deleting Invoice
-@login_required
+@login_required(login_url='login')
 def delete_Invoice_view(request, pk):
     invoice = get_object_or_404(InvoiceSchedule, pk=pk)
     
@@ -438,12 +500,14 @@ def delete_Invoice_view(request, pk):
 
 
 #emergency visits
-@login_required
+@login_required(login_url='login')
 def emergency_visits_view(request):
     visits = EmergencyVisits.objects.all()
     return render(request, 'pages/emergency_visits.html', {'visits': visits, 'segment':'emergency'})
+
+
 # Deleting emergency visit
-@login_required
+@login_required(login_url='login')
 def delete_emergency_visit_view(request, pk):
     visit = get_object_or_404(EmergencyVisits, pk=pk)
     
@@ -451,8 +515,10 @@ def delete_emergency_visit_view(request, pk):
         visit.delete()
         messages.success(request, 'Emergency Visit deleted successfully.')
         return redirect('emergency-visits')
+
+
 # Create emergency form
-@login_required
+@login_required(login_url='login')
 def create_emergency_visit_request_view(request):
     if request.method == 'POST':
         form = EmergencyForm(request.POST, request.FILES)
@@ -463,8 +529,10 @@ def create_emergency_visit_request_view(request):
         form = EmergencyForm()
 
     return render(request, 'pages/create_emergency_visit.html', {'form': form})
+
+
 #Modal update
-@login_required
+@login_required(login_url='login')
 def update_emergency_visit_view(request):
     if request.method == 'POST':
         visit_id = request.POST.get('emergencyVisit_id')

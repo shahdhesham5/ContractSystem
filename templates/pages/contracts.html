@@ -8,8 +8,9 @@
           <div class="col-md-12 text-end">
           <a class="btn bg-gradient-dark mb-2" href="{% url 'create-contract' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Contract</a>
           </div>
-    {% endif %}
+    
     <!-- Filter Form -->
+
     <form method="GET" action="{% url 'contract-table' %}">
       <div class="row">
           <!-- Branch and Branch Site -->
@@ -55,7 +56,7 @@
       </div>
     </form>
   </div>
-  
+  {% endif %}
   <div class="row">
     <div class="col-12">
       <div class="card mb-4">

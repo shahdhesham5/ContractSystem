@@ -58,15 +58,18 @@ def generate_invoice_schedule(sender, instance, created, **kwargs):
         }
 
         visit_interval = frequency_map[invoice_frequency]
-
-        sub_companies = instance.company.sub_companies.all() 
-
-        if sub_companies.exists():
-            companies_to_invoice = sub_companies  
+        if start_date.month == end_date.month:
             total_invoices = ((end_date.year - start_date.year) * 12 + end_date.month - start_date.month) // visit_interval
         else:
-            companies_to_invoice = [instance.company] 
             total_invoices = ((end_date.year - start_date.year) * 12 + end_date.month - start_date.month) // visit_interval +1
+        
+        
+        sub_companies = instance.company.sub_companies.all() 
+        if sub_companies.exists():
+            companies_to_invoice = sub_companies  
+        else:
+            companies_to_invoice = [instance.company]
+
 
         num_companies = len(companies_to_invoice)
         invoice_amount_per_invoice = contract_price_value / (total_invoices * num_companies)

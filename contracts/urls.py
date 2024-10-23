@@ -1,14 +1,8 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import ContractViewSet, MaintenanceScheduleViewSet, InvoiceScheduleViewSet, contract_table_view, edit_contract_view, maintenence_schedule_table_view, edit_visit_view, edit_invoice_view, invoice_schedule_table_view, create_contract_view, contracts_expiring_soon_view, dashboard_view,update_maintenance_visit, emergency_visits_view, create_emergency_visit_request_view, update_invoice_view, delete_contract_view,delete_Invoice_view, delete_Visit_view, delete_emergency_visit_view, update_emergency_visit_view
-
-router = DefaultRouter()
-router.register(r'contracts', ContractViewSet)
-router.register(r'maintenance/schedule', MaintenanceScheduleViewSet)
-router.register(r'invoice/schedule', InvoiceScheduleViewSet)
+from django.urls import path
+from .views import contract_table_view, edit_contract_view, maintenence_schedule_table_view, edit_visit_view, edit_invoice_view, invoice_schedule_table_view, create_contract_view, contracts_expiring_soon_view, dashboard_view,update_maintenance_visit, emergency_visits_view, create_emergency_visit_request_view, update_invoice_view, delete_contract_view,delete_Invoice_view, delete_Visit_view, delete_emergency_visit_view, update_emergency_visit_view
 
 urlpatterns = [
-    path('', include(router.urls)),  # API paths
+    
     path('dashboard', dashboard_view, name='dashboard'),
     path('contracts-list/', contract_table_view, name='contract-table'), 
     path('contracts-expire-list/', contracts_expiring_soon_view, name='contract-expire-table'), 

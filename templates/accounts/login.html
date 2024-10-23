@@ -26,13 +26,15 @@
                         <span class="text-danger">{{ error }}</span>
                       </div>
                       {% endfor %}
-                    {% endif %}
-                    {% csrf_token %}
-                    {% for field in form %}
+                      {% endif %}
+                      {% csrf_token %}
+                      {% for field in form %}
+                      <div class="form-group">
                       <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                       <div class="mb-3">
                         {{field}}
                       </div>
+                    </div>
                     {% endfor %}
                     <div class="text-center">
                       <button type="submit" class="btn bg-gradient-info w-100 mt-1 mb-0">Login</button>
