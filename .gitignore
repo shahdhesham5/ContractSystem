@@ -13,7 +13,10 @@ ENV/
 !**/migrations
 !**/migrations/__init__.py
 
-
+**/static/
+static/
+*/static/
+*static/
 media/
 
 __pycache__/

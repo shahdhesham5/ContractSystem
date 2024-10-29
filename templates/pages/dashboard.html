@@ -433,6 +433,10 @@
 {% endblock content %}
 {% block extrascript %}
 
+<!-- Include your custom JavaScript file -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/plugins/chartjs.min.js' %}"></script>
+<script src="{% static 'js/custome.js' %}"></script>
 <script type="text/javascript">
   const dashboardUrl = "{% url 'dashboard' %}";
   const updateMaintenanceUrl = "{% url 'update_maintenance_visit' %}";
@@ -552,8 +556,4 @@
 
 </script>
 
-<!-- Include your custom JavaScript file -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{% static 'js/plugins/chartjs.min.js' %}"></script>
-<script src="{% static 'js/custome.js' %}"></script>
 {% endblock extrascript %}
