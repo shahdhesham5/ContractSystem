@@ -228,7 +228,7 @@
         <div class="card z-index-2">
           <h6 class="ms-2 mt-4 mb-0">{% trans 'Invoices of the month' %}</h6>
           <div class="card-body p-3">
-                <canvas id="myBarChart" class="chart-canvas" height="300"></canvas>
+                <canvas id="invoicesBarChart" class="chart-canvas" height="300"></canvas>
           </div>
         </div>
       </div>
@@ -451,108 +451,118 @@
   var doneInvoicesAmount = parseFloat("{{ total_invoice_amount_done }}") || 0;
   var notDoneInvoicesAmount = parseFloat("{{ total_invoice_amount_not_done }}") || 0;
 
-  // Maintenance Chart
-  function initializeChart1() {
-    var ctx1 = document.getElementById("maintenancePieChart").getContext("2d");
-    var myPieChart = new Chart(ctx1, {
-        type: 'pie',
-        data: {
-            labels: ['Done', 'Not Done'],
-            datasets: [{
-                data: [doneCount, notDoneCount],
-                backgroundColor: ['#4CAF50', '#F44336'], 
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return tooltipItem.label + ': ' + tooltipItem.raw;
-                        }
-                    }
-                }
-            }
-        }
-    });
-  }
+ // Declare variables to keep track of the chart instances
+  let myPieChart;
+  let myBarChart;
 
-  function initializeChart() {
-    var ctx = document.getElementById("maintenancePieChart").getContext("2d");
+  function initializePieChart() {
+      const ctx1 = document.getElementById("maintenancePieChart").getContext("2d");
 
-    if (ctx) {
-      new Chart(ctx, {
-        type: "bar",
-        data: {
-          labels: [
-            `Done Invoices (${doneInvoicesCount})`,
-            `Not Done Invoices (${notDoneInvoicesCount})`
-          ],
-          datasets: [
-            {
-              backgroundColor: ['#4CAF50', '#F44336'],
-              data: [doneInvoicesAmount, notDoneInvoicesAmount]
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            }
+      // Destroy the existing chart if it exists
+      if (myPieChart) {
+          myPieChart.destroy();
+      }
+
+      myPieChart = new Chart(ctx1, {
+          type: 'pie',
+          data: {
+              labels: ['Done', 'Not Done'],
+              datasets: [{
+                  data: [doneCount, notDoneCount],
+                  backgroundColor: ['#4CAF50', '#F44336'], 
+              }]
           },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                font: {
-                  size: 14,
-                  family: "Open Sans"
-                },
-                color: "#333"
-              },
-              title: {
-                display: true,
-                text: '(EGP)'
-              },
-              grid: {
-                display: false
+          options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                  legend: {
+                      position: 'top',
+                  },
+                  tooltip: {
+                      callbacks: {
+                          label: function(tooltipItem) {
+                              return tooltipItem.label + ': ' + tooltipItem.raw;
+                          }
+                      }
+                  }
               }
-            },
-            x: {
-              ticks: {
-                font: {
-                  size: 14,
-                  family: "Open Sans",
-                  style: "normal",
-                  weight: "normal"
-                },
-                color: "#333"
-              },
-              grid: {
-                display: false
-              }
-            }
           }
-        }
       });
-    } else {
-      console.error("Canvas element not found or not defined in HTML.");
-    }
   }
 
-  $(document).ready(function() {
-    initializeChart1();
-    initializeChart();
-  });
+  function initializeBarChart() {
+      const ctx = document.getElementById("invoicesBarChart").getContext("2d");
 
+      // Destroy the existing chart if it exists
+      if (myBarChart) {
+          myBarChart.destroy();
+      }
+
+      myBarChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+              labels: [
+                  `Done Invoices (${doneInvoicesCount})`,
+                  `Not Done Invoices (${notDoneInvoicesCount})`
+              ],
+              datasets: [
+                  {
+                      backgroundColor: ['#4CAF50', '#F44336'],
+                      data: [doneInvoicesAmount, notDoneInvoicesAmount]
+                  }
+              ]
+          },
+          options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                  legend: {
+                      display: false
+                  }
+              },
+              scales: {
+                  y: {
+                      beginAtZero: true,
+                      ticks: {
+                          font: {
+                              size: 14,
+                              family: "Open Sans"
+                          },
+                          color: "#333"
+                      },
+                      title: {
+                          display: true,
+                          text: '(EGP)'
+                      },
+                      grid: {
+                          display: false
+                      }
+                  },
+                  x: {
+                      ticks: {
+                          font: {
+                              size: 14,
+                              family: "Open Sans",
+                              style: "normal",
+                              weight: "normal"
+                          },
+                          color: "#333"
+                      },
+                      grid: {
+                          display: false
+                      }
+                  }
+              }
+          }
+      });
+  }
+
+  // Initialize both charts when the document is ready
+  $(document).ready(function() {
+      initializePieChart();
+      initializeBarChart();
+  });
 
 </script>
 
