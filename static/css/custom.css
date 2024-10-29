@@ -1,0 +1,46 @@
+  .modal {
+      z-index: 2000 !important;  
+  }
+
+  .modal-backdrop {
+      z-index: 1990 !important;  
+  }
+
+.language-switcher {
+    margin-right: auto !important; /* Ensure language options are on the left */
+}
+
+.navbar-nav .nav-item {
+    margin-left: 15px !important; /* Adjust space between items if needed */
+}
+
+.btn-custom {
+    padding: 6px 12px;
+    font-size: 1rem;
+  }
+  
+/* .rtl-direction {
+    direction: rtl !important; 
+    text-align: right !important;
+}
+
+.rtl-direction .list-group-item {
+    text-align: right !important;
+}
+
+.rtl-direction strong {
+    float: right !important; 
+}
+
+.rtl-direction .list-group-item  {
+    padding-right: 0 !important; 
+    padding-left: 15px !important; 
+} */
+
+/* .rtl {
+    direction: rtl;
+  }
+  .ltr {
+    direction: ltr;
+  }
+   */
