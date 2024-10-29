@@ -8,21 +8,24 @@ from django.core import validators
 from django_resized import ResizedImageField
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta
+from django.utils.translation import gettext_lazy as _
+
 
 # extension validations
 allowed_image_extensions = ['jpg', 'png', 'jpeg', 'gif', 'svg']
 allowed_pdf_extensions = ['pdf']
 
-# Validator to limit file size 
 def pdf_file_size(value):
     limit = 10 * 1024 * 1024  # 10 MB limit
+    if not value.name.endswith('.pdf'):
+        raise ValidationError(_('Only PDF files are allowed.'))
     if value.size > limit:
-        raise ValidationError('File too large. Size should not exceed 10 MB.')
+        raise ValidationError(_('File too large. Size should not exceed 10 MB.'))
 
 def image_file_size(value):
     limit = 5 * 1024 * 1000
     if value.size > limit:
-        raise ValidationError('File too large. Size should not exceed 5 MiB.')
+        raise ValidationError(_('File too large. Size should not exceed 5 MiB.'))
     
 # path generators to upload images/files for contracts
 def get_contract_image_upload_path(instance, filename):
@@ -55,20 +58,20 @@ def get_emergency_visit_pdf_upload_path(instance, filename):
 
 
 intervals= [
-    ("Every Month","Every Month"),         #12 visits/Y
-    ("Every 2 Months","Every 2 Months"),   #6  visits/Y 
-    ("Every 3 Months","Every 3 Months"),   #4  visits/Y
-    ("Every 4 Months","Every 4 Months"),   #3  visits/Y
-    ("Every 6 Months","Every 6 Months"),   #2  visits/Y
+    ("Every Month",_("Every Month")),         #12 visits/Y
+    ("Every 2 Months",_("Every 2 Months")),   #6  visits/Y 
+    ("Every 3 Months",_("Every 3 Months")),   #4  visits/Y
+    ("Every 4 Months",_("Every 4 Months")),   #3  visits/Y
+    ("Every 6 Months",_("Every 6 Months")),   #2  visits/Y
 ]
 
 branches=[
-    ("International company","International company"),
-    ("Millenium company","Millenium company"),
+    ("International company",_("International company")),
+    ("Millenium company",_("Millenium company")),
 ]
 branches_site=[
-    ("Cairo","Cairo"),
-    ("Alexandria","Alexandria"),
+    ("Cairo",_("Cairo")),
+    ("Alexandria",_("Alexandria")),
 ]
 
 annual_increase_percentage = [
@@ -76,8 +79,8 @@ annual_increase_percentage = [
     (10, '10%'),
 ]
 invoice_date_choices = [
-    ('start', 'From the Start of the Frequency Period'),
-    ('end', 'From the End of the Frequency Period'),
+    ('start', _('From the Start of the Frequency Period')),
+    ('end', _('From the End of the Frequency Period')),
 ]
 within_period =[
     (48, '48'),
@@ -85,47 +88,49 @@ within_period =[
 ]
 class Contract(models.Model):
     id = models.CharField(primary_key=True, default=uuid.uuid4, editable=False, max_length=255)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="company_contract")
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="company_contract",verbose_name=_("Company Name"))
     
-    start_date = models.DateField()
-    end_date = models.DateField(null=True, blank=True)
+    start_date = models.DateField(verbose_name=_("Start Date"))
+    end_date = models.DateField(null=True, blank=True,verbose_name=_("End Date"))
 
-    contract_price_value = models.FloatField(validators=[MinValueValidator(0.0)])
-    annual_increase = models.IntegerField(choices=annual_increase_percentage,null=True,blank=True)  
-    auto_renew = models.BooleanField(default=False)
-    emergency_visit_price = models.FloatField(validators=[MinValueValidator(0.0)], default=0, null=True, blank=True)
-    emergency_within_period = models.IntegerField(choices=within_period,null=True,blank=True)
+    contract_price_value = models.FloatField(validators=[MinValueValidator(0.0)],verbose_name=_("Contract Price Value"))
+    annual_increase = models.IntegerField(choices=annual_increase_percentage,null=True,blank=True,verbose_name=_("Annual Percentage"))  
+    auto_renew = models.BooleanField(default=False,verbose_name=_("Auto Renew"))
+    emergency_visit_price = models.FloatField(validators=[MinValueValidator(0.0)], default=0, null=True, blank=True,verbose_name=_("Emergency Visit Price"))
+    emergency_within_period = models.IntegerField(choices=within_period,null=True,blank=True,verbose_name=_("Emergency Visit within"))
     
-    invoice_frequency = models.CharField(max_length=255, choices=intervals) 
-    invoice_date_calculation = models.CharField(max_length=10, choices=invoice_date_choices, default='end')
-    maintenance_frequency = models.CharField(max_length=255, choices=intervals)  
+    invoice_frequency = models.CharField(max_length=255, choices=intervals,verbose_name=_("Invoice Frequency")) 
+    invoice_date_calculation = models.CharField(max_length=10, choices=invoice_date_choices, default='end',verbose_name=_("Invoice Calculated Date"))
+    maintenance_frequency = models.CharField(max_length=255, choices=intervals,verbose_name=_("Maintenance Frequency"))  
     
-    branch = models.CharField(max_length=255, choices=branches)
-    branch_site = models.CharField(max_length=255, choices=branches_site, default='Cairo')
+    branch = models.CharField(max_length=255, choices=branches,verbose_name=_("Company"))
+    branch_site = models.CharField(max_length=255, choices=branches_site, default='Cairo',verbose_name=_("Company Branch"))
     
     
-    damgh_date = models.DateField(null=True, blank=True)
-    damgh_price = models.FloatField(validators=[MinValueValidator(0.0)], default=0, null=True, blank=True)
+    damgh_date = models.DateField(null=True, blank=True,verbose_name=_("Damgh Date"))
+    damgh_price = models.FloatField(validators=[MinValueValidator(0.0)], default=0, null=True, blank=True,verbose_name=_("Damgh Price"))
     
     image = ResizedImageField(
         upload_to=get_contract_image_upload_path,
         null=True,
+        verbose_name=_("Contract Image"),
         blank=True,
         validators=[
             validators.FileExtensionValidator(
                 allowed_image_extensions,
-                f"Invalid image extension. Only the following formats are allowed: {', '.join(allowed_image_extensions)}."
-            ),
+            _("Invalid image extension. Only the following formats are allowed: {}.").format(', '.join(allowed_image_extensions))            ),
             image_file_size,
         ],
     )
     pdf = models.FileField(
         upload_to=get_contract_pdf_upload_path,
         null=True,
+        verbose_name=_("Contract PDF"),
         blank=True,
         validators=[
-            validators.FileExtensionValidator(allowed_pdf_extensions, 
-            f"Invalid file extension. Only the following formats are allowed: {', '.join(allowed_pdf_extensions)}."),
+            validators.FileExtensionValidator(
+            allowed_pdf_extensions, 
+            _("Invalid file extension. Only the following formats are allowed: {}.").format(', '.join(allowed_pdf_extensions))),
             pdf_file_size,
         ],
     )
@@ -140,36 +145,41 @@ class Contract(models.Model):
         return f"{self.company}"
 
 class Engineers(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255,verbose_name=_("Engineer name"))
+    def __str__(self):
+        return f"{self.name}"
+
     
 class MaintenanceSchedule(models.Model):
-    contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='schedules')
-    site = models.ForeignKey(Site, on_delete=models.CASCADE)
-    eng = models.ForeignKey(Engineers, on_delete=models.CASCADE, null=True, blank=True)
+    contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='schedules',verbose_name=_("Company Name"))
+    site = models.ForeignKey(Site, on_delete=models.CASCADE,verbose_name=_("Site"))
+    eng = models.ForeignKey(Engineers, on_delete=models.CASCADE, null=True, blank=True,verbose_name=_("Engineer name"))
     
-    visit_date = models.DateField()
-    due_date = models.DateField(null=True, blank=True)
-    completed_date = models.DateField(null=True, blank=True)
-    done = models.BooleanField(default=False, null=True, blank=True)
+    visit_date = models.DateField(verbose_name=_("Visit date"))
+    due_date = models.DateField(null=True, blank=True,verbose_name=_("Visit Due date"))
+    completed_date = models.DateField(null=True, blank=True,verbose_name=_("Visit Completed date"))
+    done = models.BooleanField(default=False, null=True, blank=True,verbose_name=_("Done"))
     image = ResizedImageField(
         upload_to=get_visit_image_upload_path,
         null=True,
         blank=True,
+        verbose_name=_("Visit Image"),
         validators=[
             validators.FileExtensionValidator(
                 allowed_image_extensions,
-                f"Invalid image extension. Only the following formats are allowed: {', '.join(allowed_image_extensions)}."
-            ),
+            _("Invalid image extension. Only the following formats are allowed: {}.").format(', '.join(allowed_image_extensions))            ),
             image_file_size,
         ],
     )
     pdf = models.FileField(
         upload_to=get_visit_pdf_upload_path,
         null=True,
+        verbose_name=_("Visit PDF"),
         blank=True,
         validators=[
-            validators.FileExtensionValidator(allowed_pdf_extensions, 
-            f"Invalid file extension. Only the following formats are allowed: {', '.join(allowed_pdf_extensions)}."),
+            validators.FileExtensionValidator(
+            allowed_pdf_extensions, 
+            _("Invalid file extension. Only the following formats are allowed: {}.").format(', '.join(allowed_pdf_extensions))),
             pdf_file_size,
         ],
     )
@@ -189,31 +199,33 @@ class MaintenanceSchedule(models.Model):
         return f"Schedule for {self.site} on {self.visit_date}"
     
 class InvoiceSchedule(models.Model):
-    contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name="invoices_Schedule")
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)  # Add this field if missing
-    sub_company = models.ForeignKey(SubCompany, on_delete=models.CASCADE, null=True, blank=True)
-    invoice_date = models.DateField()
-    amount = models.FloatField(validators=[MinValueValidator(0.0)])
-    is_paid = models.BooleanField(default=False)
+    contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name="invoices_Schedule",verbose_name=_("Company Name"))
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True,verbose_name=_("Company Name"))  
+    sub_company = models.ForeignKey(SubCompany, on_delete=models.CASCADE, null=True, blank=True,verbose_name=_("Sub Company Name"))
+    invoice_date = models.DateField(verbose_name=_("Invoice date"))
+    amount = models.FloatField(validators=[MinValueValidator(0.0)],verbose_name=_("Invoice value"))
+    is_paid = models.BooleanField(default=False,verbose_name=_("Is paid"))
     image = ResizedImageField(
         upload_to=get_invoice_image_upload_path,
         null=True,
+        verbose_name=_("Invoice Image"),
         blank=True,
         validators=[
             validators.FileExtensionValidator(
                 allowed_image_extensions,
-                f"Invalid image extension. Only the following formats are allowed: {', '.join(allowed_image_extensions)}."
-            ),
+            _("Invalid image extension. Only the following formats are allowed: {}.").format(', '.join(allowed_image_extensions))            ),
             image_file_size,
         ],
     )
     pdf = models.FileField(
         upload_to=get_invoice_pdf_upload_path,
         null=True,
+        verbose_name=_("Invoice PDF"),
         blank=True,
         validators=[
-            validators.FileExtensionValidator(allowed_pdf_extensions, 
-            f"Invalid file extension. Only the following formats are allowed: {', '.join(allowed_pdf_extensions)}."),
+            validators.FileExtensionValidator(
+            allowed_pdf_extensions, 
+            _("Invalid file extension. Only the following formats are allowed: {}.").format(', '.join(allowed_pdf_extensions))),
             pdf_file_size,
         ],
     )
@@ -227,30 +239,32 @@ class EmergencyVisits(models.Model):
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
     eng = models.ForeignKey(Engineers, on_delete=models.CASCADE, null=True, blank=True)
     
-    request_visit_date = models.DateField()
-    actual_visit_date = models.DateField(null=True, blank=True)
-    price = models.FloatField(validators=[MinValueValidator(0.0)], default=0, null=True, blank=True)
-    done = models.BooleanField(default=False, null=True, blank=True)
-    comment = models.TextField(null=True, blank=True)
+    request_visit_date = models.DateField(verbose_name=_("Emergency Visit Request date"))
+    actual_visit_date = models.DateField(null=True, blank=True,verbose_name=_("Emergency Visit date"))
+    price = models.FloatField(validators=[MinValueValidator(0.0)], default=0, null=True, blank=True,verbose_name=_("Price"))
+    done = models.BooleanField(default=False, null=True, blank=True,verbose_name=_("Done"))
+    comment = models.TextField(null=True, blank=True,verbose_name=_("Comment"))
     image = ResizedImageField(
         upload_to=get_emergency_visit_image_upload_path,
         null=True,
         blank=True,
+        verbose_name=_("Emergency Visit Image"),
         validators=[
             validators.FileExtensionValidator(
                 allowed_image_extensions,
-                f"Invalid image extension. Only the following formats are allowed: {', '.join(allowed_image_extensions)}."
-            ),
+            _("Invalid image extension. Only the following formats are allowed: {}.").format(', '.join(allowed_image_extensions))            ),
             image_file_size,
         ],
     )
     pdf = models.FileField(
         upload_to=get_emergency_visit_pdf_upload_path,
         null=True,
+        verbose_name=_("Emergency Visit PDF"),
         blank=True,
         validators=[
-            validators.FileExtensionValidator(allowed_pdf_extensions, 
-            f"Invalid file extension. Only the following formats are allowed: {', '.join(allowed_pdf_extensions)}."),
+            validators.FileExtensionValidator(
+            allowed_pdf_extensions, 
+            _("Invalid file extension. Only the following formats are allowed: {}.").format(', '.join(allowed_pdf_extensions))),
             pdf_file_size,
         ],
     )

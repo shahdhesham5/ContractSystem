@@ -1,11 +1,21 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-
+{% load i18n %}
 {% block content %}
+<div class="container">
+    <h2>{% trans 'Create New Emergency Visit' %}</h2>
 <form id="emergency-visit-form" action="{% url 'create-emergency-visits' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Create Emergency Visit</button>
-    <a href="{% url 'emergency-visits' %}" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-success">{% trans 'Create' %}</button>
+    <a href="{% url 'emergency-visits' %}" class="btn btn-secondary">{% trans 'Cancel' %}</a>
 </form>
+</div>
 {% endblock content %}
+{% block extrascript %}
+<script type="text/javascript">
+  const SitesURL="{% url 'ajax_load_sites' %}"
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/sites.js' %}"></script>
+{% endblock %}

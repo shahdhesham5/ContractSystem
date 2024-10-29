@@ -1,8 +1,6 @@
 from django.shortcuts import render
-from django.db.models import Count, Q
-import json
+from django.db.models import Count
 from django.http import JsonResponse
-from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
@@ -14,38 +12,25 @@ from .models import Contract, MaintenanceSchedule, InvoiceSchedule, Engineers, E
 from Clients.models import Company, Site
 from .forms import ContractForm, MaintenanceScheduleForm, InvoiceceScheduleForm, EmergencyForm
 from .decorators import allowed_users
+from django.utils.translation import gettext_lazy as _      
 
-
-#Get total contracts value and number
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin','alex','cairo'])
 def dashboard_view(request):
-    # Get branch and branch_site from URL parameters
-    # branch = request.GET.get('branch')
-    # branch_site = request.GET.get('branch_site')
-    # branches = Contract.objects.values_list('branch', flat=True).distinct()
-    # branch_sites = Contract.objects.values_list('branch_site', flat=True).distinct()
-    
+    if request.user.groups.exists():
+        group = request.user.groups.all()[0].name
+
     contracts = Contract.objects.all()
-    # if branch:
-    #     contracts = contracts.filter(branch=branch)
-    # if branch_site:
-    #     contracts = contracts.filter(branch_site=branch_site)
-        
     engineers= Engineers.objects.all()
-    emergencyvisits = EmergencyVisits.objects.filter(
-        done=False)
-    emergencyvisitscount = EmergencyVisits.objects.filter(
-    done=False).count()
-    total_contracts = contracts.aggregate(total_count=Count('id'))['total_count']
-    total_value = contracts.aggregate(total_sum=Sum('contract_price_value'))['total_sum'] or 0 
     total_companies = Company.objects.aggregate(total_count=Count('id'))['total_count'] 
+    emergencyvisits = EmergencyVisits.objects.filter(done=False)
+    emergencyvisitscount = EmergencyVisits.objects.filter(done=False).count()
+    
     current_date = timezone.now().date()
-    # Filter companies based on contract branch or branch site
-    # total_companies = Company.objects.filter(
-    #     Q(company_contract__branch=branch) & Q(company_contract__branch_site=branch_site)
-    #     ).aggregate(total_count=Count('id'))['total_count'] or 0
     month_number = current_date.month
     month_name = calendar.month_name[month_number]
+    invoices_done = []
+    invoices_not_done = []
     
     visits = MaintenanceSchedule.objects.filter(
         done=False,
@@ -58,15 +43,18 @@ def dashboard_view(request):
         visit_date__lte=current_date,
         due_date__gte=current_date   
     )
+    
     expired_visits = MaintenanceSchedule.objects.filter(
         done=False,
         visit_date__lt=current_date,
         due_date__lte=current_date   
     )
+    
     visits_count = MaintenanceSchedule.objects.filter(
         visit_date__year=current_date.year,
         visit_date__month=current_date.month
     ).count()
+    
     done_count = MaintenanceSchedule.objects.filter(
         done=True,
         visit_date__year=current_date.year,
@@ -83,6 +71,7 @@ def dashboard_view(request):
         invoice_date__month=current_date.month,
         is_paid=True
     ).count()
+    
     getinvoices_not_done = InvoiceSchedule.objects.filter(
         invoice_date__month=current_date.month,
         is_paid=False
@@ -99,9 +88,122 @@ def dashboard_view(request):
     ).aggregate(total=Sum('amount'))['total'] or 0
 
     getinvoices = InvoiceSchedule.objects.filter(invoice_date__month=current_date.month,is_paid=False) 
-    invoices_done = []
-    invoices_not_done = []
     
+    if group == "admin":
+        total_contracts = contracts.aggregate(total_count=Count('id'))['total_count']
+        total_value = contracts.aggregate(total_sum=Sum('contract_price_value'))['total_sum'] or 0 
+
+    elif group == "alex":
+        contracts = contracts.filter(branch_site='Alexandria')
+        total_contracts = contracts.aggregate(total_count=Count('id'))['total_count']
+        total_value = contracts.aggregate(total_sum=Sum('contract_price_value'))['total_sum'] or 0 
+        emergencyvisits = emergencyvisits.filter(contract__branch_site='Alexandria')
+        emergencyvisitscount = EmergencyVisits.objects.filter(done=False, contract__branch_site='Alexandria').count()
+        visits = visits.filter(contract__branch_site='Alexandria')
+        valid_visits = valid_visits.filter(contract__branch_site='Alexandria')
+        expired_visits = expired_visits.filter(contract__branch_site='Alexandria')
+        visits_count = MaintenanceSchedule.objects.filter(
+            contract__branch_site='Alexandria',
+            visit_date__year=current_date.year,
+            visit_date__month=current_date.month
+        ).count()
+
+        done_count = MaintenanceSchedule.objects.filter(
+            contract__branch_site='Alexandria',
+            done=True,
+            visit_date__year=current_date.year,
+            visit_date__month=current_date.month
+        ).count()
+
+        not_done_count = MaintenanceSchedule.objects.filter(
+            contract__branch_site='Alexandria',
+            done=False,
+            visit_date__year=current_date.year,
+            visit_date__month=current_date.month
+        ).count()
+
+        getinvoices_done = InvoiceSchedule.objects.filter(
+            contract__branch_site='Alexandria',
+            invoice_date__month=current_date.month,
+            is_paid=True
+        ).count()
+
+        getinvoices_not_done = InvoiceSchedule.objects.filter(
+            contract__branch_site='Alexandria',
+            invoice_date__month=current_date.month,
+            is_paid=False
+        ).count()
+
+        total_invoice_amount_done = InvoiceSchedule.objects.filter(
+            contract__branch_site='Alexandria',
+            is_paid=True,
+            invoice_date__month=current_date.month,
+        ).aggregate(total=Sum('amount'))['total'] or 0
+
+        total_invoice_amount_not_done = InvoiceSchedule.objects.filter(
+            contract__branch_site='Alexandria',
+            is_paid=False,
+            invoice_date__month=current_date.month,
+        ).aggregate(total=Sum('amount'))['total'] or 0
+
+        getinvoices = getinvoices.filter(contract__branch_site='Alexandria')
+        
+    elif group == "cairo":
+        contracts = contracts.filter(branch_site='Cairo')
+        total_contracts = contracts.aggregate(total_count=Count('id'))['total_count']
+        total_value = contracts.aggregate(total_sum=Sum('contract_price_value'))['total_sum'] or 0 
+        emergencyvisits = emergencyvisits.filter(contract__branch_site='Cairo')
+        emergencyvisitscount = EmergencyVisits.objects.filter(done=False, contract__branch_site='Cairo').count()
+        visits = visits.filter(contract__branch_site='Cairo')
+        valid_visits = valid_visits.filter(contract__branch_site='Cairo')
+        expired_visits = expired_visits.filter(contract__branch_site='Cairo')
+        visits_count = MaintenanceSchedule.objects.filter(
+            contract__branch_site='Cairo',
+            visit_date__year=current_date.year,
+            visit_date__month=current_date.month
+        ).count()
+
+        done_count = MaintenanceSchedule.objects.filter(
+            contract__branch_site='Cairo',
+            done=True,
+            visit_date__year=current_date.year,
+            visit_date__month=current_date.month
+        ).count()
+
+        not_done_count = MaintenanceSchedule.objects.filter(
+            contract__branch_site='Cairo',
+            done=False,
+            visit_date__year=current_date.year,
+            visit_date__month=current_date.month
+        ).count()
+
+        getinvoices_done = InvoiceSchedule.objects.filter(
+            contract__branch_site='Cairo',
+            invoice_date__month=current_date.month,
+            is_paid=True
+        ).count()
+
+        getinvoices_not_done = InvoiceSchedule.objects.filter(
+            contract__branch_site='Cairo',
+            invoice_date__month=current_date.month,
+            is_paid=False
+        ).count()
+
+        total_invoice_amount_done = InvoiceSchedule.objects.filter(
+            contract__branch_site='Cairo',
+            is_paid=True,
+            invoice_date__month=current_date.month,
+        ).aggregate(total=Sum('amount'))['total'] or 0
+
+        total_invoice_amount_not_done = InvoiceSchedule.objects.filter(
+            contract__branch_site='Cairo',
+            is_paid=False,
+            invoice_date__month=current_date.month,
+        ).aggregate(total=Sum('amount'))['total'] or 0
+
+        getinvoices = getinvoices.filter(contract__branch_site='Cairo')
+
+        
     for invoice in getinvoices:
         if invoice.sub_company is None:
             # Get all maintenance visits related to the parent company
@@ -158,94 +260,58 @@ def dashboard_view(request):
                                                     'invoices_not_done':invoices_not_done,
                                                     'current_date':current_date})    
 
+# View Contracts
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin','alex','cairo'])
+def contract_table_view(request):
+    is_admin = request.user.groups.filter(name='admin').exists()
+    if request.user.groups.exists():
+        group = request.user.groups.all()[0].name
 
-# New view for displaying contracts in an HTML table
-# @login_required(login_url='login')
-# @allowed_users(allowed_roles=['admin','alex','cairo'])
-# def contract_table_view(request):
-#     is_admin = request.user.groups.filter(name='admin').exists()  # Check if user is in the 'admin' group    group = None
-#     if request.user.groups.exists():
-#         group = request.user.groups.all()[0].name
+    contracts = Contract.objects.all()
 
-#     # Initialize the contracts queryset
-#     contracts = Contract.objects.all()
-
-#     if group == 'admin':
-#         branch = request.GET.get('branch')
-#         branch_site = request.GET.get('branch_site')
-#         company_id = request.GET.get('company_name') 
-#         contracts = Contract.objects.all()
+    if group == 'admin':
+        branch = request.GET.get('branch')
+        branch_site = request.GET.get('branch_site')
+        company_id = request.GET.get('company_name') 
+        contracts = Contract.objects.all()
         
-#         if branch:
-#             contracts = contracts.filter(branch=branch)
-#         if branch_site:
-#             contracts = contracts.filter(branch_site=branch_site)
-#         if company_id:
-#             contracts = contracts.filter(company__id=company_id)  
+        if branch:
+            contracts = contracts.filter(branch=branch)
+        if branch_site:
+            contracts = contracts.filter(branch_site=branch_site)
+        if company_id:
+            contracts = contracts.filter(company__id=company_id)  
 
             
-#         branches = Contract.objects.values_list('branch', flat=True).distinct()
-#         branch_sites = Contract.objects.values_list('branch_site', flat=True).distinct()
-#         company_names = Company.objects.values('id', 'company_name').distinct() 
+        branches = Contract.objects.values_list('branch', flat=True).distinct()
+        branch_sites = Contract.objects.values_list('branch_site', flat=True).distinct()
+        company_names = Company.objects.values('id', 'company_name').distinct() 
     
-#         return render(request, 'pages/contracts.html', {
-#             'contracts': contracts,
-#             'branches': branches,
-#             'branch_sites': branch_sites,
-#             'company_names': company_names, 
-#             'selected_branch': branch,
-#             'selected_branch_site': branch_site,
-#             'selected_company_name': company_id,
-#             'segment':'contracts',
-#             'is_admin': is_admin,
-#         })
+        return render(request, 'pages/contracts.html', {
+            'contracts': contracts,
+            'branches': branches,
+            'branch_sites': branch_sites,
+            'company_names': company_names, 
+            'selected_branch': branch,
+            'selected_branch_site': branch_site,
+            'selected_company_name': company_id,
+            'segment':'contracts',
+            'is_admin': is_admin,
+        })
         
-#     elif group == 'alex':
-#            contracts = Contract.objects.filter(branch_site="Alexandria")
-#            return render(request, 'pages/contracts.html', {'contracts': contracts, 'segment':'contracts', 'is_admin': is_admin,})
+    elif group == 'alex':
+           contracts = Contract.objects.filter(branch_site="Alexandria")
+           return render(request, 'pages/contracts.html', {'contracts': contracts, 'segment':'contracts', 'is_admin': is_admin,})
        
-#     elif group == 'cairo':
-#            contracts = Contract.objects.filter(branch_site="Cairo")
-#            return render(request, 'pages/contracts.html', {'contracts': contracts, 'segment':'contracts', 'is_admin': is_admin,})
+    elif group == 'cairo':
+           contracts = Contract.objects.filter(branch_site="Cairo")
+           return render(request, 'pages/contracts.html', {'contracts': contracts, 'segment':'contracts', 'is_admin': is_admin,})
     
-
-@login_required(login_url='login')
-def contract_table_view(request):
-  
-    # Initialize the contracts queryset
-    contracts = Contract.objects.all()
-    branch = request.GET.get('branch')
-    branch_site = request.GET.get('branch_site')
-    company_id = request.GET.get('company_name') 
-    contracts = Contract.objects.all()
-    
-    if branch:
-        contracts = contracts.filter(branch=branch)
-    if branch_site:
-        contracts = contracts.filter(branch_site=branch_site)
-    if company_id:
-        contracts = contracts.filter(company__id=company_id)  
-
-        
-    branches = Contract.objects.values_list('branch', flat=True).distinct()
-    branch_sites = Contract.objects.values_list('branch_site', flat=True).distinct()
-    company_names = Company.objects.values('id', 'company_name').distinct() 
-
-    return render(request, 'pages/contracts.html', {
-        'contracts': contracts,
-        'branches': branches,
-        'branch_sites': branch_sites,
-        'company_names': company_names, 
-        'selected_branch': branch,
-        'selected_branch_site': branch_site,
-        'selected_company_name': company_id,
-        'segment':'contracts',
-    })
-
-
 
 # editing the contract 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def edit_contract_view(request, pk):
     contract = get_object_or_404(Contract, pk=pk)
 
@@ -262,6 +328,7 @@ def edit_contract_view(request, pk):
 
 #adding new contract view
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def create_contract_view(request):
     if request.method == 'POST':
         form = ContractForm(request.POST, request.FILES)
@@ -276,6 +343,7 @@ def create_contract_view(request):
 
 # Deleting contract
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def delete_contract_view(request, pk):
     contract = get_object_or_404(Contract, pk=pk)
     
@@ -288,35 +356,78 @@ def delete_contract_view(request, pk):
 
 # listing the contract almost expired 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin','alex','cairo'])
 def contracts_expiring_soon_view(request):
-    today = timezone.now().date()  # Get today's date
-    one_month_later = today + timedelta(days=30) # Calculate the date one month from today
-    contracts_expiring_soon = Contract.objects.filter(end_date__lte=one_month_later, end_date__gte=today)
-    context = {
-        'contracts_expiring_soon': contracts_expiring_soon,
-        'segment':'expire'
-    }
-    return render(request, 'pages/expiring_soon.html', context)
+    
+    today = timezone.now().date()  
+    one_month_later = today + timedelta(days=30) 
+    
+    if request.user.groups.exists():
+        group = request.user.groups.all()[0].name
+
+    if group == 'alex':
+        contracts_expiring_soon = Contract.objects.filter(end_date__lte=one_month_later, end_date__gte=today, branch_site="Alexandria")   
+        return render(request, 'pages/expiring_soon.html', {'contracts_expiring_soon': contracts_expiring_soon, 'segment':'expire'})
+       
+    elif group == 'cairo':
+        contracts_expiring_soon = Contract.objects.filter(end_date__lte=one_month_later, end_date__gte=today, branch_site="Cairo")
+        return render(request, 'pages/expiring_soon.html', {'contracts_expiring_soon': contracts_expiring_soon, 'segment':'expire'})
+    
+    else:
+        contracts_expiring_soon = Contract.objects.filter(end_date__lte=one_month_later, end_date__gte=today)
+        context = {
+            'contracts_expiring_soon': contracts_expiring_soon,
+            'segment':'expire'
+        }
+        return render(request, 'pages/expiring_soon.html', context)
 
 
-
-
-
-#view for displaying maintenance scheduled visits 
+# List Maintenance Visits
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'alex', 'cairo'])
 def maintenence_schedule_table_view(request):
-    month = request.GET.get('month')  # Expecting '1' for January, '10' for October, etc.
-    done_filter = request.GET.get('done')  # Expecting 'true' or 'false'
+    is_admin = request.user.groups.filter(name='admin').exists()
+    if request.user.groups.exists():
+        group = request.user.groups.all()[0].name
+
     visits = MaintenanceSchedule.objects.all()
+    site_names = Site.objects.values('id', 'site_name').distinct() 
+   
+    month = request.GET.get('month')  
+    done_filter = request.GET.get('done')
     site_id = request.GET.get('site_name') 
     branch = request.GET.get('branch')
     branch_site = request.GET.get('branch_site')
-    if branch:
-        visits = visits.filter(contract__branch=branch)
-    if branch_site:
-        visits = visits.filter(contract__branch_site=branch_site)
-    if site_id:
-        visits = visits.filter(site__id=site_id)  
+
+    if group == 'admin':
+        if branch:
+            visits = visits.filter(contract__branch=branch)
+        if branch_site:
+            visits = visits.filter(contract__branch_site=branch_site)
+        if site_id:
+            visits = visits.filter(site__id=site_id)
+
+    else:
+        if group == 'alex':
+            visits = visits.filter(contract__branch_site='Alexandria')
+            # Filter Site based on companies that have contracts in Alexandria
+            alex_company_ids = Contract.objects.filter(branch_site='Alexandria').values_list('company_id', flat=True)
+            site_names = Site.objects.filter(company_id__in=alex_company_ids).values('id', 'site_name').distinct()
+            if site_id:
+                visits = visits.filter(site__id=site_id)
+
+          
+          
+        elif group == 'cairo':
+            visits = visits.filter(contract__branch_site='Cairo')
+            # Filter Site based on companies that have contracts in Cairo
+            cairo_company_ids = Contract.objects.filter(branch_site='Cairo').values_list('company_id', flat=True)
+            site_names = Site.objects.filter(company_id__in=cairo_company_ids).values('id', 'site_name').distinct()
+            if site_id:
+                visits = visits.filter(site__id=site_id)
+
+            
+
     if month:
         month = int(month)  
         visits = visits.filter(visit_date__month=month)
@@ -327,23 +438,26 @@ def maintenence_schedule_table_view(request):
         elif done_filter.lower() == 'false':
             visits = visits.filter(done=False)
 
+    # Fetch branches and branch sites for the filters
     branches = Contract.objects.values_list('branch', flat=True).distinct()
     branch_sites = Contract.objects.values_list('branch_site', flat=True).distinct()
-    site_names = Site.objects.values('id', 'site_name').distinct() 
 
-
-    return render(request, 'pages/maintenance_schedule.html', {'visits': visits,
-        'segment':'visits',
+    return render(request, 'pages/maintenance_schedule.html', {
+        'visits': visits,
+        'segment': 'visits',
         'branches': branches,
         'branch_sites': branch_sites,
         'site_names': site_names, 
         'selected_branch': branch,
         'selected_branch_site': branch_site,
-        'selected_site_name': site_id,})
+        'selected_site_name': site_id,
+        'is_admin': is_admin,
+    })
 
 
 # editing maintenance schedule
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def edit_visit_view(request, pk):
     visit = get_object_or_404(MaintenanceSchedule, pk=pk)
 
@@ -396,6 +510,7 @@ def update_maintenance_visit(request):
 
 # Deleting Visit
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def delete_Visit_view(request, pk):
     visit = get_object_or_404(MaintenanceSchedule, pk=pk)
     
@@ -408,20 +523,49 @@ def delete_Visit_view(request, pk):
 
 #view for displaying invoices
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'alex', 'cairo'])
 def invoice_schedule_table_view(request):
+    is_admin = request.user.groups.filter(name='admin').exists()
+    if request.user.groups.exists():
+        group = request.user.groups.all()[0].name
+
     invoices = InvoiceSchedule.objects.all()
+    company_names = Company.objects.values('id', 'company_name').distinct() 
+    
     month = request.GET.get('month')  
     done_filter = request.GET.get('done')
     company_id = request.GET.get('company_name')  
     branch = request.GET.get('branch')
     branch_site = request.GET.get('branch_site')
     
-    if branch:
-        invoices = invoices.filter(contract__branch=branch)
-    if branch_site:
-        invoices = invoices.filter(contract__branch_site=branch_site)
-    if company_id:
-        invoices = invoices.filter(company__id=company_id)  
+    if group == 'admin':
+        if branch:
+            invoices = invoices.filter(contract__branch=branch)
+        if branch_site:
+            invoices = invoices.filter(contract__branch_site=branch_site)
+        if company_id:
+            invoices = invoices.filter(company__id=company_id)  
+    else:
+        if group == 'alex':
+            invoices = invoices.filter(contract__branch_site='Alexandria')
+            # Filter companies that have contracts in Alexandria
+            alex_company_ids = Contract.objects.filter(branch_site='Alexandria').values_list('company_id', flat=True)
+            company_names = Company.objects.filter(id__in=alex_company_ids).values('id', 'company_name').distinct()
+            if company_id:
+                invoices = invoices.filter(company__id=company_id)  
+                
+
+        elif group == 'cairo':
+            invoices = invoices.filter(contract__branch_site='Cairo')
+            # Filter companies that have contracts in Cairo
+            cairo_company_ids = Contract.objects.filter(branch_site='Cairo').values_list('company_id', flat=True)
+            company_names = Company.objects.filter(id__in=cairo_company_ids).values('id', 'company_name').distinct()
+            if company_id:
+                invoices = invoices.filter(company__id=company_id)  
+                
+                
+
+    
     if month:
         month = int(month) 
         invoices = invoices.filter(invoice_date__month=month)
@@ -432,11 +576,10 @@ def invoice_schedule_table_view(request):
         elif done_filter.lower() == 'false':
             invoices = invoices.filter(is_paid=False)
 
+
     branches = Contract.objects.values_list('branch', flat=True).distinct()
     branch_sites = Contract.objects.values_list('branch_site', flat=True).distinct()
-    company_names = Company.objects.values('id', 'company_name').distinct() 
 
-    
 
     return render(request, 'pages/invoice_schedule.html', {'invoices': invoices, 
         'segment':'invoices',
@@ -446,11 +589,13 @@ def invoice_schedule_table_view(request):
         'selected_branch': branch,
         'selected_branch_site': branch_site,
         'selected_company_name': company_id,
+        'is_admin': is_admin,
         })
 
 
 # editing invoice schedule
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def edit_invoice_view(request, pk):
     invoice = get_object_or_404(InvoiceSchedule, pk=pk)
 
@@ -489,6 +634,7 @@ def update_invoice_view(request):
 
 # Deleting Invoice
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def delete_Invoice_view(request, pk):
     invoice = get_object_or_404(InvoiceSchedule, pk=pk)
     
@@ -498,16 +644,26 @@ def delete_Invoice_view(request, pk):
         return redirect('invoice-schedule')
 
 
-
 #emergency visits
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'alex', 'cairo'])
 def emergency_visits_view(request):
+    if request.user.groups.exists():
+        group = request.user.groups.all()[0].name
+    
     visits = EmergencyVisits.objects.all()
+
+    if group == 'alex':
+        visits = visits.filter(contract__branch_site='Alexandria')
+    elif group == 'cairo':
+        visits = visits.filter(contract__branch_site='Cairo')
+    
     return render(request, 'pages/emergency_visits.html', {'visits': visits, 'segment':'emergency'})
 
 
 # Deleting emergency visit
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def delete_emergency_visit_view(request, pk):
     visit = get_object_or_404(EmergencyVisits, pk=pk)
     
@@ -558,3 +714,31 @@ def update_emergency_visit_view(request):
         return JsonResponse({'success': True})
 
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+# editing maintenance schedule
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def edit_emergency_visit_request_view(request, pk):
+    visit = get_object_or_404(EmergencyVisits, pk=pk)
+
+    if request.method == 'POST':
+        form = EmergencyForm(request.POST, request.FILES, instance=visit)  # request.FILES for handling files
+        if form.is_valid():
+            form.save()
+            return redirect('emergency-visits')
+    else:
+        form = EmergencyForm(instance=visit)
+
+    return render(request, 'pages/edit_emergency_visit.html', {'form': form, 'visit': visit})
+
+
+@login_required(login_url='login')
+def load_sites(request):
+    contract_id = request.GET.get('contract_id')
+    if contract_id:
+        # Get the company ID associated with the contract
+        company_id = Contract.objects.filter(id=contract_id).values_list('company_id', flat=True).first()
+        # Get sites related to this company
+        sites = Site.objects.filter(company_id=company_id).values('id', 'site_name')
+        return JsonResponse(list(sites), safe=False)
+    return JsonResponse({'error': 'Invalid contract ID'}, status=400)

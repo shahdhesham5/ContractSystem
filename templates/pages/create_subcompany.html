@@ -1,13 +1,22 @@
 {% extends 'layouts/base.html' %}
-
+{% load static %}
+{% load i18n %}
 {% block content %}
   <div class="container">
-    <h2>Create New SubCompany</h2>
+    <h2>{% trans 'Create New SubCompany' %}</h2>
     <form action="{% url 'subcompany-create' %}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}  <!-- Renders the form fields -->
-      <button type="submit" class="btn btn-success">Create</button>
-      <a href="{% url 'subcompanies-list' %}" class="btn btn-secondary">Cancel</a>
+      <button type="submit" class="btn btn-success">{% trans 'Create' %}</button>
+      <a href="{% url 'subcompanies-list' %}" class="btn btn-secondary">{% trans 'Cancel' %}</a>
     </form>
   </div>
+{% endblock %}
+{% block extrascript %}
+<script type="text/javascript">
+  const CitiesURL= "{% url 'ajax_load_areas' %}"
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/plugins/chartjs.min.js' %}"></script>
+<script src="{% static 'js/cities-areas.js' %}"></script>
 {% endblock %}

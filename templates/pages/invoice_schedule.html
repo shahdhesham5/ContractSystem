@@ -1,18 +1,20 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-
+{% load custom_tags %} 
+{% load i18n %}
 {% block content %}
 <div class="container-fluid py-4">
     <!-- Filter Form -->
     <div class="row mb-4">
       <form method="GET" action="{% url 'invoice-schedule' %}">
         <div class="row">
+          {% if request.user|is_admin %}
             <!-- Branch Field -->
             <div class="col-md-3">
             <div class="form-group">
-                <label for="branch">Branch</label>
+                <label for="branch">{% trans 'Branch' %}</label>
                 <select id="branch" name="branch" class="form-control" onchange="submitFilterForm()">
-                    <option value="">All Branches</option>
+                    <option value="">{% trans 'All Branches' %}</option>
                     {% for branch in branches %}
                         <option value="{{ branch }}" {% if branch == selected_branch %}selected{% endif %}>{{ branch }}</option>
                     {% endfor %}
@@ -22,20 +24,21 @@
             <!-- Branch Site Field -->
             <div class="col-md-2">
                 <div class="form-group">
-                    <label for="branch_site">Branch Site</label>
+                    <label for="branch_site">{% trans 'Branch Site' %}</label>
                     <select id="branch_site" name="branch_site" class="form-control" onchange="submitFilterForm()">
-                        <option value="">All Branch Sites</option>
+                        <option value="">{% trans 'All Branch Sites' %}</option>
                         {% for site in branch_sites %}
                             <option value="{{ site }}" {% if site == selected_branch_site %}selected{% endif %}>{{ site }}</option>
                         {% endfor %}
                     </select>
                 </div>
             </div>
+            {% endif %}
             <!-- Company Name -->
             <div class="col-md-3">
-              <label for="company_name">Company Name</label>
+              <label for="company_name">{% trans 'Company Name' %}</label>
               <select id="company_name" name="company_name" class="form-control" onchange="submitFilterForm()">
-                  <option value="">All Companies</option>
+                  <option value="">{% trans 'All Companies' %}</option>
                   {% for company in company_names %}
                       <option value="{{ company.id }}" {% if company.id == selected_company_name %}selected{% endif %}>
                           {{ company.company_name }}
@@ -46,32 +49,32 @@
             <!-- Month Field -->
             <div class="col-md-2">
               <div class="form-group">
-                <label>Month</label>
-                <select name="month" class="form-select">
-                  <option value="">Month</option>
-                  <option value="1">January</option>
-                  <option value="2">February</option>
-                  <option value="3">March</option>
-                  <option value="4">April</option>
-                  <option value="5">May</option>
-                  <option value="6">June</option>
-                  <option value="7">July</option>
-                  <option value="8">August</option>
-                  <option value="9">September</option>
-                  <option value="10">October</option>
-                  <option value="11">November</option>
-                  <option value="12">December</option>
-                </select>
+                <label>{% trans 'Month' %}</label>
+              <select name="month" class="form-select">
+                <option value="">{% trans 'Month' %}</option>
+                <option value="1">{% trans 'January' %}</option>
+                <option value="2">{% trans 'February' %}</option>
+                <option value="3">{% trans 'March' %}</option>
+                <option value="4">{% trans 'April' %}</option>
+                <option value="5">{% trans 'May' %}</option>
+                <option value="6">{% trans 'June' %}</option>
+                <option value="7">{% trans 'July' %}</option>
+                <option value="8">{% trans 'August' %}</option>
+                <option value="9">{% trans 'September' %}</option>
+                <option value="10">{% trans 'October' %}</option>
+                <option value="11">{% trans 'November' %}</option>
+                <option value="12">{% trans 'December' %}</option>
+              </select>
               </div>
             </div>
             <!-- Done Status Field -->
             <div class="col-md-2">
               <div class="form-group">
-                <label>Is Done</label>
+                <label>{% trans 'Is Done Invoice' %}</label>
                 <select name="done" class="form-select">
-                  <option value="">Done Status</option>
-                  <option value="true">Done</option>
-                  <option value="false">Not Done</option>
+                  <option value="">{% trans 'Done Status' %}</option>
+                  <option value="true">{% trans 'Done' %}</option>
+                  <option value="false">{% trans 'Not Done' %}</option>
                 </select>
               </div>
             </div>
@@ -79,7 +82,7 @@
             <!-- Submit Button -->
             <div class="col-md-12 d-flex justify-content-end">
               <button type="submit" class="btn btn-primary mb-2">
-                  <i class="fas fa-filter"></i>&nbsp; Apply Filters
+                  <i class="fas fa-filter"></i>&nbsp; {% trans 'Apply Filters' %}
               </button>
             </div>
         </div>
@@ -90,65 +93,69 @@
     <div class="col-12">
       <div class="card mb-4">
         <div class="card-header pb-0">
-          <h6>Invoice Schedule</h6>
+          <h6>{% trans 'Invoice Schedule' %}</h6>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sub Company</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Invoice Date</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Amount</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Is Paid</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Image</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PDF</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Company Name' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Sub Company Name' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Invoice date' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Invoice value' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Is paid' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Invoice Image' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Invoice PDF' %}</th>
                   <th class="text-secondary opacity-7"></th>
                 </tr>
               </thead>
               <tbody>
                 {% for invoice in invoices %}
                 <tr>
-                  <td>
+                  <td class="align-middle text-center">
                     <div class="d-flex px-2 py-1">
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="mb-0 text-sm">{{ invoice.company }}</h6>
                       </div>
                     </div>
                   </td>
-                  <td>
-                    <p class="text-xs font-weight-bold mb-0">{{ invoice.sub_company }}</p>
+                  <td class="align-middle text-center">
+                    {% if invoice.sub_company %}
+                    <p class="text-xs font-weight-bold mb-0 text-center">{{ invoice.sub_company }}</p>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
                   </td>
                   <td>
-                    <p class="text-xs font-weight-bold mb-0">{{ invoice.invoice_date }}</p>
+                    <p class="text-xs font-weight-bold mb-0 text-center">{{ invoice.invoice_date }}</p>
                   </td>
                   <td>
-                    <p class="text-xs font-weight-bold mb-0">{{ invoice.amount }}</p>
+                    <p class="text-xs font-weight-bold mb-0 text-center">{{ invoice.amount }}</p>
                   </td>
                   <td class="align-middle text-sm">
                     {% if invoice.is_paid %}
-                    <span class="badge badge-sm bg-gradient-success">{{ invoice.is_paid }}</span>
+                    <span class="badge badge-sm bg-gradient-success text-center">{{ invoice.is_paid }}</span>
                     {% else %}
-                    <span class="badge badge-sm bg-gradient-danger">{{ invoice.is_paid }}</span>
+                    <span class="badge badge-sm bg-gradient-danger text-center">{{ invoice.is_paid }}</span>
                     {% endif %}
                   </td>
-                  <td class="align-middle text-center text-sm">
+                  <td class="align-middle text-center text-sm text-center">
                     {% if invoice.image %}
-                    <a href="{{ invoice.image.url }}"><i class="fas fa-file-image text-lg me-1"></i> Image</a>
+                    <a href="{{ invoice.image.url }}"><i class="fas fa-file-image text-lg me-1 text-center"></i> Image</a>
                     {% else %}
-                    <span>-</span>
+                    <span class="text-center">-</span>
                     {% endif %}
                   </td>
-                  <td class="align-middle text-center text-sm">
+                  <td class="align-middle text-center text-sm text-center">
                     {% if invoice.pdf %}
-                    <a href="{{ invoice.pdf.url }}" target="_blank"> <i class="fas fa-file-pdf text-lg me-1"></i> PDF
+                    <a href="{{ invoice.pdf.url }}" target="_blank"> <i class="fas fa-file-pdf text-lg me-1 text-center"></i> PDF
                     </a>
                     {% else %}
-                    <span>-</span>
+                    <span class="text-center">-</span>
                     {% endif %}
                   </td>
-                  {% if request.user.is_superuser  %}
+                  {% if request.user|is_admin %}
                   <td class="align-middle">
                     <a href="{% url 'edit-invoice' invoice.id %}" >
                     <i class="fas fa-pencil-alt ms-auto text-dark cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Card"></i></a>
@@ -160,8 +167,8 @@
                       </button>
                     </form>
                   </td>
+                  {% endif %}
                 </tr>
-                {% endif %}
                 {% endfor %}
               </tbody>
             </table>

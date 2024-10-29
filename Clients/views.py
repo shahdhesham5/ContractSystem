@@ -1,20 +1,52 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Sum, Count
 from .models import City, Area, Company, SubCompany, Site
 from .forms import CompanyForm, SubCompanyForm, SiteForm
 from contracts.models import Contract, MaintenanceSchedule, InvoiceSchedule, EmergencyVisits
+import uuid
+from django.core.exceptions import ValidationError
+from contracts.decorators import allowed_users
 
+import logging
+
+logger = logging.getLogger(__name__)  # Configure this in your settings if not already
+
+def load_subcompanies(request):
+    company_id = request.GET.get('company_id')
+
+    try:
+        # Validate and parse the UUID
+        company_id = uuid.UUID(company_id)
+    except (ValueError, TypeError, ValidationError) as e:
+        logger.error(f"UUID parsing error: {e}")
+        return JsonResponse({'error': 'Invalid company ID format'}, status=400)
+
+    try:
+        # Perform the query for sub-companies based on the UUID
+        sub_companies = SubCompany.objects.filter(parent_company_id=company_id).values('id', 'sub_company_name')
+        return JsonResponse(list(sub_companies), safe=False)
+    except Exception as e:
+        logger.error(f"Database query error: {e}")
+        return JsonResponse({'error': 'Server error while retrieving sub-companies'}, status=500)
+
+def load_areas(request):
+    city_id = request.GET.get('city_id')
+    areas = Area.objects.filter(city_id=city_id).values('id', 'name')
+    return JsonResponse(list(areas), safe=False)
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def company_list_view(request):
     companies = Company.objects.all()
     return render(request, 'pages/companies.html', {'companies': companies, 'segment': 'company'})
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def company_delete_view(request, pk):
     company = get_object_or_404(Company, pk=pk)
     
@@ -24,7 +56,8 @@ def company_delete_view(request, pk):
         return redirect('companies-list')
 
 
-@login_required(login_url='accounts/login/')       
+@login_required(login_url='accounts/login/')  
+@allowed_users(allowed_roles=['admin'])     
 def company_edit_view(request, pk):
     company = get_object_or_404(Company, pk=pk)
 
@@ -40,6 +73,7 @@ def company_edit_view(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def create_company_view(request):
     if request.method == 'POST':
         form = CompanyForm(request.POST, request.FILES)
@@ -53,6 +87,7 @@ def create_company_view(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def company_profile_view(request, pk):
     company = get_object_or_404(Company, id=pk)
     subcompanies = SubCompany.objects.filter(parent_company=company)
@@ -77,12 +112,14 @@ def company_profile_view(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def subcompany_list_view(request):
     subcompanies = SubCompany.objects.all()
     return render(request, 'pages/subcompanies.html', {'subcompanies': subcompanies, 'segment': 'subcompany'})
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def subcompany_delete_view(request, pk):
     subcompany = get_object_or_404(SubCompany, pk=pk)
     
@@ -92,7 +129,8 @@ def subcompany_delete_view(request, pk):
         return redirect('subcompanies-list')
 
 
-@login_required(login_url='accounts/login/')        
+@login_required(login_url='accounts/login/')  
+@allowed_users(allowed_roles=['admin'])      
 def subcompany_edit_view(request, pk):
     subcompany = get_object_or_404(SubCompany, pk=pk)
 
@@ -108,6 +146,7 @@ def subcompany_edit_view(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def create_subcompany_view(request):
     if request.method == 'POST':
         form = SubCompanyForm(request.POST, request.FILES)
@@ -123,12 +162,14 @@ def create_subcompany_view(request):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def site_list_view(request):
     sites = Site.objects.all()
     return render(request, 'pages/sites.html', {'sites': sites, 'segment': 'site'})
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def site_delete_view(request, pk):
     site = get_object_or_404(Site, pk=pk)
     
@@ -139,6 +180,7 @@ def site_delete_view(request, pk):
 
 
 @login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
 def site_edit_view(request, pk):
     site = get_object_or_404(Site, pk=pk)
 
@@ -154,6 +196,7 @@ def site_edit_view(request, pk):
 
 
 @login_required(login_url='accounts/login/')
+@allowed_users(allowed_roles=['admin'])
 def create_site_view(request):
     if request.method == 'POST':
         form = SiteForm(request.POST, request.FILES)

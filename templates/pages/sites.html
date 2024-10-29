@@ -1,55 +1,59 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-
+{% load i18n %}
 {% block content %}
 <div class="container-fluid py-4">
-  {% if request.user.is_superuser  %}
+
   <div class="row">
     <div class="col-md-12 text-end">
-      <a class="btn bg-gradient-dark mb-2" href="{% url 'site-create' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Site</a>
+      <a class="btn bg-gradient-dark mb-2" href="{% url 'site-create' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;{% trans 'Create New Site' %}</a>
     </div>
-    {% endif %}
+
     <div class="col-12">
       <div class="card mb-4">
         <div class="card-header pb-0">
-          <h6>Sites</h6>
+          <h6>{% trans 'Sites' %}</h6>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">SubCompany</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Site</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Manager</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Address</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Phone Number</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">City</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Area</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Location URL</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Comment</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Company Name' %}</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Sub Company Name' %}</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Site' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Manager' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Site Address' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Phone Number' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'City' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Area' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Location URL' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Comment' %}</th>
                   <th class="text-secondary opacity-7"></th>
                 </tr>
               </thead>
               <tbody>
                 {% for site in sites %}
                 <tr>
-                <td>
+                <td class="align-middle text-center">
                     <div class="d-flex px-2 py-1">
                     <div class="d-flex flex-column justify-content-center">
                         <h6 class="mb-0 text-sm">{{ site.company }}</h6>
                     </div>
                     </div>
                 </td>
-                  <td>
+                  <td class="align-middle text-center">
                     <div class="d-flex px-2 py-1">
+                      {% if site.sub_company %}
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="mb-0 text-sm">{{ site.sub_company }}</h6>
                       </div>
+                      {% else %}
+                      <span>-</span>
+                      {% endif %}
                     </div>
                   </td>
-                  <td>
+                  <td class="align-middle text-center">
                     <div class="d-flex px-2 py-1">
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="mb-0 text-sm">{{ site.site_name }}</h6>
@@ -76,9 +80,13 @@
                     <span class="text-xs font-weight-bold">{{site.location_url}}</span>
                   </td>
                   <td class="align-middle text-center">
+                    {% if site.comment %}
                     <span class="text-xs font-weight-bold">{{site.comment}}</span>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
                   </td>
-                  {% if request.user.is_superuser  %}
+                 
                   <td class="align-middle">
                     <a  href="{% url 'site-edit' site.id %}" class="font-weight-bold text-xs" >
                       <i class="fas fa-pencil-alt ms-auto text-dark cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Card"></i>
@@ -91,7 +99,7 @@
                         </button>
                       </form>
                   </td>
-                  {% endif %}
+                  
                 </tr>
                 {% endfor %}
 

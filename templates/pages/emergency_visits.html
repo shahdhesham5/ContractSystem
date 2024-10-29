@@ -1,33 +1,34 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-
+{% load custom_tags %} 
+{% load i18n %}
 {% block content %}
 <div class="container-fluid py-4">
   <div class="row">
     <div class="col-md-12 text-end">
-        <a class="btn bg-gradient-dark mb-2" href="{% url 'create-emergency-visits' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Emergency Visit request</a>
+        <a class="btn bg-gradient-dark mb-2" href="{% url 'create-emergency-visits' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;{% trans 'Add New Emergency Visit request' %}</a>
       </div>
     <div class="col-12">
       <div class="card mb-4">
         <div class="card-header pb-0">
-          <h6>Emergency Visits</h6>
+          <h6>{% trans 'Emergency Visits' %}</h6>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Site</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Price</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Within</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit Date</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit completed Date</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Done</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Done by</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Comment</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Image</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PDF</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Company' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Site' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Price' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Emergency Visit within' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Emergency Visit Request date' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Emergency Visit date' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Done' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Engineer name' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Comment' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Emergency Visit Image' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Emergency Visit PDF' %}</th>
                   <th class="text-secondary opacity-7"></th>
                 </tr>
               </thead>
@@ -53,7 +54,7 @@
                   </td>
                   <td class="align-middle text-center text-sm">
                     {% if visit.contract.emergency_within_period %}
-                    <p class="text-xs font-weight-bold mb-0">{{ visit.contract.emergency_within_period }}</p>
+                    <p class="text-xs font-weight-bold mb-0">{{ visit.contract.emergency_within_period }} {% trans 'hours' %}</p>
                     {% else %}
                     <span>-</span>
                     {% endif %}
@@ -103,9 +104,9 @@
                     <span>-</span>
                     {% endif %}
                   </td>
-                  {% if request.user.is_superuser  %}
+                  {% if request.user|is_admin %}
                   <td class="align-middle">
-                    <a href="{% url 'edit-visit' visit.id %}" >
+                    <a href="{% url 'edit-emergency-visits' visit.id %}" >
                       <i class="fas fa-pencil-alt ms-auto text-dark cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Card"></i>
                     </a>
                        <!-- Delete button wrapped in a form -->

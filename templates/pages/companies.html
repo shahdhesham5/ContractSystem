@@ -1,30 +1,29 @@
 {% extends 'layouts/base.html' %}
+{% load i18n %}
 {% load static %}
 
 {% block content %}
 <div class="container-fluid py-4">
-  {% if request.user.is_superuser  %}
   <div class="row">
     <div class="col-md-12 text-end">
-      <a class="btn bg-gradient-dark mb-2" href="{% url 'company-create' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add New Company</a>
+      <a class="btn bg-gradient-dark mb-2" href="{% url 'company-create' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;{% trans 'Create New Company' %}</a>
     </div>
-    {% endif %}
     <div class="col-12">
       <div class="card mb-4">
         <div class="card-header pb-0">
-          <h6>Companies</h6>
+          <h6>{% trans 'Companies' %}</h6>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Manager</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Address</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Phone Number</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">City</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Area</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Company Name' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Manager' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Company Address' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Phone Number' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'City' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Area' %}</th>
                   <th class="text-secondary opacity-7"></th>
                 </tr>
               </thead>
@@ -58,7 +57,6 @@
                   <td class="align-middle text-center">
                     <span class="text-xs font-weight-bold">{{company.area}}</span>
                   </td>
-                  {% if request.user.is_superuser  %}
                   <td class="align-middle">
                     <a  href="{% url 'company-edit' company.id %}" class="font-weight-bold text-xs" >
                       <i class="fas fa-pencil-alt ms-auto text-dark cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Card"></i>
@@ -71,7 +69,7 @@
                         </button>
                       </form>
                   </td>
-                  {% endif %}
+               
 
                 </tr>
                 {% endfor %}

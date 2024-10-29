@@ -1,12 +1,13 @@
 {% extends 'layouts/base.html' %}
+{% load i18n %}
 {% block content %}
   <div class="container">
-    <h2>Edit Sub Company</h2>
+    <h2>{% trans 'Edit Sub Company' %}</h2>
     <form action="{% url 'subcompany-edit' subcompany.id %}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit" class="btn btn-success">Update Sub Company</button>
-      <a href="{% url 'subcompanies-list' %}" class="btn btn-secondary">Cancel</a>
+      <button type="submit" class="btn btn-success">{% trans 'Update' %}</button>
+      <a href="{% url 'subcompanies-list' %}" class="btn btn-secondary">{% trans 'Cancel' %}</a>
     </form>
   </div>
 {% endblock %}

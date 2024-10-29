@@ -1,35 +1,37 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-
+{% load custom_tags %} 
+{% load i18n %}
 {% block content %}
 <div class="container-fluid py-4">
   <div class="row">
     <div class="col-12">
       <div class="card mb-4">
         <div class="card-header pb-0">
-          <h6>Contracts Expiring Soon</h6>
+          <h6>{% trans 'Contracts Expiring Soon' %}</h6>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Start Date</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">End Date</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contract Value</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Invoice Frequency</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Invoice Generating Date</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Maintenance Frequency</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Emergency Visit Price</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Branch</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Branch Site</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Annual increase percentage</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Auto Renew</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Gamgh Date</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Gamgh Price</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Image</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PDF</th>
+                  <th class="text-center  text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Company Name' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Start Date' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'End Date' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Contract Price Value' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Invoice Frequency' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Invoice Calculated Date' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Maintenance Frequency' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Emergency Visit Price' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Emergency Visit within' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Company' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Company Branch' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Annual Percentage' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Auto Renew' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Damgh Date' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Damgh Price' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Contract Image' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Contract PDF' %}</th>
                   <th class="text-secondary opacity-7"></th>
                 </tr>
               </thead>
@@ -65,7 +67,18 @@
                     <span class="text-xs font-weight-bold">{{contract.maintenance_frequency}}</span>
                   </td>
                   <td class="align-middle text-center">
+                    {% if contract.emergency_visit_price %}
                     <span class=" text-xs font-weight-bold">{{contract.emergency_visit_price}}</span>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
+                  </td>
+                  <td class="align-middle text-center">
+                    {% if contract.emergency_within_period %}
+                    <span class=" text-xs font-weight-bold">{{contract.emergency_within_period}} {% trans 'hours' %}</span>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
                   </td>
                   <td class="align-middle text-center">
                     <span class="text-xs font-weight-bold">{{contract.branch}}</span>
@@ -74,7 +87,11 @@
                     <span class="text-xs font-weight-bold">{{contract.branch_site}}</span>
                   </td>
                   <td class="align-middle text-center">
-                    <span class="text-xs font-weight-bold">{{contract.annual_increase}}</span>
+                    {% if contract.annual_increase %}
+                    <span class="text-xs font-weight-bold">{{contract.annual_increase}} %</span>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
                   </td>
                   
                   <td class="align-middle text-center text-sm">
@@ -86,11 +103,19 @@
                   </td>
 
                   <td class="align-middle text-center text-sm">
+                    {% if contract.damgh_date %}
                     <span class=" text-xs font-weight-bold">{{contract.damgh_date}}</span>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
                   </td>
 
                   <td class="align-middle text-center text-sm">
+                    {% if contract.damgh_price %}
                     <span class="text-xs font-weight-bold">{{contract.damgh_price}}</span>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
                   </td>
 
                   <td class="align-middle text-center text-sm">
@@ -111,7 +136,7 @@
                       <span>-</span>
                     {% endif %}
                   </td>
-                  {% if request.user.is_superuser  %}
+                  {% if request.user|is_admin %}
                   <td class="align-middle">
                     <a  href="{% url 'edit-contract' contract.id %}" class="font-weight-bold text-xs" >
                       <i class="fas fa-pencil-alt ms-auto text-dark cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Card"></i>

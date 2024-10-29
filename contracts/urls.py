@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import contract_table_view, edit_contract_view, maintenence_schedule_table_view, edit_visit_view, edit_invoice_view, invoice_schedule_table_view, create_contract_view, contracts_expiring_soon_view, dashboard_view,update_maintenance_visit, emergency_visits_view, create_emergency_visit_request_view, update_invoice_view, delete_contract_view,delete_Invoice_view, delete_Visit_view, delete_emergency_visit_view, update_emergency_visit_view
+from .views import contract_table_view, edit_contract_view, maintenence_schedule_table_view, edit_visit_view, edit_invoice_view, invoice_schedule_table_view, create_contract_view, contracts_expiring_soon_view, dashboard_view,update_maintenance_visit, emergency_visits_view, create_emergency_visit_request_view, update_invoice_view, delete_contract_view,delete_Invoice_view, delete_Visit_view, delete_emergency_visit_view, update_emergency_visit_view, edit_emergency_visit_request_view
+from . import views
 
 urlpatterns = [
     
@@ -19,9 +20,11 @@ urlpatterns = [
     path('invoice-schedule/edit/<int:pk>/', edit_invoice_view, name='edit-invoice'),
     path('update-invoice/', update_invoice_view, name='update_invoice'),
     path('delete-invoice/<int:pk>/', delete_Invoice_view, name='delete-invoice'),
-
+    
+    path('ajax/load-sites/', views.load_sites, name='ajax_load_sites'),
     path('emergency-visits/', emergency_visits_view, name='emergency-visits'),
     path('emergency-visits/create', create_emergency_visit_request_view, name='create-emergency-visits'),
+    path('emergency-visits/edit/<int:pk>/', edit_emergency_visit_request_view, name='edit-emergency-visits'),
     path('delete-emergency-visit/<int:pk>/', delete_emergency_visit_view, name='delete-emergency-visit'),
     path('update-emergency-visit/',update_emergency_visit_view, name='update-emergency-visit'),
     

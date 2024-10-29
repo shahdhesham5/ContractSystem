@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-from str2bool import str2bool
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -59,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'ContractSystem.urls'
@@ -87,16 +87,6 @@ WSGI_APPLICATION = 'ContractSystem.wsgi.application'
 
 
 # Load environment variables from .env file
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': os.getenv('DB_NAME'),
-#         'USER': os.getenv('DB_USER'),
-#         'PASSWORD': os.getenv('DB_PASSWORD'),
-#         'HOST': os.getenv('DB_HOST'),
-#         'PORT': os.getenv('DB_PORT'),
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -107,6 +97,7 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT'),
     }
 }
+
 
 
 # Password validation
@@ -130,8 +121,19 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
-
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale')
+]
 LANGUAGE_CODE = 'en-us'
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('ar', 'العربية'),
+]
+
+DATE_FORMAT = 'd/m/Y'
+
+USE_L10N = True
 
 TIME_ZONE = 'UTC'
 
@@ -147,6 +149,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB limit
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

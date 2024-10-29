@@ -1,6 +1,7 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-
+{% load custom_tags %} 
+{% load i18n %}
 {% block content %}
 <div class="container-fluid py-4">
     <!-- Filter Form -->
@@ -8,11 +9,12 @@
       <form method="GET" action="{% url 'maintenence-schedule' %}">
         <div class="row">
           <!-- Branch Field -->
+          {% if request.user|is_admin %}
           <div class="col-md-3">
             <div class="form-group">
-                <label for="branch">Branch</label>
+                <label for="branch">{% trans 'Branch' %}</label>
                 <select id="branch" name="branch" class="form-control" onchange="submitFilterForm()">
-                    <option value="">All Branches</option>
+                    <option value="">{% trans 'All Branches' %}</option>
                     {% for branch in branches %}
                         <option value="{{ branch }}" {% if branch == selected_branch %}selected{% endif %}>{{ branch }}</option>
                     {% endfor %}
@@ -23,20 +25,21 @@
         <!-- Branch Site Field -->
         <div class="col-md-2">
             <div class="form-group">
-                <label for="branch_site">Branch Site</label>
+                <label for="branch_site">{% trans 'Branch Site' %}</label>
                 <select id="branch_site" name="branch_site" class="form-control" onchange="submitFilterForm()">
-                    <option value="">All Branch Sites</option>
+                    <option value="">{% trans 'All Branch Sites' %}</option>
                     {% for site in branch_sites %}
                         <option value="{{ site }}" {% if site == selected_branch_site %}selected{% endif %}>{{ site }}</option>
                     {% endfor %}
                 </select>
             </div>
         </div>
+        {% endif %}
           <!-- Site Name -->
           <div class="col-md-3 mb-3">
-          <label for="site_name">Site Name</label>
+          <label for="site_name">{% trans 'Site Name' %}</label>
           <select id="site_name" name="site_name" class="form-control" onchange="submitFilterForm()">
-              <option value="">All Sites</option>
+              <option value="">{% trans 'All Sites' %}</option>
               {% for site in site_names %}
                   <option value="{{ site.id }}" {% if site.id == selected_site_name %}selected{% endif %}>
                       {{ site.site_name }}
@@ -47,21 +50,21 @@
           <!-- Month Field -->
           <div class="col-md-2">
             <div class="form-group">
-              <label>Month</label>
+              <label>{% trans 'Month' %}</label>
               <select name="month" class="form-select">
-                <option value="">Month</option>
-                <option value="1">January</option>
-                <option value="2">February</option>
-                <option value="3">March</option>
-                <option value="4">April</option>
-                <option value="5">May</option>
-                <option value="6">June</option>
-                <option value="7">July</option>
-                <option value="8">August</option>
-                <option value="9">September</option>
-                <option value="10">October</option>
-                <option value="11">November</option>
-                <option value="12">December</option>
+                <option value="">{% trans 'Month' %}</option>
+                <option value="1">{% trans 'January' %}</option>
+                <option value="2">{% trans 'February' %}</option>
+                <option value="3">{% trans 'March' %}</option>
+                <option value="4">{% trans 'April' %}</option>
+                <option value="5">{% trans 'May' %}</option>
+                <option value="6">{% trans 'June' %}</option>
+                <option value="7">{% trans 'July' %}</option>
+                <option value="8">{% trans 'August' %}</option>
+                <option value="9">{% trans 'September' %}</option>
+                <option value="10">{% trans 'October' %}</option>
+                <option value="11">{% trans 'November' %}</option>
+                <option value="12">{% trans 'December' %}</option>
               </select>
             </div>
           </div>
@@ -69,21 +72,21 @@
           <!-- Done Status Field -->
           <div class="col-md-2">
             <div class="form-group">
-              <label>Is Done</label>
+              <label>{% trans 'Is Done Visit' %}</label>
               <select name="done" class="form-select">
-                <option value="">Done Status</option>
-                <option value="true">Done</option>
-                <option value="false">Not Done</option>
+                <option value="">{% trans 'Done Status' %}</option>
+                <option value="true">{% trans 'Done' %}</option>
+                <option value="false">{% trans 'Not Done' %}</option>
               </select>
             </div>
           </div>
 
             <!-- Submit Button -->
-            <div class="col-md-12 d-flex justify-content-end">
+            <div class="col-md-12 d-flex justify-content-end">              
               <button type="submit" class="btn btn-primary mb-2">
-                  <i class="fas fa-filter"></i>&nbsp; Apply Filters
+                  <i class="fas fa-filter"></i>&nbsp; {% trans 'Apply Filters' %}
               </button>
-          </div>
+            </div>
         </div>
       </form>
     </div>
@@ -93,21 +96,22 @@
     <div class="col-12">
       <div class="card mb-4">
         <div class="card-header pb-0">
-          <h6>Maintenance Schedule</h6>
+          <h6>{% trans 'Maintenance Schedule' %}</h6>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <div class="table-responsive p-0">
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Company</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Site</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit Date</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit Due Date</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Visit completed Date</th>                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Done</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Done by</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Image</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PDF</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Company' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Site' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Visit date' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Visit Due date' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Visit Completed date' %}</th>                  
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Done' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Engineer name' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Visit Image' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Visit PDF' %}</th>
                   <th class="text-secondary opacity-7"></th>
                 </tr>
               </thead>
@@ -165,7 +169,7 @@
                     <span>-</span>
                     {% endif %}
                   </td>
-                  {% if request.user.is_superuser  %}
+                  {% if request.user|is_admin %}
                   <td class="align-middle">
                     <a href="{% url 'edit-visit' visit.id %}" >
                       <i class="fas fa-pencil-alt ms-auto text-dark cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Card"></i>
