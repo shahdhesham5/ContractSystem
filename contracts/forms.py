@@ -13,7 +13,6 @@ class MaintenanceScheduleForm(forms.ModelForm):
         }
 
 
-
 class InvoiceceScheduleForm(forms.ModelForm):
     class Meta:
         model = InvoiceSchedule
@@ -68,16 +67,16 @@ class EmergencyForm(forms.ModelForm):
             'request_visit_date': forms.DateInput(attrs={'type': 'date', 'placeholder': 'DD/MM/YYYY'}),
             'actual_visit_date': forms.DateInput(attrs={'type': 'date', 'placeholder': 'DD/MM/YYYY'}),
         }
-        def clean(self):
-            cleaned_data = super().clean()
-            price = cleaned_data.get('price')
-            contract = cleaned_data.get('contract')
+    def clean(self):
+        cleaned_data = super().clean()
+        price = cleaned_data.get('price')
+        contract = cleaned_data.get('contract')
 
-            # Custom validation
-            if price is None and contract and contract.emergency_visit_price is None:
-                raise forms.ValidationError("Price is required when the contract's emergency_visit_price is null.")
+        # Custom validation
+        if price is None and contract and contract.emergency_visit_price is None:
+            raise forms.ValidationError("Price is required when the contract's emergency_visit_price is null.")
 
-            return cleaned_data
+        return cleaned_data
 
 
 
