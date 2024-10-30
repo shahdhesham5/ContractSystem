@@ -229,12 +229,15 @@ def dashboard_view(request):
                 visit_date__lt=invoice.invoice_date,
                 done=False
             )
-        if maintenance_visits_done.exists():
+            # Check the conditions for appending the invoice
+        if maintenance_visits_done.exists() and not maintenance_visits_not_done.exists():
+            # Only "done" maintenance visits exist, so add to invoices_done
             invoices_done.append(invoice)
-            
-        if maintenance_visits_not_done.exists():
+        elif maintenance_visits_not_done.exists():
+            # "Not done" maintenance visits exist (with or without "done" visits), so add to invoices_not_done
             invoices_not_done.append(invoice)
-    
+
+
 
 
         

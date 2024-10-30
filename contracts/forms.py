@@ -17,7 +17,7 @@ class MaintenanceScheduleForm(forms.ModelForm):
 class InvoiceceScheduleForm(forms.ModelForm):
     class Meta:
         model = InvoiceSchedule
-        fields = ['contract','company', 'sub_company', 'invoice_date', 'amount', 'is_paid', 'image', 'pdf']
+        fields = ['company', 'sub_company', 'invoice_date', 'amount', 'is_paid', 'image', 'pdf']
         widgets = {
             'invoice_date': forms.DateInput(attrs={'type': 'date', 'placeholder': 'DD/MM/YYYY'}),
         }
