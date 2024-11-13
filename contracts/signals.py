@@ -39,6 +39,7 @@ def generate_maintenance_schedule(sender, instance, created, **kwargs):
         # Ensure no extra visits are generated past the end date
         if current_date > end_date:
             current_date = end_date
+            
 
 @receiver(post_save, sender=Contract)
 def generate_invoice_schedule(sender, instance, created, **kwargs):

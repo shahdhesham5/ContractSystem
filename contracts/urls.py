@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import contract_table_view, edit_contract_view, maintenence_schedule_table_view, edit_visit_view, edit_invoice_view, invoice_schedule_table_view, create_contract_view, contracts_expiring_soon_view, dashboard_view,update_maintenance_visit, emergency_visits_view, create_emergency_visit_request_view, update_invoice_view, delete_contract_view,delete_Invoice_view, delete_Visit_view, delete_emergency_visit_view, update_emergency_visit_view, edit_emergency_visit_request_view
+from .views import contract_table_view, edit_contract_view, maintenence_schedule_table_view, edit_visit_view, edit_invoice_view, invoice_schedule_table_view, create_contract_view, contracts_expiring_soon_view, dashboard_view,update_maintenance_visit, emergency_visits_view, create_emergency_visit_request_view, update_invoice_view, delete_contract_view,delete_Invoice_view, delete_Visit_view, delete_emergency_visit_view, update_emergency_visit_view, edit_emergency_visit_request_view, generate_schedule, schedule_page
 from . import views
 
 urlpatterns = [
@@ -27,7 +27,10 @@ urlpatterns = [
     path('emergency-visits/edit/<int:pk>/', edit_emergency_visit_request_view, name='edit-emergency-visits'),
     path('delete-emergency-visit/<int:pk>/', delete_emergency_visit_view, name='delete-emergency-visit'),
     path('update-emergency-visit/',update_emergency_visit_view, name='update-emergency-visit'),
-    
+    path('generate_schedule/', generate_schedule, name='generate_schedule'),   
+    path('locations/', schedule_page, name='locations'),  # URL to access the schedule page 
+
+
 
     
 ]

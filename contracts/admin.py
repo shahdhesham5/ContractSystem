@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Contract, MaintenanceSchedule, InvoiceSchedule, Engineers, EmergencyVisits
+from .models import Contract, MaintenanceSchedule, InvoiceSchedule, Engineers, EmergencyVisits, Vehicles
 
 @admin.register(Contract)
 class ContractAdmin(admin.ModelAdmin):
@@ -77,4 +77,7 @@ class EmergencyVisitsAdmin(admin.ModelAdmin):
     list_display = ('contract', 'site', 'request_visit_date','actual_visit_date','price', 'done','eng', 'image','pdf','comment')
     list_filter = ('request_visit_date', 'contract', 'site')
     search_fields = ('contract__company__company_name', 'site__site_name')
-  
+
+@admin.register(Vehicles)
+class VehiclesAdmin(admin.ModelAdmin):
+    list_display = ('num_vehicles','vehicle_capacity')

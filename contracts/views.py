@@ -8,11 +8,29 @@ from datetime import timedelta
 import calendar
 from django.db.models import Sum, Count
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Contract, MaintenanceSchedule, InvoiceSchedule, Engineers, EmergencyVisits
+from .models import Contract, MaintenanceSchedule, InvoiceSchedule, Engineers, EmergencyVisits, Vehicles
 from Clients.models import Company, Site
 from .forms import ContractForm, MaintenanceScheduleForm, InvoiceceScheduleForm, EmergencyForm
 from .decorators import allowed_users
-from django.utils.translation import gettext_lazy as _      
+from django.utils.translation import gettext_lazy as _   
+from django.core.management import call_command
+from io import StringIO
+
+def generate_schedule(request):
+    """View to trigger schedule generation"""
+    try:
+        # Capture the output of the management command
+        out = StringIO()
+        call_command('schedule_maintenance', stdout=out)  # Run your management command
+        schedule_output = out.getvalue()  # Get the command's output as a string
+
+        return JsonResponse({'status': 'success', 'schedule': schedule_output})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+   
+def schedule_page(request):
+    """View to render the schedule page."""
+    return render(request, 'pages/locations.html')  # Path to your template
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin','alex','cairo'])

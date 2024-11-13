@@ -1,0 +1,42 @@
+
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid py-4">
+    <button id="generateScheduleBtn" class="btn btn-primary mb-2">Generate Routing Schedule</button>
+    <div id="scheduleOutput"></div>
+{% endblock content %}
+    
+{% block extrascript %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+            $('#generateScheduleBtn').on('click', function() {
+                // Disable the button to avoid multiple clicks
+                $(this).prop('disabled', true);
+
+                // Send AJAX request to the backend
+                $.ajax({
+                    url: '{% url "generate_schedule" %}',
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $('#scheduleOutput').html('<pre>' + response.schedule + '</pre>');
+                        } else {
+                            $('#scheduleOutput').html('<p>Error: ' + response.message + '</p>');
+                        }
+                    },
+                    error: function() {
+                        $('#scheduleOutput').html('<p>An error occurred while generating the schedule.</p>');
+                    },
+                    complete: function() {
+                        // Enable the button again
+                        $('#generateScheduleBtn').prop('disabled', false);
+                    }
+                });
+            });
+        });
+
+</script>
+
+{% endblock %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-29 10:20+0300\n"
+"POT-Creation-Date: 2024-11-13 09:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,65 +19,60 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: ContractSystem/Clients/forms.py:10 ContractSystem/Clients/forms.py:37
-#: ContractSystem/Clients/forms.py:65 ContractSystem/Clients/models.py:26
-#: ContractSystem/Clients/models.py:41 ContractSystem/Clients/models.py:63
+#: Clients/forms.py:10 Clients/forms.py:37 Clients/forms.py:65
+#: Clients/models.py:26 Clients/models.py:41 Clients/models.py:63
 msgid "Company Name"
 msgstr "أسم الشركة الرئيسية"
 
-#: ContractSystem/Clients/forms.py:11 ContractSystem/Clients/forms.py:39
-#: ContractSystem/Clients/forms.py:68 ContractSystem/Clients/models.py:27
-#: ContractSystem/Clients/models.py:43 ContractSystem/Clients/models.py:66
+#: Clients/forms.py:11 Clients/forms.py:39 Clients/forms.py:68
+#: Clients/models.py:27 Clients/models.py:43 Clients/models.py:66
 msgid "Manager"
 msgstr "المسؤول"
 
-#: ContractSystem/Clients/forms.py:12 ContractSystem/Clients/forms.py:40
-#: ContractSystem/Clients/forms.py:69 ContractSystem/Clients/models.py:29
-#: ContractSystem/Clients/models.py:45 ContractSystem/Clients/models.py:68
+#: Clients/forms.py:12 Clients/forms.py:40 Clients/forms.py:69
+#: Clients/models.py:29 Clients/models.py:45 Clients/models.py:68
 msgid "Phone Number"
 msgstr "رقم الهاتف"
 
-#: ContractSystem/Clients/forms.py:13 ContractSystem/Clients/forms.py:41
-#: ContractSystem/Clients/forms.py:70 ContractSystem/Clients/models.py:30
-#: ContractSystem/Clients/models.py:46 ContractSystem/Clients/models.py:71
+#: Clients/forms.py:13 Clients/forms.py:41 Clients/forms.py:70
+#: Clients/models.py:30 Clients/models.py:46 Clients/models.py:71
 msgid "City"
 msgstr "المحافظة"
 
-#: ContractSystem/Clients/forms.py:14 ContractSystem/Clients/forms.py:42
-#: ContractSystem/Clients/forms.py:71 ContractSystem/Clients/models.py:31
-#: ContractSystem/Clients/models.py:47 ContractSystem/Clients/models.py:72
+#: Clients/forms.py:14 Clients/forms.py:42 Clients/forms.py:71
+#: Clients/models.py:31 Clients/models.py:47 Clients/models.py:72
 msgid "Area"
 msgstr "المنطقة"
 
-#: ContractSystem/Clients/forms.py:15 ContractSystem/Clients/models.py:28
+#: Clients/forms.py:15 Clients/models.py:28
 msgid "Company Address"
 msgstr "عنوان الشركة الرئيسية"
 
-#: ContractSystem/Clients/forms.py:38 ContractSystem/Clients/forms.py:66
-#: ContractSystem/Clients/models.py:42 ContractSystem/Clients/models.py:64
+#: Clients/forms.py:38 Clients/forms.py:66 Clients/models.py:42
+#: Clients/models.py:64
 msgid "Sub Company Name"
 msgstr "أسم الشركة"
 
-#: ContractSystem/Clients/forms.py:43 ContractSystem/Clients/models.py:44
+#: Clients/forms.py:43 Clients/models.py:44
 msgid "Sub Company Address"
 msgstr "عنوان الشركة"
 
-#: ContractSystem/Clients/forms.py:67 ContractSystem/Clients/models.py:65
+#: Clients/forms.py:67 Clients/models.py:65
 msgid "Site"
 msgstr "أسم الموقع"
 
-#: ContractSystem/Clients/forms.py:72 ContractSystem/Clients/models.py:69
+#: Clients/forms.py:72 Clients/models.py:69
 msgid "Location URL"
 msgstr "الموقع "
 
-#: ContractSystem/Clients/forms.py:73 ContractSystem/Clients/models.py:67
+#: Clients/forms.py:73 Clients/models.py:67
 msgid "Site Address"
 msgstr "عنوان الموقع"
 
-#: ContractSystem/Clients/forms.py:74 ContractSystem/Clients/models.py:70
+#: Clients/forms.py:74 Clients/models.py:70
 msgid "Comment"
 msgstr "ملحوظة"
 
-#: ContractSystem/Clients/models.py:8
+#: Clients/models.py:8
 msgid "Phone number must be 11 digits long."
 msgstr "يجب أن يكون رقم الهاتف مكوناً من 11 رقمًا."

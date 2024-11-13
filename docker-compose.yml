@@ -1,13 +1,14 @@
 services:
+
   db:
-    image: mysql:8.0
+    image: postgres:13
     container_name: django_contracts_db
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     env_file:
       - .env
     ports:
-      - "3306:3306"
+      - "5435:5432"
 
 
   django:
@@ -30,4 +31,5 @@ services:
       - db 
 
 volumes:
-  mysql_data:
+  postgres_data:
+

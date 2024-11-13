@@ -76,6 +76,7 @@ branches_site=[
 
 annual_increase_percentage = [
     (5, '5%'),
+    (7, '7%'),
     (10, '10%'),
 ]
 invoice_date_choices = [
@@ -282,3 +283,9 @@ class EmergencyVisits(models.Model):
     def __str__(self):
         return f"Schedule for {self.site} on {self.request_visit_date}"
     
+
+
+class Vehicles(models.Model):
+    num_vehicles = models.PositiveIntegerField(default=1, verbose_name="Number of Vehicles")
+    vehicle_capacity = models.PositiveIntegerField(default=2, verbose_name="Vehicle Capacity")
+    depot = models.URLField(max_length=200, null=True, blank=True, verbose_name=_("Depot Location"))
