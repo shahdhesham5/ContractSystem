@@ -27,4 +27,4 @@ COPY . /ContractSystem
 EXPOSE 8000
 
 # Command to run the Django application (using Gunicorn for production)
-CMD ["gunicorn", "ContractSystem.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2"]
+CMD ["gunicorn", "ContractSystem.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "4", "--timeout", "120", "--log-level", "info", "--access-logfile", "-", "--error-logfile", "-"]
