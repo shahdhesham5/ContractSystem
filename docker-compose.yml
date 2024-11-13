@@ -28,6 +28,18 @@ services:
       - .env
     depends_on:
       - db 
+  nginx:
+      image: nginx:alpine
+      container_name: django_nginx
+      volumes:
+        - ./nginx.conf:/e tc/nginx/nginx.conf:ro
+        - .:/ContractSystem
+        - /var/www/certbot:/var/www/certbot
+      ports:
+        - "80:80"
+        - "443:443"
+      depends_on:
+        - django
 
 volumes:
   mysql_data:
