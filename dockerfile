@@ -21,9 +21,11 @@ COPY requirements.txt /ContractSystem/
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code into the container
+# Copy the rest of the application code into the 
 COPY . /ContractSystem
-COPY nginx.conf /etc/nginx/nginx.conf
+#COPY /etc/nginx/sites-available/ictcoegyptstock /etc/nginx/nginx.conf
+
+#COPY nginx.conf /etc/nginx/nginx.conf
 # Expose the port that Django will run on
 # EXPOSE 8000
 EXPOSE 80 443
