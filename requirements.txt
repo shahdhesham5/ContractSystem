@@ -16,4 +16,4 @@ numpy
 geopy
 ortools
 requests==2.32.3
-# mysqlclient==2.1.1
+mysqlclient==2.1.1
