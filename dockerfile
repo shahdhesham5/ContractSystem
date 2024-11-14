@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-    RUN apt-get update && apt-get install -y nginx
+# RUN apt-get update && apt-get install -y nginx
 # Copy the requirements file into the container
 COPY requirements.txt /ContractSystem/
 
@@ -23,15 +23,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code into the 
 COPY . /ContractSystem
-#COPY /etc/nginx/sites-available/ictcoegyptstock /etc/nginx/nginx.conf
-
-#COPY nginx.conf /etc/nginx/nginx.conf
 # Expose the port that Django will run on
-# EXPOSE 8000
-EXPOSE 80 443
+EXPOSE 8000
+# EXPOSE 80 443
 
 # Command to run the Django application (using Gunicorn for production)
-# CMD ["gunicorn", "ContractSystem.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+CMD ["gunicorn", "ContractSystem.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2"]
 # Command to start both Gunicorn and Nginx
-CMD ["sh", "-c", "service nginx start && gunicorn ContractSystem.wsgi:application --bind 0.0.0.0:8000 --workers 3"]
+# CMD ["sh", "-c", "service nginx start && gunicorn ContractSystem.wsgi:application --bind 0.0.0.0:8000 --workers 3"]
 
