@@ -33,8 +33,8 @@ LOGIN_REDIRECT_URL = 'dashboard'  # Redirect to dashboard after login
 LOGOUT_REDIRECT_URL = 'login'
 
 DEBUG = os.getenv('DEBUG') 
-# ALLOWED_HOSTS = ['ictcoegyptstock.com', 'www.ictcoegyptstock.com', '195.35.38.155']
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(",")
+ALLOWED_HOSTS = ['ictcoegyptstock.com', 'www.ictcoegyptstock.com', '195.35.38.155']
+#ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(",")
 # Application definition
 INSTALLED_APPS = [
     'admin_soft.apps.AdminSoftDashboardConfig',
@@ -97,7 +97,7 @@ DATABASES = {
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
+        'HOST': os.getenv('DB_HOST','127.0.0.1'),
         'PORT': os.getenv('DB_PORT'),
     }
 }
@@ -168,3 +168,4 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB limit
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SECURE_SSL_REDIRECT = False
