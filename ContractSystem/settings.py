@@ -34,7 +34,7 @@ LOGOUT_REDIRECT_URL = 'login'
 
 DEBUG = os.getenv('DEBUG') 
 ALLOWED_HOSTS = ['ictcoegyptstock.com', 'www.ictcoegyptstock.com', '195.35.38.155']
-#ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(",")
+# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(",")
 # Application definition
 INSTALLED_APPS = [
     'admin_soft.apps.AdminSoftDashboardConfig',

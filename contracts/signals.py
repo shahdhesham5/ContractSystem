@@ -5,27 +5,64 @@ from Clients.models import Site, Company, SubCompany
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta
 
+# @receiver(post_save, sender=Contract)
+# def generate_maintenance_schedule(sender, instance, created, **kwargs):
+#     if created:
+#         start_date = instance.start_date
+#         end_date = instance.end_date
+#         maintenance_mapping = {
+#             "Every Month": 1,
+#             "Every 2 Months": 2,
+#             "Every 3 Months": 3,
+#             "Every 4 Months": 4,
+#             "Every 6 Months": 6,
+#         }
+        
+#         visit_interval = maintenance_mapping.get(instance.maintenance_frequency, 1)
+
+#         current_date = start_date
+#         next_date = current_date + relativedelta(months=visit_interval)
+        
+#         sites = Site.objects.filter(company=instance.company)
+
+#         while current_date <= end_date:
+#             for site in sites:
+#                 MaintenanceSchedule.objects.create(
+#                     contract=instance,
+#                     site=site,
+#                     visit_date=current_date,
+#                     due_date=min(next_date, end_date)
+#                 )
+#             current_date = next_date
+#             next_date = current_date + relativedelta(months=visit_interval)
+
+#         # Ensure no extra visits are generated past the end date
+#         if current_date > end_date:
+#             current_date = end_date
+
 @receiver(post_save, sender=Contract)
 def generate_maintenance_schedule(sender, instance, created, **kwargs):
     if created:
         start_date = instance.start_date
         end_date = instance.end_date
+        
         maintenance_mapping = {
-            "Every Month": 1,
-            "Every 2 Months": 2,
-            "Every 3 Months": 3,
-            "Every 4 Months": 4,
-            "Every 6 Months": 6,
+            "Every Week": timedelta(weeks=1),
+            "Every 2 Weeks": timedelta(weeks=2),
+            "Every Month": relativedelta(months=1),
+            "Every 2 Months": relativedelta(months=2),
+            "Every 3 Months": relativedelta(months=3),
+            "Every 4 Months": relativedelta(months=4),
+            "Every 6 Months": relativedelta(months=6),
         }
         
-        visit_interval = maintenance_mapping.get(instance.maintenance_frequency, 1)
-
+        visit_interval = maintenance_mapping.get(instance.maintenance_frequency, relativedelta(months=1))
         current_date = start_date
-        next_date = current_date + relativedelta(months=visit_interval)
+        next_date = start_date + visit_interval
         
         sites = Site.objects.filter(company=instance.company)
-
-        while current_date <= end_date:
+        
+        while current_date < end_date:  # Ensure the current date is strictly before the end date
             for site in sites:
                 MaintenanceSchedule.objects.create(
                     contract=instance,
@@ -34,12 +71,12 @@ def generate_maintenance_schedule(sender, instance, created, **kwargs):
                     due_date=min(next_date, end_date)
                 )
             current_date = next_date
-            next_date = current_date + relativedelta(months=visit_interval)
+            next_date = current_date + visit_interval
 
-        # Ensure no extra visits are generated past the end date
-        if current_date > end_date:
-            current_date = end_date
-            
+        # Avoid generating a visit if the last `current_date` equals the `end_date`
+        if current_date == end_date:
+            return
+  
 
 @receiver(post_save, sender=Contract)
 def generate_invoice_schedule(sender, instance, created, **kwargs):

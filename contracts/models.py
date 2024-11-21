@@ -57,14 +57,22 @@ def get_emergency_visit_pdf_upload_path(instance, filename):
 
 
 
-intervals= [
+visit_intervals= [
+    ("Every Week", _("Every Week")),           # 52 visits/Y
+    ("Every 2 Weeks", _("Every 2 Weeks")),     # 26 visits/Y
     ("Every Month",_("Every Month")),         #12 visits/Y
     ("Every 2 Months",_("Every 2 Months")),   #6  visits/Y 
     ("Every 3 Months",_("Every 3 Months")),   #4  visits/Y
     ("Every 4 Months",_("Every 4 Months")),   #3  visits/Y
     ("Every 6 Months",_("Every 6 Months")),   #2  visits/Y
 ]
-
+invoice_intervals= [
+    ("Every Month",_("Every Month")),         #12 visits/Y
+    ("Every 2 Months",_("Every 2 Months")),   #6  visits/Y 
+    ("Every 3 Months",_("Every 3 Months")),   #4  visits/Y
+    ("Every 4 Months",_("Every 4 Months")),   #3  visits/Y
+    ("Every 6 Months",_("Every 6 Months")),   #2  visits/Y
+]
 branches=[
     ("International company",_("International company")),
     ("Millenium company",_("Millenium company")),
@@ -100,9 +108,9 @@ class Contract(models.Model):
     emergency_visit_price = models.FloatField(validators=[MinValueValidator(0.0)], default=0, null=True, blank=True,verbose_name=_("Emergency Visit Price"))
     emergency_within_period = models.IntegerField(choices=within_period,null=True,blank=True,verbose_name=_("Emergency Visit within"))
     
-    invoice_frequency = models.CharField(max_length=255, choices=intervals,verbose_name=_("Invoice Frequency")) 
+    invoice_frequency = models.CharField(max_length=255, choices=invoice_intervals,verbose_name=_("Invoice Frequency")) 
     invoice_date_calculation = models.CharField(max_length=10, choices=invoice_date_choices, default='end',verbose_name=_("Invoice Calculated Date"))
-    maintenance_frequency = models.CharField(max_length=255, choices=intervals,verbose_name=_("Maintenance Frequency"))  
+    maintenance_frequency = models.CharField(max_length=255, choices=visit_intervals,verbose_name=_("Maintenance Frequency"))  
     
     branch = models.CharField(max_length=255, choices=branches,verbose_name=_("Company"))
     branch_site = models.CharField(max_length=255, choices=branches_site, default='Cairo',verbose_name=_("Company Branch"))
