@@ -624,7 +624,7 @@ def edit_invoice_view(request, pk):
         form = InvoiceceScheduleForm(request.POST, request.FILES, instance=invoice) 
         if form.is_valid():
             form.save()
-            return redirect('maintenence-schedule')
+            return redirect('invoice-schedule')
     else:
         form = InvoiceceScheduleForm(instance=invoice)
 

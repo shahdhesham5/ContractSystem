@@ -1623,7 +1623,7 @@ msgstr "إضافة"
 #: templates/pages/edit_invoice.html:10 templates/pages/edit_site.html:10
 #: templates/pages/edit_subcompany.html:10 templates/pages/edit_visit.html:10
 msgid "Cancel"
-msgstr "إلغلاء"
+msgstr "إلغاء"
 
 #: templates/pages/create_contract.html:5
 msgid "Create New Contract"

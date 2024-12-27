@@ -22,6 +22,7 @@ urlpatterns = [
     path('delete-invoice/<int:pk>/', delete_Invoice_view, name='delete-invoice'),
     
     path('ajax/load-sites/', views.load_sites, name='ajax_load_sites'),
+    
     path('emergency-visits/', emergency_visits_view, name='emergency-visits'),
     path('emergency-visits/create', create_emergency_visit_request_view, name='create-emergency-visits'),
     path('emergency-visits/edit/<int:pk>/', edit_emergency_visit_request_view, name='edit-emergency-visits'),

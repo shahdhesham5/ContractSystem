@@ -1,16 +1,15 @@
 services:
   db:
-    image: mysql:8.0
+    image: postgres:13
     container_name: django_contracts_db
     volumes:
-      - ./docker-mysql-data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     env_file:
       - .env
     ports:
-      - "3307:3306"
-    environment:
-      - MYSQL_ROOT_PASSWORD=230223  # Set this password
-      - MYSQL_DATABASE=contracts_db
+      - "5435:5432"
+
+
   django:
     build: .
     container_name: django_contracts
@@ -28,9 +27,7 @@ services:
     env_file:
       - .env
     depends_on:
-      - db
+      - db 
 
-
-networks:
-  default:
-    driver: bridge
+volumes:
+  postgres_data:
