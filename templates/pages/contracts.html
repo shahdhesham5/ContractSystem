@@ -73,6 +73,8 @@
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Start Date' %}</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'End Date' %}</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Contract Price Value' %} <span>{% trans 'Not Including VAT' %}</span></th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Is Taxed' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Tax Percentage' %}</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Invoice Frequency' %}</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Invoice Calculated Date' %}</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Maintenance Frequency' %}</th>
@@ -111,6 +113,12 @@
                   </td>
                   <td class="align-middle text-center">
                     <span class="text-xs font-weight-bold">{{contract.contract_price_value}}</span>
+                  </td>
+                  <td class="align-middle text-center">
+                    <span class="text-xs font-weight-bold">{{contract.is_taxed}}</span>
+                  </td>
+                  <td class="align-middle text-center">
+                    <span class="text-xs font-weight-bold">{{contract.tax_percentage}}</span>
                   </td>
                   <td class="align-middle text-center">
                     <span class="text-xs font-weight-bold">{{contract.invoice_frequency}}</span>

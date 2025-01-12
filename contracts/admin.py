@@ -38,6 +38,8 @@ class ContractAdmin(admin.ModelAdmin):
                 'start_date',
                 'end_date',
                 'contract_price_value',
+                'is_taxed',
+                'tax_percentage',
                 'emergency_visit_price',
                 'emergency_within_period',
                 'annual_increase',

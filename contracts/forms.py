@@ -27,7 +27,8 @@ class ContractForm(forms.ModelForm):
         model = Contract
         fields = [
             'company', 'start_date', 'end_date', 
-            'contract_price_value', 'invoice_frequency', 
+            'contract_price_value', 'is_taxed',
+            'tax_percentage', 'invoice_frequency', 
             'invoice_date_calculation', 'maintenance_frequency', 
             'emergency_visit_price', 'emergency_within_period', 
             'branch', 'branch_site', 'annual_increase', 
@@ -45,6 +46,8 @@ class ContractForm(forms.ModelForm):
             'start_date': _("Start Date"),
             'end_date': _("End Date"),
             'contract_price_value': _("Contract Price Value"),
+            'is_taxed':_("Is Taxed"),
+            'tax_percentage': _("Tax Percentage"),
             'annual_increase': _("Annual Percentage"),
             'auto_renew': _("Auto Renew"),
             'emergency_visit_price': _("Emergency Visit Price"),

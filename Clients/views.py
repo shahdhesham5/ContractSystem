@@ -11,9 +11,7 @@ import uuid
 from django.core.exceptions import ValidationError
 from contracts.decorators import allowed_users
 
-import logging
 
-logger = logging.getLogger(__name__)  # Configure this in your settings if not already
 
 def load_subcompanies(request):
     company_id = request.GET.get('company_id')
@@ -22,7 +20,6 @@ def load_subcompanies(request):
         # Validate and parse the UUID
         company_id = uuid.UUID(company_id)
     except (ValueError, TypeError, ValidationError) as e:
-        logger.error(f"UUID parsing error: {e}")
         return JsonResponse({'error': 'Invalid company ID format'}, status=400)
 
     try:
@@ -30,7 +27,6 @@ def load_subcompanies(request):
         sub_companies = SubCompany.objects.filter(parent_company_id=company_id).values('id', 'sub_company_name')
         return JsonResponse(list(sub_companies), safe=False)
     except Exception as e:
-        logger.error(f"Database query error: {e}")
         return JsonResponse({'error': 'Server error while retrieving sub-companies'}, status=500)
 
 def load_areas(request):
@@ -96,9 +92,10 @@ def company_profile_view(request, pk):
     all_sites = company_sites.union(subcompany_sites)
     
     contracts = Contract.objects.filter(company=company)  
-    invoices_done = InvoiceSchedule.objects.filter(company=company, is_paid=True)  
-    emergency = EmergencyVisits.objects.filter(contract__company=company, done=True)
-    
+    invoices_done = InvoiceSchedule.objects.filter(company=company, is_paid=True).order_by('-id')[:3]
+    emergency = EmergencyVisits.objects.filter(contract__company=company, done=True).order_by('-id')[:3]
+    visits = MaintenanceSchedule.objects.filter(contract__in=contracts, done=True).order_by('-id')[:3]
+        
     context = {
         'company': company,
         'subcompanies':subcompanies,
@@ -106,10 +103,35 @@ def company_profile_view(request, pk):
         'contracts': contracts,
         'invoices_done':invoices_done,
         'emergency':emergency,
+        'visits':visits,
     }
     return render(request, 'pages/company_profile.html', context)
 
+def company_invoices_view(request, pk):
+    company = get_object_or_404(Company, id=pk)    
+    invoices_done = InvoiceSchedule.objects.filter(company=company, is_paid=True)
+    context = {
+        'company': company,
+        'invoices_done':invoices_done,
+    }
+    return render(request, 'pages/company_invoices.html', context)
 
+def company_visits_view(request, pk):
+    company = get_object_or_404(Company, id=pk)   
+    contracts = Contract.objects.filter(company=company)  
+    visits = MaintenanceSchedule.objects.filter(contract__in=contracts, done=True)
+    context = {
+        'visits':visits,
+    }
+    return render(request, 'pages/company_visits.html', context)
+
+def company_emrgencyvisits_view(request, pk):
+    company = get_object_or_404(Company, id=pk)   
+    visits = EmergencyVisits.objects.filter(contract__company=company, done=True)
+    context = {
+        'visits':visits,
+    }
+    return render(request, 'pages/company_emrgencyvisits.html', context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])

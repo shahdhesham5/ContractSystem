@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-13 09:22+0200\n"
+"POT-Creation-Date: 2025-01-02 15:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,57 +19,67 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: Clients/forms.py:10 Clients/forms.py:37 Clients/forms.py:65
-#: Clients/models.py:26 Clients/models.py:41 Clients/models.py:63
+#: Clients/forms.py:10 Clients/forms.py:39 Clients/forms.py:69
+#: Clients/models.py:26 Clients/models.py:42 Clients/models.py:66
 msgid "Company Name"
 msgstr "أسم الشركة الرئيسية"
 
-#: Clients/forms.py:11 Clients/forms.py:39 Clients/forms.py:68
-#: Clients/models.py:27 Clients/models.py:43 Clients/models.py:66
+#: Clients/forms.py:11 Clients/forms.py:41 Clients/models.py:32
+#: Clients/models.py:49
+msgid "Registration number"
+msgstr "رقم التسجيل الضريبي"
+
+#: Clients/forms.py:12 Clients/forms.py:42 Clients/models.py:33
+#: Clients/models.py:50
+msgid "ERP code"
+msgstr "كود ERP"
+
+#: Clients/forms.py:13 Clients/forms.py:43 Clients/forms.py:72
+#: Clients/models.py:27 Clients/models.py:44 Clients/models.py:69
 msgid "Manager"
 msgstr "المسؤول"
 
-#: Clients/forms.py:12 Clients/forms.py:40 Clients/forms.py:69
-#: Clients/models.py:29 Clients/models.py:45 Clients/models.py:68
+#: Clients/forms.py:14 Clients/forms.py:44 Clients/forms.py:73
+#: Clients/models.py:29 Clients/models.py:46 Clients/models.py:71
 msgid "Phone Number"
 msgstr "رقم الهاتف"
 
-#: Clients/forms.py:13 Clients/forms.py:41 Clients/forms.py:70
-#: Clients/models.py:30 Clients/models.py:46 Clients/models.py:71
+#: Clients/forms.py:15 Clients/forms.py:45 Clients/forms.py:74
+#: Clients/models.py:30 Clients/models.py:47 Clients/models.py:74
 msgid "City"
 msgstr "المحافظة"
 
-#: Clients/forms.py:14 Clients/forms.py:42 Clients/forms.py:71
-#: Clients/models.py:31 Clients/models.py:47 Clients/models.py:72
+#: Clients/forms.py:16 Clients/forms.py:46 Clients/forms.py:75
+#: Clients/models.py:31 Clients/models.py:48 Clients/models.py:75
 msgid "Area"
 msgstr "المنطقة"
 
-#: Clients/forms.py:15 Clients/models.py:28
+#: Clients/forms.py:17 Clients/models.py:28
 msgid "Company Address"
 msgstr "عنوان الشركة الرئيسية"
 
-#: Clients/forms.py:38 Clients/forms.py:66 Clients/models.py:42
-#: Clients/models.py:64
+#: Clients/forms.py:40 Clients/forms.py:70 Clients/models.py:43
+#: Clients/models.py:67
 msgid "Sub Company Name"
 msgstr "أسم الشركة"
 
-#: Clients/forms.py:43 Clients/models.py:44
+#: Clients/forms.py:47 Clients/models.py:45
 msgid "Sub Company Address"
 msgstr "عنوان الشركة"
 
-#: Clients/forms.py:67 Clients/models.py:65
+#: Clients/forms.py:71 Clients/models.py:68
 msgid "Site"
 msgstr "أسم الموقع"
 
-#: Clients/forms.py:72 Clients/models.py:69
+#: Clients/forms.py:76 Clients/models.py:72
 msgid "Location URL"
 msgstr "الموقع "
 
-#: Clients/forms.py:73 Clients/models.py:67
+#: Clients/forms.py:77 Clients/models.py:70
 msgid "Site Address"
 msgstr "عنوان الموقع"
 
-#: Clients/forms.py:74 Clients/models.py:70
+#: Clients/forms.py:78 Clients/models.py:73
 msgid "Comment"
 msgstr "ملحوظة"
 

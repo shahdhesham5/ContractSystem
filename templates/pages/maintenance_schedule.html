@@ -118,17 +118,17 @@
               <tbody>
                 {% for visit in visits %}
                 <tr>
-                  <td>
+                  <td class="align-middle text-center">
                     <div class="d-flex px-2 py-1">
                       <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">{{ visit.contract }}</h6>
+                        <h6 class="mb-0 text-sm">{{ visit.contract.company }}</h6>
                       </div>
                     </div>
                   </td>
-                  <td>
-                    <p class="text-xs font-weight-bold mb-0">{{ visit.site }}</p>
+                  <td class="align-middle text-center">
+                    <p class="d-flex flex-column justify-content-center">{{ visit.site }}</p>
                   </td>
-                  <td>
+                  <td class="align-middle text-center">
                     <p class="text-xs font-weight-bold mb-0">{{ visit.visit_date }}</p>
                   </td>
                   <td class="align-middle text-center text-sm">

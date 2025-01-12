@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-13 09:22+0200\n"
+"POT-Creation-Date: 2025-01-12 13:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,68 +19,76 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: contracts/forms.py:44 contracts/models.py:92 contracts/models.py:155
-#: contracts/models.py:203 contracts/models.py:204
+#: contracts/forms.py:45 contracts/models.py:100 contracts/models.py:176
+#: contracts/models.py:224 contracts/models.py:225
 msgid "Company Name"
 msgstr "أسم الشركة الرئيسية"
 
-#: contracts/forms.py:45 contracts/models.py:94
+#: contracts/forms.py:46 contracts/models.py:102
 msgid "Start Date"
 msgstr "بداية العقد"
 
-#: contracts/forms.py:46 contracts/models.py:95
+#: contracts/forms.py:47 contracts/models.py:103
 msgid "End Date"
 msgstr "نهاية العقد"
 
-#: contracts/forms.py:47 contracts/models.py:97
+#: contracts/forms.py:48 contracts/models.py:105
 msgid "Contract Price Value"
 msgstr "قيمة العقد"
 
-#: contracts/forms.py:48 contracts/models.py:98
+#: contracts/forms.py:49 contracts/models.py:122
+msgid "Is Taxed"
+msgstr "شامل ضريبة"
+
+#: contracts/forms.py:50 contracts/models.py:123
+msgid "Tax Percentage"
+msgstr "نسبة الضريبة"
+
+#: contracts/forms.py:51 contracts/models.py:106
 msgid "Annual Percentage"
 msgstr "الزيادة السنوية"
 
-#: contracts/forms.py:49 contracts/models.py:99
+#: contracts/forms.py:52 contracts/models.py:107
 msgid "Auto Renew"
 msgstr "يجدد تلقائي"
 
-#: contracts/forms.py:50 contracts/models.py:100
+#: contracts/forms.py:53 contracts/models.py:108
 msgid "Emergency Visit Price"
 msgstr "سعر الزيارة الطارئة"
 
-#: contracts/forms.py:51 contracts/models.py:101
+#: contracts/forms.py:54 contracts/models.py:109
 msgid "Emergency Visit within"
 msgstr "تتم الزيارة الطارئة خلال"
 
-#: contracts/forms.py:52 contracts/models.py:103
+#: contracts/forms.py:55 contracts/models.py:111
 msgid "Invoice Frequency"
 msgstr "مواعيد الفواتير"
 
-#: contracts/forms.py:53 contracts/models.py:104
+#: contracts/forms.py:56 contracts/models.py:112
 msgid "Invoice Calculated Date"
 msgstr "بداية/نهاية"
 
-#: contracts/forms.py:54 contracts/models.py:105
+#: contracts/forms.py:57 contracts/models.py:113
 msgid "Maintenance Frequency"
 msgstr "مواعيد الزيارات"
 
-#: contracts/forms.py:55 contracts/models.py:108
+#: contracts/forms.py:58 contracts/models.py:116
 msgid "Company Branch"
 msgstr "فرع الشركة"
 
-#: contracts/forms.py:56 contracts/models.py:111
+#: contracts/forms.py:59 contracts/models.py:119
 msgid "Damgh Date"
 msgstr "تاريخ الدمغ"
 
-#: contracts/forms.py:57 contracts/models.py:112
+#: contracts/forms.py:60 contracts/models.py:120
 msgid "Damgh Price"
 msgstr "سعر الدمغ"
 
-#: contracts/forms.py:58 contracts/models.py:117
+#: contracts/forms.py:61 contracts/models.py:128
 msgid "Contract Image"
 msgstr "صورة العقد"
 
-#: contracts/forms.py:59 contracts/models.py:129
+#: contracts/forms.py:62 contracts/models.py:140
 msgid "Contract PDF"
 msgstr "فايل العقد"
 
@@ -97,145 +105,155 @@ msgid "File too large. Size should not exceed 5 MiB."
 msgstr "الملف كبير جدًا. يجب ألا يتجاوز الحجم 5 ميجابايت."
 
 #: contracts/models.py:61
+msgid "Every Week"
+msgstr ""
+
+#: contracts/models.py:62
+#, fuzzy
+#| msgid "Every 2 Months"
+msgid "Every 2 Weeks"
+msgstr "كل شهرين"
+
+#: contracts/models.py:63 contracts/models.py:70
 msgid "Every Month"
 msgstr "كل شهر"
 
-#: contracts/models.py:62
+#: contracts/models.py:64 contracts/models.py:71
 msgid "Every 2 Months"
 msgstr "كل شهرين"
 
-#: contracts/models.py:63
+#: contracts/models.py:65 contracts/models.py:72
 msgid "Every 3 Months"
 msgstr "كل ٣ شهور"
 
-#: contracts/models.py:64
+#: contracts/models.py:66 contracts/models.py:73
 msgid "Every 4 Months"
 msgstr "كل ٤ شهور"
 
-#: contracts/models.py:65
+#: contracts/models.py:67 contracts/models.py:74
 msgid "Every 6 Months"
 msgstr "كل ٦ شهور"
 
-#: contracts/models.py:69
+#: contracts/models.py:77
 msgid "International company"
 msgstr " الدولية"
 
-#: contracts/models.py:70
+#: contracts/models.py:78
 msgid "Millenium company"
 msgstr " ميلينيوم"
 
-#: contracts/models.py:73
+#: contracts/models.py:81
 msgid "Cairo"
 msgstr "القاهرة"
 
-#: contracts/models.py:74
+#: contracts/models.py:82
 msgid "Alexandria"
 msgstr "أسكندرية"
 
-#: contracts/models.py:83
+#: contracts/models.py:91
 msgid "From the Start of the Frequency Period"
 msgstr "بداية "
 
-#: contracts/models.py:84
+#: contracts/models.py:92
 msgid "From the End of the Frequency Period"
 msgstr "نهاية "
 
-#: contracts/models.py:107
+#: contracts/models.py:115
 msgid "Company"
 msgstr "الشركة"
 
-#: contracts/models.py:122 contracts/models.py:171 contracts/models.py:217
-#: contracts/models.py:256
+#: contracts/models.py:133 contracts/models.py:192 contracts/models.py:238
+#: contracts/models.py:282
 msgid "Invalid image extension. Only the following formats are allowed: {}."
 msgstr "امتداد الصورة غير صالح. التنسيقات المسموح بها هي: {}."
 
-#: contracts/models.py:134 contracts/models.py:183 contracts/models.py:229
-#: contracts/models.py:268
+#: contracts/models.py:145 contracts/models.py:204 contracts/models.py:250
+#: contracts/models.py:294
 msgid "Invalid file extension. Only the following formats are allowed: {}."
 msgstr "امتداد الملف غير صالح. التنسيقات المسموح بها هي: {}."
 
-#: contracts/models.py:149 contracts/models.py:157
+#: contracts/models.py:170 contracts/models.py:178
 msgid "Engineer name"
 msgstr "أسم مهندس الصيانة"
 
-#: contracts/models.py:156
+#: contracts/models.py:177
 msgid "Site"
 msgstr ""
 
-#: contracts/models.py:159
+#: contracts/models.py:180
 msgid "Visit date"
 msgstr "من "
 
-#: contracts/models.py:160
+#: contracts/models.py:181
 msgid "Visit Due date"
 msgstr "إلي"
 
-#: contracts/models.py:161
+#: contracts/models.py:182
 msgid "Visit Completed date"
 msgstr "تاريخ الزيارة"
 
-#: contracts/models.py:162 contracts/models.py:246
+#: contracts/models.py:183 contracts/models.py:272
 msgid "Done"
 msgstr "تم"
 
-#: contracts/models.py:167
+#: contracts/models.py:188
 msgid "Visit Image"
 msgstr "صورة الزيارة"
 
-#: contracts/models.py:178
+#: contracts/models.py:199
 msgid "Visit PDF"
 msgstr "فايل الزيارة"
 
-#: contracts/models.py:205
+#: contracts/models.py:226
 #, fuzzy
 #| msgid "Company Name"
 msgid "Sub Company Name"
 msgstr "أسم الشركة الرئيسية"
 
-#: contracts/models.py:206
+#: contracts/models.py:227
 msgid "Invoice date"
 msgstr "تاريخ الفاتورة"
 
-#: contracts/models.py:207
+#: contracts/models.py:228
 msgid "Invoice value"
 msgstr "قيمة الفاتورة"
 
-#: contracts/models.py:208
+#: contracts/models.py:229
 msgid "Is paid"
 msgstr "تم الدفع"
 
-#: contracts/models.py:212
+#: contracts/models.py:233
 msgid "Invoice Image"
 msgstr "صورة الفاتورة"
 
-#: contracts/models.py:224
+#: contracts/models.py:245
 msgid "Invoice PDF"
 msgstr "فايل الفاتورة"
 
-#: contracts/models.py:243
+#: contracts/models.py:269
 msgid "Emergency Visit Request date"
 msgstr "تاريخ طلب الزيارة الطارئة"
 
-#: contracts/models.py:244
+#: contracts/models.py:270
 msgid "Emergency Visit date"
 msgstr "تاريخ الزيارة الطارئة"
 
-#: contracts/models.py:245
+#: contracts/models.py:271
 msgid "Price"
 msgstr "سعر الزيارة الطارئة"
 
-#: contracts/models.py:247
+#: contracts/models.py:273
 msgid "Comment"
 msgstr "ملحوظة"
 
-#: contracts/models.py:252
+#: contracts/models.py:278
 msgid "Emergency Visit Image"
 msgstr "صورة الزيارة الطارئة"
 
-#: contracts/models.py:263
+#: contracts/models.py:289
 msgid "Emergency Visit PDF"
 msgstr "فايل الزيارة الطارئة"
 
-#: contracts/models.py:291
+#: contracts/models.py:317
 msgid "Depot Location"
 msgstr ""

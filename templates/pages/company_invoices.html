@@ -1,0 +1,83 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load custom_tags %} 
+{% load i18n %}
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <h6>{% trans 'Invoices' %}</h6>
+        </div>
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Company Name' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Sub Company Name' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Invoice date' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Invoice value' %} <span>{% trans 'Not Including VAT' %}</span></th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Is paid' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Invoice Image' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Invoice PDF' %}</th>
+                  <th class="text-secondary opacity-7"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for invoice in invoices_done %}
+                <tr>
+                  <td class="align-middle text-center">
+                    <div class="d-flex px-2 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{ invoice.company }}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="align-middle text-center">
+                    {% if invoice.sub_company %}
+                    <p class="text-xs font-weight-bold mb-0 text-center">{{ invoice.sub_company }}</p>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <p class="text-xs font-weight-bold mb-0 text-center">{{ invoice.invoice_date }}</p>
+                  </td>
+                  <td>
+                    <p class="text-xs font-weight-bold mb-0 text-center">{{ invoice.amount }}</p>
+                  </td>
+                  <td class="align-middle text-sm">
+                    {% if invoice.is_paid %}
+                    <span class="badge badge-sm bg-gradient-success text-center">{{ invoice.is_paid }}</span>
+                    {% else %}
+                    <span class="badge badge-sm bg-gradient-danger text-center">{{ invoice.is_paid }}</span>
+                    {% endif %}
+                  </td>
+                  <td class="align-middle text-center text-sm text-center">
+                    {% if invoice.image %}
+                    <a href="{{ invoice.image.url }}"><i class="fas fa-file-image text-lg me-1 text-center"></i> Image</a>
+                    {% else %}
+                    <span class="text-center">-</span>
+                    {% endif %}
+                  </td>
+                  <td class="align-middle text-center text-sm text-center">
+                    {% if invoice.pdf %}
+                    <a href="{{ invoice.pdf.url }}" target="_blank"> <i class="fas fa-file-pdf text-lg me-1 text-center"></i> PDF
+                    </a>
+                    {% else %}
+                    <span class="text-center">-</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

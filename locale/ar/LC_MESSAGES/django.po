@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-13 09:22+0200\n"
+"POT-Creation-Date: 2025-01-12 14:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -836,73 +836,73 @@ msgstr ""
 #: templates/pages/invoice_schedule.html:55
 #: templates/pages/maintenance_schedule.html:56
 msgid "January"
-msgstr ""
+msgstr "يناير"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:26
 #: templates/pages/invoice_schedule.html:56
 #: templates/pages/maintenance_schedule.html:57
 msgid "February"
-msgstr ""
+msgstr "فبراير"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:27
 #: templates/pages/invoice_schedule.html:57
 #: templates/pages/maintenance_schedule.html:58
 msgid "March"
-msgstr ""
+msgstr "مارس"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:28
 #: templates/pages/invoice_schedule.html:58
 #: templates/pages/maintenance_schedule.html:59
 msgid "April"
-msgstr ""
+msgstr "إبريل"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:29
 #: templates/pages/invoice_schedule.html:59
 #: templates/pages/maintenance_schedule.html:60
 msgid "May"
-msgstr ""
+msgstr "مايو"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:30
 #: templates/pages/invoice_schedule.html:60
 #: templates/pages/maintenance_schedule.html:61
 msgid "June"
-msgstr ""
+msgstr "يونيو"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:31
 #: templates/pages/invoice_schedule.html:61
 #: templates/pages/maintenance_schedule.html:62
 msgid "July"
-msgstr ""
+msgstr "يوليو"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:32
 #: templates/pages/invoice_schedule.html:62
 #: templates/pages/maintenance_schedule.html:63
 msgid "August"
-msgstr ""
+msgstr "اغسطس"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:33
 #: templates/pages/invoice_schedule.html:63
 #: templates/pages/maintenance_schedule.html:64
 msgid "September"
-msgstr ""
+msgstr "سبتمبر"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:34
 #: templates/pages/invoice_schedule.html:64
 #: templates/pages/maintenance_schedule.html:65
 msgid "October"
-msgstr ""
+msgstr "أكتوبر"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:35
 #: templates/pages/invoice_schedule.html:65
 #: templates/pages/maintenance_schedule.html:66
 msgid "November"
-msgstr ""
+msgstr "نوفمبر"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:36
 #: templates/pages/invoice_schedule.html:66
 #: templates/pages/maintenance_schedule.html:67
 msgid "December"
-msgstr ""
+msgstr "ديسمبر"
 
 #: env/lib/python3.12/site-packages/django/utils/dates.py:39
 msgid "jan"
@@ -1351,21 +1351,25 @@ msgstr "نظام إدارة العقود"
 msgid "Dashboard"
 msgstr "لوحة القيادة"
 
-#: templates/includes/sidebar.html:40 templates/pages/contracts.html:65
+#: templates/includes/sidebar.html:40 templates/pages/company_profile.html:45
+#: templates/pages/contracts.html:65
 msgid "Contracts"
 msgstr "العقود"
 
-#: templates/includes/sidebar.html:48
-#: templates/pages/maintenance_schedule.html:99
-msgid "Maintenance Schedule"
-msgstr "الزيارات"
+#: templates/includes/sidebar.html:48 templates/pages/company_profile.html:173
+#: templates/pages/company_visits.html:11 templates/pages/new.html:169
+msgid "Visits"
+msgstr "زيارات"
 
-#: templates/includes/sidebar.html:56 templates/pages/invoice_schedule.html:96
-msgid "Invoice Schedule"
-msgstr "الفواتير"
+#: templates/includes/sidebar.html:56 templates/pages/company_invoices.html:11
+#: templates/pages/company_profile.html:139 templates/pages/new.html:139
+msgid "Invoices"
+msgstr "فواتير"
 
-#: templates/includes/sidebar.html:64 templates/pages/dashboard.html:119
-#: templates/pages/emergency_visits.html:14
+#: templates/includes/sidebar.html:64
+#: templates/pages/company_emrgencyvisits.html:11
+#: templates/pages/company_profile.html:213 templates/pages/dash.html:119
+#: templates/pages/dashboard.html:171 templates/pages/emergency_visits.html:14
 msgid "Emergency Visits"
 msgstr "الزيارات الطارئة"
 
@@ -1373,9 +1377,10 @@ msgstr "الزيارات الطارئة"
 msgid "Contracts Expiring Soon"
 msgstr "تجديد العقود"
 
-#: templates/includes/sidebar.html:77
-msgid "Accounts"
-msgstr "بيانات العملاء"
+#: templates/includes/sidebar.html:77 templates/pages/dash.html:61
+#: templates/pages/dashboard.html:61
+msgid "Clients"
+msgstr "العملاء"
 
 #: templates/includes/sidebar.html:84 templates/pages/companies.html:14
 msgid "Companies"
@@ -1393,17 +1398,18 @@ msgstr "المواقع"
 msgid "Create New Company"
 msgstr "إضافة شركة رئيسية جديدة"
 
-#: templates/pages/companies.html:21 templates/pages/contracts.html:40
-#: templates/pages/contracts.html:72 templates/pages/expiring_soon.html:18
+#: templates/pages/companies.html:21 templates/pages/company_invoices.html:18
+#: templates/pages/contracts.html:40 templates/pages/contracts.html:72
+#: templates/pages/expiring_soon.html:18
 #: templates/pages/invoice_schedule.html:39
-#: templates/pages/invoice_schedule.html:103 templates/pages/sites.html:22
+#: templates/pages/invoice_schedule.html:103 templates/pages/sites.html:24
 #: templates/pages/subcompanies.html:21
 msgid "Company Name"
 msgstr " أسم الشركة الرئيسية "
 
-#: templates/pages/companies.html:22 templates/pages/company_profile.html:41
-#: templates/pages/company_profile.html:62
-#: templates/pages/company_profile.html:93 templates/pages/sites.html:25
+#: templates/pages/companies.html:22 templates/pages/company_profile.html:85
+#: templates/pages/company_profile.html:114 templates/pages/new.html:85
+#: templates/pages/new.html:114 templates/pages/sites.html:25
 #: templates/pages/subcompanies.html:22
 msgid "Manager"
 msgstr ""
@@ -1414,100 +1420,193 @@ msgstr ""
 msgid "Company Address"
 msgstr " أسم الشركة الرئيسية "
 
-#: templates/pages/companies.html:24 templates/pages/company_profile.html:42
-#: templates/pages/company_profile.html:63
-#: templates/pages/company_profile.html:96 templates/pages/sites.html:27
-#: templates/pages/subcompanies.html:24
+#: templates/pages/companies.html:24 templates/pages/company_profile.html:31
+#: templates/pages/company_profile.html:88
+#: templates/pages/company_profile.html:117 templates/pages/new.html:31
+#: templates/pages/new.html:88 templates/pages/new.html:117
+#: templates/pages/sites.html:27 templates/pages/subcompanies.html:24
 msgid "Phone Number"
 msgstr ""
 
-#: templates/pages/companies.html:25 templates/pages/company_profile.html:43
-#: templates/pages/company_profile.html:64
-#: templates/pages/company_profile.html:99 templates/pages/sites.html:28
-#: templates/pages/subcompanies.html:25
+#: templates/pages/companies.html:25 templates/pages/company_profile.html:15
+#: templates/pages/new.html:15 templates/pages/subcompanies.html:25
+msgid "Tax Registration number"
+msgstr "رقم التسجيل الضريبي"
+
+#: templates/pages/companies.html:26 templates/pages/company_profile.html:33
+#: templates/pages/new.html:33 templates/pages/subcompanies.html:26
+msgid "ERP code"
+msgstr "كود ERP"
+
+#: templates/pages/companies.html:27 templates/pages/company_profile.html:91
+#: templates/pages/company_profile.html:120 templates/pages/new.html:91
+#: templates/pages/new.html:120 templates/pages/sites.html:28
+#: templates/pages/subcompanies.html:27
 msgid "City"
 msgstr ""
 
-#: templates/pages/companies.html:26 templates/pages/company_profile.html:44
-#: templates/pages/company_profile.html:65
-#: templates/pages/company_profile.html:102 templates/pages/sites.html:29
-#: templates/pages/subcompanies.html:26
+#: templates/pages/companies.html:28 templates/pages/company_profile.html:94
+#: templates/pages/company_profile.html:123 templates/pages/new.html:94
+#: templates/pages/new.html:123 templates/pages/sites.html:29
+#: templates/pages/subcompanies.html:28
 msgid "Area"
 msgstr ""
 
-#: templates/pages/company_profile.html:34
-msgid "Company Information"
-msgstr "بيانات الشركة الرئيسية"
+#: templates/pages/company_emrgencyvisits.html:18
+#: templates/pages/company_visits.html:18 templates/pages/contracts.html:83
+#: templates/pages/emergency_visits.html:21
+#: templates/pages/expiring_soon.html:27
+#: templates/pages/maintenance_schedule.html:106
+msgid "Company"
+msgstr "الشركة"
 
-#: templates/pages/company_profile.html:40
-msgid "Name"
-msgstr "إسم الشركة الرئيسية"
+#: templates/pages/company_emrgencyvisits.html:19
+#: templates/pages/company_profile.html:109
+#: templates/pages/company_visits.html:19
+#: templates/pages/emergency_visits.html:22
+#: templates/pages/maintenance_schedule.html:107 templates/pages/new.html:109
+#: templates/pages/sites.html:22
+msgid "Site"
+msgstr "المواقع"
 
-#: templates/pages/company_profile.html:54
-msgid "Sub Companies Information"
-msgstr "بيانات الشركات"
+#: templates/pages/company_emrgencyvisits.html:20
+#: templates/pages/company_visits.html:20
+#: templates/pages/maintenance_schedule.html:108
+msgid "Visit date"
+msgstr ""
 
-#: templates/pages/company_profile.html:61
-#: templates/pages/company_profile.html:89
+#: templates/pages/company_emrgencyvisits.html:21
+#: templates/pages/company_visits.html:21
+#: templates/pages/maintenance_schedule.html:109
+msgid "Visit Due date"
+msgstr ""
+
+#: templates/pages/company_emrgencyvisits.html:22
+#: templates/pages/company_visits.html:22
+#: templates/pages/maintenance_schedule.html:110
+msgid "Visit Completed date"
+msgstr ""
+
+#: templates/pages/company_emrgencyvisits.html:23
+#: templates/pages/company_visits.html:23 templates/pages/dash.html:209
+#: templates/pages/dashboard.html:150 templates/pages/dashboard.html:487
+#: templates/pages/emergency_visits.html:27
+#: templates/pages/invoice_schedule.html:76
+#: templates/pages/maintenance_schedule.html:78
+#: templates/pages/maintenance_schedule.html:111
+msgid "Done"
+msgstr "تم"
+
+#: templates/pages/company_emrgencyvisits.html:24
+#: templates/pages/company_profile.html:194
+#: templates/pages/company_profile.html:234
+#: templates/pages/company_visits.html:24
+#: templates/pages/emergency_visits.html:28
+#: templates/pages/maintenance_schedule.html:112
+msgid "Engineer name"
+msgstr "إسم المهندس"
+
+#: templates/pages/company_emrgencyvisits.html:25
+#: templates/pages/company_visits.html:25
+#: templates/pages/maintenance_schedule.html:113
+msgid "Visit Image"
+msgstr ""
+
+#: templates/pages/company_emrgencyvisits.html:26
+#: templates/pages/company_visits.html:26
+#: templates/pages/maintenance_schedule.html:114
+msgid "Visit PDF"
+msgstr "ملف الزيارة"
+
+#: templates/pages/company_invoices.html:19
 #: templates/pages/invoice_schedule.html:104 templates/pages/sites.html:23
 #: templates/pages/subcompanies.html:20
 msgid "Sub Company Name"
 msgstr " أسم الشركة "
 
-#: templates/pages/company_profile.html:77
-msgid "Sites Information"
-msgstr "بيانات المواقع"
+#: templates/pages/company_invoices.html:20
+#: templates/pages/invoice_schedule.html:105
+msgid "Invoice date"
+msgstr "تاريخ الفاتورة"
 
-#: templates/pages/company_profile.html:85
-#: templates/pages/maintenance_schedule.html:40
-msgid "Site Name"
-msgstr "إسم الموقع"
+#: templates/pages/company_invoices.html:21
+#: templates/pages/invoice_schedule.html:106
+msgid "Invoice value"
+msgstr "قيمة الفاتوره"
 
-#: templates/pages/company_profile.html:116
-#, fuzzy
-#| msgid "Contracts"
-msgid "Contracts Information"
-msgstr "بيانات العقود"
+#: templates/pages/company_invoices.html:21 templates/pages/contracts.html:75
+#: templates/pages/contracts.html:81 templates/pages/emergency_visits.html:23
+#: templates/pages/invoice_schedule.html:106
+msgid "Not Including VAT"
+msgstr "غير شامل الضريبة"
 
-#: templates/pages/company_profile.html:124 templates/pages/contracts.html:73
-#: templates/pages/expiring_soon.html:19
+#: templates/pages/company_invoices.html:22
+#: templates/pages/invoice_schedule.html:107
+msgid "Is paid"
+msgstr "تم الدفع"
+
+#: templates/pages/company_invoices.html:23
+#: templates/pages/invoice_schedule.html:108
+msgid "Invoice Image"
+msgstr "صورة الفاتورة"
+
+#: templates/pages/company_invoices.html:24
+#: templates/pages/invoice_schedule.html:109
+msgid "Invoice PDF"
+msgstr "فايل الفاتورة"
+
+#: templates/pages/company_profile.html:53 templates/pages/contracts.html:73
+#: templates/pages/expiring_soon.html:19 templates/pages/new.html:53
 msgid "Start Date"
 msgstr ""
 
-#: templates/pages/company_profile.html:125 templates/pages/contracts.html:74
-#: templates/pages/expiring_soon.html:20
+#: templates/pages/company_profile.html:54 templates/pages/contracts.html:74
+#: templates/pages/expiring_soon.html:20 templates/pages/new.html:54
 msgid "End Date"
 msgstr ""
 
-#: templates/pages/company_profile.html:126
+#: templates/pages/company_profile.html:55 templates/pages/new.html:55
 msgid "Contract Value"
 msgstr "قيمة العقد"
 
-#: templates/pages/company_profile.html:127 templates/pages/contracts.html:19
+#: templates/pages/company_profile.html:56 templates/pages/contracts.html:19
 #: templates/pages/invoice_schedule.html:15
-#: templates/pages/maintenance_schedule.html:15
+#: templates/pages/maintenance_schedule.html:15 templates/pages/new.html:56
 msgid "Branch"
 msgstr "الشركة"
 
-#: templates/pages/company_profile.html:128 templates/pages/contracts.html:29
+#: templates/pages/company_profile.html:57 templates/pages/contracts.html:29
 #: templates/pages/invoice_schedule.html:27
-#: templates/pages/maintenance_schedule.html:28
+#: templates/pages/maintenance_schedule.html:28 templates/pages/new.html:57
 msgid "Branch Site"
 msgstr "فرع الشركة"
 
-#: templates/pages/company_profile.html:141
-msgid "Invoices"
-msgstr "فواتير"
+#: templates/pages/company_profile.html:74
+msgid "Sub Company"
+msgstr "الشركة"
 
-#: templates/pages/company_profile.html:162
-msgid "Invoices Of Emergency Visits"
-msgstr "فواتير الزيارات الطارئة"
+#: templates/pages/company_profile.html:77 templates/pages/new.html:77
+msgid "Related Sites"
+msgstr " المواقع التابعة"
 
-#: templates/pages/company_profile.html:170
-msgid "for"
-msgstr "ل"
+#: templates/pages/company_profile.html:82
+#: templates/pages/maintenance_schedule.html:40 templates/pages/new.html:82
+msgid "Site Name"
+msgstr "إسم الموقع"
 
-#: templates/pages/company_profile.html:182
+#: templates/pages/company_profile.html:142
+#: templates/pages/company_profile.html:176
+#: templates/pages/company_profile.html:216
+msgid "View All"
+msgstr "عرض الكل"
+
+#: templates/pages/company_profile.html:201 templates/pages/new.html:192
+#, fuzzy
+#| msgid "Visits"
+msgid "No Visits"
+msgstr "زيارات"
+
+#: templates/pages/company_profile.html:242 templates/pages/new.html:227
 msgid "No Emergency Visits"
 msgstr "لا توجد زيارات طارئة"
 
@@ -1538,69 +1637,65 @@ msgstr "بحث"
 msgid "Contract Price Value"
 msgstr "قيمة العقد"
 
-#: templates/pages/contracts.html:75 templates/pages/contracts.html:79
-#: templates/pages/emergency_visits.html:23
-#: templates/pages/invoice_schedule.html:106
-msgid "Not Including VAT"
-msgstr "غير شامل الضريبة"
+#: templates/pages/contracts.html:76
+msgid "Is Taxed"
+msgstr ""
 
-#: templates/pages/contracts.html:76 templates/pages/expiring_soon.html:22
+#: templates/pages/contracts.html:77
+msgid "Tax Percentage"
+msgstr ""
+
+#: templates/pages/contracts.html:78 templates/pages/expiring_soon.html:22
 msgid "Invoice Frequency"
 msgstr "الفواتير"
 
-#: templates/pages/contracts.html:77 templates/pages/expiring_soon.html:23
+#: templates/pages/contracts.html:79 templates/pages/expiring_soon.html:23
 msgid "Invoice Calculated Date"
 msgstr " الفاتورة كل"
 
-#: templates/pages/contracts.html:78 templates/pages/expiring_soon.html:24
+#: templates/pages/contracts.html:80 templates/pages/expiring_soon.html:24
 msgid "Maintenance Frequency"
 msgstr "الزيارات"
 
-#: templates/pages/contracts.html:79 templates/pages/expiring_soon.html:25
+#: templates/pages/contracts.html:81 templates/pages/expiring_soon.html:25
 msgid "Emergency Visit Price"
 msgstr "سعر الزيارة الطارئة"
 
-#: templates/pages/contracts.html:80 templates/pages/emergency_visits.html:24
+#: templates/pages/contracts.html:82 templates/pages/emergency_visits.html:24
 #: templates/pages/expiring_soon.html:26
 msgid "Emergency Visit within"
 msgstr " زيارة طارئة في خلال"
 
-#: templates/pages/contracts.html:81 templates/pages/emergency_visits.html:21
-#: templates/pages/expiring_soon.html:27
-#: templates/pages/maintenance_schedule.html:106
-msgid "Company"
-msgstr "الشركة"
-
-#: templates/pages/contracts.html:82 templates/pages/expiring_soon.html:28
+#: templates/pages/contracts.html:84 templates/pages/expiring_soon.html:28
 msgid "Company Branch"
 msgstr "فرع الشركة"
 
-#: templates/pages/contracts.html:83 templates/pages/expiring_soon.html:29
+#: templates/pages/contracts.html:85 templates/pages/expiring_soon.html:29
 msgid "Annual Percentage"
 msgstr ""
 
-#: templates/pages/contracts.html:84 templates/pages/expiring_soon.html:30
+#: templates/pages/contracts.html:86 templates/pages/expiring_soon.html:30
 msgid "Auto Renew"
 msgstr ""
 
-#: templates/pages/contracts.html:85 templates/pages/expiring_soon.html:31
+#: templates/pages/contracts.html:87 templates/pages/expiring_soon.html:31
 msgid "Damgh Date"
 msgstr ""
 
-#: templates/pages/contracts.html:86 templates/pages/expiring_soon.html:32
+#: templates/pages/contracts.html:88 templates/pages/expiring_soon.html:32
 msgid "Damgh Price"
 msgstr ""
 
-#: templates/pages/contracts.html:87 templates/pages/expiring_soon.html:33
+#: templates/pages/contracts.html:89 templates/pages/expiring_soon.html:33
 msgid "Contract Image"
 msgstr " صورة العقد"
 
-#: templates/pages/contracts.html:88 templates/pages/expiring_soon.html:34
+#: templates/pages/contracts.html:90 templates/pages/expiring_soon.html:34
 msgid "Contract PDF"
 msgstr "ملف العقد"
 
-#: templates/pages/contracts.html:129 templates/pages/dashboard.html:184
-#: templates/pages/emergency_visits.html:57
+#: templates/pages/contracts.html:137 templates/pages/dash.html:184
+#: templates/pages/dashboard.html:183 templates/pages/emergency_visits.html:57
 #: templates/pages/expiring_soon.html:78
 msgid "hours"
 msgstr "ساعة"
@@ -1641,152 +1736,170 @@ msgstr "إضافة موقع جديد"
 msgid "Create New SubCompany"
 msgstr "إضافة شركة جديدة"
 
-#: templates/pages/dashboard.html:17
+#: templates/pages/dash.html:17 templates/pages/dashboard.html:17
 msgid "Total Contracts"
 msgstr " مجموع العقود"
 
-#: templates/pages/dashboard.html:39
+#: templates/pages/dash.html:39 templates/pages/dashboard.html:39
 msgid "Contracts Value"
 msgstr "قيمة العقود"
 
-#: templates/pages/dashboard.html:61
-msgid "Clients"
-msgstr "العملاء"
-
-#: templates/pages/dashboard.html:81
+#: templates/pages/dash.html:81 templates/pages/dashboard.html:81
 msgid "Emergency Requests"
 msgstr "الزيارات الطارئة"
 
-#: templates/pages/dashboard.html:104
+#: templates/pages/dash.html:104
 msgid "Maintenance Visits"
 msgstr "زيارات الصيانة"
 
-#: templates/pages/dashboard.html:107
+#: templates/pages/dash.html:107 templates/pages/dashboard.html:112
+#: templates/pages/dashboard.html:266 templates/pages/dashboard.html:302
 msgid "visits"
 msgstr "زيارات"
 
-#: templates/pages/dashboard.html:107
+#: templates/pages/dash.html:107
 msgid "in"
 msgstr "في"
 
-#: templates/pages/dashboard.html:116
+#: templates/pages/dash.html:116 templates/pages/dashboard.html:109
 msgid "Visits of the Month"
 msgstr "زيارات الصيانة لهذا الشهر"
 
-#: templates/pages/dashboard.html:117
+#: templates/pages/dash.html:117
 msgid "Visits valid"
 msgstr "الزيارات المتاحة"
 
-#: templates/pages/dashboard.html:118
+#: templates/pages/dash.html:118
 msgid "Visits not valid"
 msgstr "الزيارات الفائتة"
 
-#: templates/pages/dashboard.html:133 templates/pages/dashboard.html:150
-#: templates/pages/dashboard.html:167
+#: templates/pages/dash.html:133 templates/pages/dash.html:150
+#: templates/pages/dash.html:167 templates/pages/dashboard.html:126
+#: templates/pages/dashboard.html:280 templates/pages/dashboard.html:316
 msgid "Visit Date"
 msgstr "تاريخ الزيارة"
 
-#: templates/pages/dashboard.html:184
+#: templates/pages/dash.html:184 templates/pages/dashboard.html:183
 msgid "Visit Requested Date"
 msgstr " تاريخ طلب لزيارة طارئة"
 
-#: templates/pages/dashboard.html:184
+#: templates/pages/dash.html:184 templates/pages/dashboard.html:183
 msgid "within"
 msgstr "خلال"
 
-#: templates/pages/dashboard.html:185
+#: templates/pages/dash.html:185 templates/pages/dashboard.html:184
 msgid "Visit Price"
 msgstr "سعر الزيارة"
 
-#: templates/pages/dashboard.html:203
+#: templates/pages/dash.html:203 templates/pages/dashboard.html:145
 msgid "Maintenance visits overview"
 msgstr "زيارات الصيانة"
 
-#: templates/pages/dashboard.html:209 templates/pages/emergency_visits.html:27
-#: templates/pages/invoice_schedule.html:76
-#: templates/pages/maintenance_schedule.html:78
-#: templates/pages/maintenance_schedule.html:111
-msgid "Done"
-msgstr "تم"
-
-#: templates/pages/dashboard.html:214 templates/pages/invoice_schedule.html:77
+#: templates/pages/dash.html:214 templates/pages/dashboard.html:155
+#: templates/pages/dashboard.html:487 templates/pages/invoice_schedule.html:77
 #: templates/pages/maintenance_schedule.html:79
 msgid "Not Done"
 msgstr "لم يتم"
 
-#: templates/pages/dashboard.html:229
+#: templates/pages/dash.html:229 templates/pages/dashboard.html:249
 msgid "Invoices of the month"
 msgstr "الفواتير لهذا الشهر"
 
-#: templates/pages/dashboard.html:240
+#: templates/pages/dash.html:240 templates/pages/dashboard.html:205
 msgid "Invoices Of The Month"
 msgstr "الفواتير لهذا الشهر"
 
-#: templates/pages/dashboard.html:249
+#: templates/pages/dash.html:249
 msgid "Invoices Ready"
 msgstr "فواتير جاهزة"
 
-#: templates/pages/dashboard.html:264 templates/pages/dashboard.html:295
+#: templates/pages/dash.html:264 templates/pages/dash.html:295
+#: templates/pages/dashboard.html:228
 msgid "No Company Data"
 msgstr "لا يوجد شركة"
 
-#: templates/pages/dashboard.html:280
+#: templates/pages/dash.html:280
 msgid "Invoices Not Ready"
 msgstr "فواتير ليست جاهزة"
 
-#: templates/pages/dashboard.html:321
+#: templates/pages/dash.html:321 templates/pages/dashboard.html:340
 msgid "Update Maintenance Visit"
 msgstr "تقرير الزيارة"
 
-#: templates/pages/dashboard.html:328 templates/pages/dashboard.html:371
+#: templates/pages/dash.html:328 templates/pages/dash.html:371
+#: templates/pages/dashboard.html:347 templates/pages/dashboard.html:390
 msgid "Completed Visit Date"
 msgstr "تاريخ الزيارة"
 
-#: templates/pages/dashboard.html:332 templates/pages/dashboard.html:375
+#: templates/pages/dash.html:332 templates/pages/dash.html:375
+#: templates/pages/dashboard.html:351 templates/pages/dashboard.html:394
 msgid "Done by"
 msgstr "قام بها"
 
-#: templates/pages/dashboard.html:334 templates/pages/dashboard.html:377
+#: templates/pages/dash.html:334 templates/pages/dash.html:377
+#: templates/pages/dashboard.html:353 templates/pages/dashboard.html:396
 msgid "Select Engineer"
 msgstr "أسم مهندس الصيانة"
 
-#: templates/pages/dashboard.html:341 templates/pages/dashboard.html:384
-#: templates/pages/dashboard.html:414
+#: templates/pages/dash.html:341 templates/pages/dash.html:384
+#: templates/pages/dash.html:414 templates/pages/dashboard.html:360
+#: templates/pages/dashboard.html:403 templates/pages/dashboard.html:433
 msgid "Upload Image"
 msgstr "صورة التقرير "
 
-#: templates/pages/dashboard.html:343 templates/pages/dashboard.html:386
-#: templates/pages/dashboard.html:416
+#: templates/pages/dash.html:343 templates/pages/dash.html:386
+#: templates/pages/dash.html:416 templates/pages/dashboard.html:362
+#: templates/pages/dashboard.html:405 templates/pages/dashboard.html:435
 msgid "Please upload a valid image (JPG or PNG)"
 msgstr "(JPG او PNG) يرجي رفع صورة من نوع "
 
-#: templates/pages/dashboard.html:346 templates/pages/dashboard.html:389
-#: templates/pages/dashboard.html:419
+#: templates/pages/dash.html:346 templates/pages/dash.html:389
+#: templates/pages/dash.html:419 templates/pages/dashboard.html:365
+#: templates/pages/dashboard.html:408 templates/pages/dashboard.html:438
 msgid "Upload PDF"
 msgstr "ملف التقرير "
 
-#: templates/pages/dashboard.html:348 templates/pages/dashboard.html:391
-#: templates/pages/dashboard.html:421
+#: templates/pages/dash.html:348 templates/pages/dash.html:391
+#: templates/pages/dash.html:421 templates/pages/dashboard.html:367
+#: templates/pages/dashboard.html:410 templates/pages/dashboard.html:440
 msgid "Please upload a valid PDF file"
 msgstr "PDF يرجي رفع ملف"
 
-#: templates/pages/dashboard.html:353 templates/pages/dashboard.html:396
-#: templates/pages/dashboard.html:426
+#: templates/pages/dash.html:353 templates/pages/dash.html:396
+#: templates/pages/dash.html:426 templates/pages/dashboard.html:372
+#: templates/pages/dashboard.html:415 templates/pages/dashboard.html:445
 msgid "Close"
 msgstr "إغلاق"
 
-#: templates/pages/dashboard.html:354 templates/pages/dashboard.html:397
-#: templates/pages/dashboard.html:427
+#: templates/pages/dash.html:354 templates/pages/dash.html:397
+#: templates/pages/dash.html:427 templates/pages/dashboard.html:373
+#: templates/pages/dashboard.html:416 templates/pages/dashboard.html:446
 msgid "Submit"
 msgstr "تم"
 
-#: templates/pages/dashboard.html:364
+#: templates/pages/dash.html:364 templates/pages/dashboard.html:383
 msgid "Update Emergency Visit"
 msgstr "تقرير الزيارة الطارئة"
 
-#: templates/pages/dashboard.html:407
+#: templates/pages/dash.html:407 templates/pages/dashboard.html:426
 msgid "Update Invoice"
 msgstr "إصدار الفاتورة"
+
+#: templates/pages/dashboard.html:263
+msgid "Visits Expiring Soon"
+msgstr "زيارات توشك علي الإنتهاء "
+
+#: templates/pages/dashboard.html:299
+msgid "Visits Expired"
+msgstr "الزيارات المنتهية"
+
+#: templates/pages/dashboard.html:524
+msgid "Collected Invoices"
+msgstr "فواتير تم تحصلها"
+
+#: templates/pages/dashboard.html:525
+msgid "Not Collected Invoices"
+msgstr "فواتير لم يتم تحصيلها"
 
 #: templates/pages/edit_company.html:5
 msgid "Edit Company"
@@ -1827,35 +1940,21 @@ msgstr "تعديل بيانات الزيارة"
 msgid "Add New Emergency Visit request"
 msgstr " إضافة طلب لزيارة طارئة"
 
-#: templates/pages/emergency_visits.html:22
-#: templates/pages/maintenance_schedule.html:107 templates/pages/sites.html:24
-msgid "Site"
-msgstr "المواقع"
-
 #: templates/pages/emergency_visits.html:23
 msgid "Price"
 msgstr ""
 
 #: templates/pages/emergency_visits.html:25
-#, fuzzy
-#| msgid "Add New Emergency Visit request"
 msgid "Emergency Visit Request date"
-msgstr " إضافة طلب لزيارة طارئة"
+msgstr " تاريخ طلب لزيارة طارئة"
 
 #: templates/pages/emergency_visits.html:26
-#, fuzzy
-#| msgid "Emergency Visits"
 msgid "Emergency Visit date"
-msgstr "الزيارات الطارئة"
-
-#: templates/pages/emergency_visits.html:28
-#: templates/pages/maintenance_schedule.html:112
-msgid "Engineer name"
-msgstr ""
+msgstr "تاريخ الزيارة الطارئة"
 
 #: templates/pages/emergency_visits.html:29 templates/pages/sites.html:31
 msgid "Comment"
-msgstr ""
+msgstr "تعليق"
 
 #: templates/pages/emergency_visits.html:30
 #, fuzzy
@@ -1885,25 +1984,9 @@ msgstr "حالة الفاتورة"
 msgid "Done Status"
 msgstr "الحاله"
 
-#: templates/pages/invoice_schedule.html:105
-msgid "Invoice date"
-msgstr "تاريخ الفاتورة"
-
-#: templates/pages/invoice_schedule.html:106
-msgid "Invoice value"
-msgstr "قيمة الفاتوره"
-
-#: templates/pages/invoice_schedule.html:107
-msgid "Is paid"
-msgstr "تم الدفع"
-
-#: templates/pages/invoice_schedule.html:108
-msgid "Invoice Image"
-msgstr "صورة الفاتورة"
-
-#: templates/pages/invoice_schedule.html:109
-msgid "Invoice PDF"
-msgstr "فايل الفاتورة"
+#: templates/pages/invoice_schedule.html:96
+msgid "Invoice Schedule"
+msgstr "الفواتير"
 
 #: templates/pages/maintenance_schedule.html:42
 msgid "All Sites"
@@ -1913,25 +1996,27 @@ msgstr "الكل"
 msgid "Is Done Visit"
 msgstr "حالة الزيارة"
 
-#: templates/pages/maintenance_schedule.html:108
-msgid "Visit date"
-msgstr ""
+#: templates/pages/maintenance_schedule.html:99
+msgid "Maintenance Schedule"
+msgstr "الزيارات"
 
-#: templates/pages/maintenance_schedule.html:109
-msgid "Visit Due date"
-msgstr ""
+#: templates/pages/new.html:45
+msgid "Contracts Information"
+msgstr "بيانات العقود"
 
-#: templates/pages/maintenance_schedule.html:110
-msgid "Visit Completed date"
-msgstr ""
+#: templates/pages/new.html:74
+#, fuzzy
+#| msgid "Company"
+msgid "Sub-Company"
+msgstr "الشركة"
 
-#: templates/pages/maintenance_schedule.html:113
-msgid "Visit Image"
-msgstr ""
+#: templates/pages/new.html:181 templates/pages/new.html:216
+msgid "for"
+msgstr "ل"
 
-#: templates/pages/maintenance_schedule.html:114
-msgid "Visit PDF"
-msgstr "ملف الزيارة"
+#: templates/pages/new.html:204
+msgid "Invoices Of Emergency Visits"
+msgstr "فواتير الزيارات الطارئة"
 
 #: templates/pages/sites.html:26
 msgid "Site Address"
@@ -1942,10 +2027,26 @@ msgid "Location URL"
 msgstr ""
 
 #: templates/pages/subcompanies.html:23
-#, fuzzy
-#| msgid "Sub Companies"
 msgid "Sub Company Address"
 msgstr "الشركات"
+
+#~ msgid "Registration number"
+#~ msgstr "رقم التسجيل الضريبي"
+
+#~ msgid "Company Information"
+#~ msgstr "بيانات الشركة الرئيسية"
+
+#~ msgid "Name"
+#~ msgstr "إسم الشركة الرئيسية"
+
+#~ msgid "Sub Companies Information"
+#~ msgstr "بيانات الشركات"
+
+#~ msgid "Sites Information"
+#~ msgstr "بيانات المواقع"
+
+#~ msgid "Accounts"
+#~ msgstr "العملاء"
 
 #~ msgid "Information related to that company needs to be mentioned."
 #~ msgstr "بيانات مهمه خاضة بالشركة الرئيسية"

@@ -5,9 +5,11 @@ from .models import Company, SubCompany, Site,  Area
 class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
-        fields = ['company_name','manager','phone_number','city','area','company_address']
+        fields = ['company_name','tax_registration_number','ERP_code','manager','phone_number','city','area','company_address']
         labels = {
             'company_name': _("Company Name"),
+            'tax_registration_number': _("Registration number"),
+            'ERP_code':_("ERP code"),
             'manager': _("Manager"),
             'phone_number': _("Phone Number"),
             'city': _("City"),
@@ -32,10 +34,12 @@ class CompanyForm(forms.ModelForm):
 class SubCompanyForm(forms.ModelForm):
     class Meta:
         model = SubCompany
-        fields = ['parent_company','sub_company_name','manager','phone_number','city','area','sub_company_address']
+        fields = ['parent_company','sub_company_name','tax_registration_number','ERP_code','manager','phone_number','city','area','sub_company_address']
         labels = {
             'company_name': _("Company Name"),
             'sub_company_name': _("Sub Company Name"),
+            'tax_registration_number': _("Registration number"),
+            'ERP_code':_("ERP code"),
             'manager': _("Manager"),
             'phone_number': _("Phone Number"),
             'city': _("City"),

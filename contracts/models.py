@@ -9,7 +9,7 @@ from django_resized import ResizedImageField
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta
 from django.utils.translation import gettext_lazy as _
-
+from threading import local
 
 # extension validations
 allowed_image_extensions = ['jpg', 'png', 'jpeg', 'gif', 'svg']
@@ -119,6 +119,9 @@ class Contract(models.Model):
     damgh_date = models.DateField(null=True, blank=True,verbose_name=_("Damgh Date"))
     damgh_price = models.FloatField(validators=[MinValueValidator(0.0)], default=0, null=True, blank=True,verbose_name=_("Damgh Price"))
     
+    is_taxed = models.BooleanField(default=False, verbose_name=_("Is Taxed"))  # New Field
+    tax_percentage = models.FloatField(default=14.0, validators=[MinValueValidator(0.0), MaxValueValidator(100.0)], verbose_name=_("Tax Percentage"))  # Optional field for dynamic tax rates
+
     image = ResizedImageField(
         upload_to=get_contract_image_upload_path,
         null=True,
@@ -143,15 +146,25 @@ class Contract(models.Model):
             pdf_file_size,
         ],
     )
+    _local = local()
     
+    @property
+    def skip_update(self):
+        return getattr(self._local, "skip_update", False)
+
+    @skip_update.setter
+    def skip_update(self, value):
+        self._local.skip_update = value
+
     def save(self, *args, **kwargs):
         # If end_date is not set, calculate it from start_date (1 year minus 1 day)
         if not self.end_date and self.start_date:
             self.end_date = self.start_date + relativedelta(years=1) - timedelta(days=1)
         super(Contract, self).save(*args, **kwargs)
-        
+   
     def __str__(self):
         return f"{self.company}"
+
 
 class Engineers(models.Model):
     name = models.CharField(max_length=255,verbose_name=_("Engineer name"))
@@ -239,6 +252,11 @@ class InvoiceSchedule(models.Model):
         ],
     )
 
+    def save(self, *args, **kwargs):
+            # Round the amount to 2 decimal places
+            if self.amount is not None:
+                self.amount = round(self.amount, 2)
+            super(InvoiceSchedule, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"Invoice for {self.contract.company.company_name} on {self.invoice_date}"

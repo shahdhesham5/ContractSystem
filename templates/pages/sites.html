@@ -19,9 +19,9 @@
             <table class="table align-items-center mb-0">
               <thead>
                 <tr>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Company Name' %}</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Sub Company Name' %}</th>
                   <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Site' %}</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Sub Company Name' %}</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Company Name' %}</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Manager' %}</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Site Address' %}</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Phone Number' %}</th>
@@ -35,18 +35,19 @@
               <tbody>
                 {% for site in sites %}
                 <tr>
-                <td class="align-middle text-center">
+                  <td class="align-middle text-center">
                     <div class="d-flex px-2 py-1">
-                    <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">{{ site.company }}</h6>
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{ site.site_name }}</h6>
+                      </div>
                     </div>
-                    </div>
-                </td>
+                  </td>
+
                   <td class="align-middle text-center">
                     <div class="d-flex px-2 py-1">
                       {% if site.sub_company %}
                       <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">{{ site.sub_company }}</h6>
+                        <h6 class="mb-0 text-sm d-flex flex-column justify-content-center">{{ site.sub_company }}</h6>
                       </div>
                       {% else %}
                       <span>-</span>
@@ -55,11 +56,11 @@
                   </td>
                   <td class="align-middle text-center">
                     <div class="d-flex px-2 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">{{ site.site_name }}</h6>
-                      </div>
+                    <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{ site.company }}</h6>
                     </div>
-                  </td>
+                    </div>
+                </td>
                   <td class="align-middle text-center">
                     <span class="text-xs font-weight-bold">{{site.manager}}</span>
                   </td>

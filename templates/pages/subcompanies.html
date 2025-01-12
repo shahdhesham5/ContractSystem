@@ -22,6 +22,8 @@
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Manager' %}</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{% trans 'Sub Company Address' %}</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Phone Number' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Tax Registration number' %}</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'ERP code' %}</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'City' %}</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">{% trans 'Area' %}</th>
                   <th class="text-secondary opacity-7"></th>
@@ -53,7 +55,20 @@
                   <td class="align-middle text-center">
                     <span class="text-xs font-weight-bold">{{company.phone_number}}</span>
                   </td>
-            
+                  <td class="align-middle text-center">
+                    {% if company.tax_registration_number %}
+                    <span class="text-xs font-weight-bold">{{company.tax_registration_number}}</span>
+                    {% else %}
+                        <span>-</span>
+                    {% endif %}
+                  </td>
+                  <td class="align-middle text-center">
+                    {% if company.ERP_code %}
+                    <span class="text-xs font-weight-bold">{{company.ERP_code}}</span>
+                    {% else %}
+                    <span>-</span>
+                    {% endif %}
+                  </td>
                   <td class="align-middle text-center">
                     <span class="text-xs font-weight-bold">{{company.city}}</span>
                   </td>

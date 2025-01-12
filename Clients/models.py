@@ -29,7 +29,8 @@ class Company(models.Model):
     phone_number = models.CharField(max_length=11, validators=[validate_phone_number], verbose_name=_("Phone Number"))
     city = models.ForeignKey(City, on_delete=models.CASCADE, related_name="company_city", null=True, blank=True, verbose_name=_("City"))
     area = models.ForeignKey(Area, on_delete=models.CASCADE, related_name="company_area", null=True, blank=True, verbose_name=_("Area"))
-
+    tax_registration_number = models.IntegerField( null=True, blank=True, verbose_name=_("Registration number") )
+    ERP_code = models.IntegerField( null=True, blank=True, verbose_name=_("ERP code") )
     def __str__(self):
         return self.company_name
     
@@ -45,7 +46,9 @@ class SubCompany(models.Model):
     phone_number = models.CharField(max_length=11, validators=[validate_phone_number], verbose_name=_("Phone Number"))
     city = models.ForeignKey(City, on_delete=models.CASCADE, related_name="sub_company_city", null=True, blank=True, verbose_name=_("City"))
     area = models.ForeignKey(Area, on_delete=models.CASCADE, related_name="sub_company_area", null=True, blank=True, verbose_name=_("Area"))
-
+    tax_registration_number = models.IntegerField( null=True, blank=True, verbose_name=_("Registration number") )
+    ERP_code = models.IntegerField( null=True, blank=True, verbose_name=_("ERP code") )
+    
     def save(self, *args, **kwargs):
         # Inherit city and area from the parent company if not set
         if not self.city and self.parent_company:
