@@ -217,6 +217,100 @@ def generate_invoice_schedule(sender, instance, created, **kwargs):
                 if invoice_date_calculation == 'end':
                     current_date -= timedelta(days=1)
 
+
+@receiver(pre_save, sender=Contract)
+def handle_contract_update(sender, instance, **kwargs):
+    if getattr(instance, "skip_update", False):
+        return  # Skip updates if flagged
+    if instance.pk:  # Ensure this is an update, not a new creation
+        try:
+            original = Contract.objects.get(pk=instance.pk)
+
+            # Recalculate invoices only if relevant fields have changed
+            fields_changed = (
+                instance.contract_price_value != original.contract_price_value or
+                instance.is_taxed != original.is_taxed or
+                instance.tax_percentage != original.tax_percentage or
+                instance.invoice_frequency != original.invoice_frequency or
+                instance.start_date != original.start_date or
+                instance.end_date != original.end_date
+            )
+
+            if fields_changed:
+                recalculate_invoices(instance)
+
+        except Contract.DoesNotExist:
+            pass  # If the instance doesn't exist, no update is needed
+
+def recalculate_invoices(contract):
+    # Remove all unpaid invoices
+    InvoiceSchedule.objects.filter(contract=contract, is_paid=False).delete()
+
+    # Re-generate invoices using the same logic as `generate_invoice_schedule`
+    start_date = contract.start_date
+    end_date = contract.end_date
+    invoice_frequency = contract.invoice_frequency
+    invoice_date_calculation = contract.invoice_date_calculation
+    contract_price_value = contract.contract_price_value
+    is_taxed = contract.is_taxed
+    tax_percentage = contract.tax_percentage
+
+    # Map invoice frequency to intervals
+    frequency_map = {
+        "Every Month": 1,
+        "Every 2 Months": 2,
+        "Every 3 Months": 3,
+        "Every 4 Months": 4,
+        "Every 6 Months": 6,
+    }
+    visit_interval = frequency_map.get(invoice_frequency, 1)
+    total_invoices = ((end_date.year - start_date.year) * 12 + end_date.month - start_date.month) // visit_interval + 1
+
+    sub_companies = contract.company.sub_companies.all()
+    sites = Site.objects.filter(company=contract.company)
+
+    if sub_companies.exists():
+        # Calculate the total number of sites across all sub-companies
+        total_sites = sites.count()
+        current_date = start_date if invoice_date_calculation == 'start' else start_date + relativedelta(months=visit_interval) - timedelta(days=1)
+
+        while current_date <= end_date:
+            for sub_company in sub_companies:
+                sub_company_sites = sites.filter(sub_company=sub_company).count()
+                sub_company_amount = (contract_price_value / total_sites) * sub_company_sites
+                invoice_amount_with_tax = sub_company_amount * (1 + (tax_percentage / 100)) if is_taxed else sub_company_amount
+
+                InvoiceSchedule.objects.create(
+                    contract=contract,
+                    company=contract.company,
+                    sub_company=sub_company,
+                    invoice_date=current_date,
+                    amount=round(invoice_amount_with_tax / total_invoices, 2),
+                )
+            current_date += relativedelta(months=visit_interval)
+            if invoice_date_calculation == 'end':
+                current_date -= timedelta(days=1)
+    else:
+        # No sub-companies: Regular invoice generation
+        current_date = start_date if invoice_date_calculation == 'start' else start_date + relativedelta(months=visit_interval) - timedelta(days=1)
+        invoice_amount_per_invoice = contract_price_value / total_invoices
+        invoice_amount_with_tax = invoice_amount_per_invoice * (1 + (tax_percentage / 100)) if is_taxed else invoice_amount_per_invoice
+
+        while current_date <= end_date:
+            InvoiceSchedule.objects.create(
+                contract=contract,
+                company=contract.company,
+                invoice_date=current_date,
+                amount=round(invoice_amount_with_tax, 2),
+            )
+            current_date += relativedelta(months=visit_interval)
+            if invoice_date_calculation == 'end':
+                current_date -= timedelta(days=1)
+
+
+
+
+
 @receiver(post_save, sender=Site)
 def generate_maintenance_for_new_site(sender, instance, created, **kwargs):
     if created and instance.company:  # Ensure the site is new and belongs to a company
@@ -318,71 +412,3 @@ def update_invoices_on_new_site(contract, new_site):
         contract.contract_price_value += new_site_value
         contract.save()
         contract.skip_update = False  # Reset the flag
-
-
-@receiver(pre_save, sender=Contract)
-def handle_contract_update(sender, instance, **kwargs):
-    if getattr(instance, "skip_update", False):
-        return  # Skip if flagged
-    if instance.pk:  # Ensure this is an update, not a new instance
-        try:
-            original = Contract.objects.get(pk=instance.pk)
-
-            # Check if the contract price value has changed
-            if instance.contract_price_value != original.contract_price_value and instance.is_taxed == original.is_taxed:
-                update_unpaid_invoices(instance, original)
-
-            # Check if the taxation status has changed
-            if instance.contract_price_value == original.contract_price_value and instance.is_taxed != original.is_taxed:
-                update_invoices_for_taxes(instance, original)
-
-            # Check if the taxation status has changed and value has changed
-            if instance.contract_price_value != original.contract_price_value and instance.is_taxed != original.is_taxed:
-                update_invoices(instance, original)
-
-        except Contract.DoesNotExist:
-            pass  # The instance is being created, so no need to handle updates
-        
-        
-def update_unpaid_invoices(instance, original):
-    unpaid_invoices = InvoiceSchedule.objects.filter(contract=instance, is_paid=False)
-
-    if unpaid_invoices.exists():
-        # Get the total number of invoices (unpaid + paid)
-        total_invoices = InvoiceSchedule.objects.filter(contract=instance).count()
-        # Calculate the new amount per invoice
-        new_invoice_amount = instance.contract_price_value / total_invoices
-
-        # Update each unpaid invoice
-        for invoice in unpaid_invoices:
-            invoice.amount = round(new_invoice_amount, 2)  # Round to 2 decimals
-            invoice.save()
-
-
-def update_invoices_for_taxes(instance, original):
-    invoices = InvoiceSchedule.objects.filter(contract=instance, is_paid=False)
-    for invoice in invoices:
-        base_amount = invoice.amount
-        if instance.is_taxed:
-            invoice.amount = round(
-                base_amount * (1 + (instance.tax_percentage / 100)), 2
-            )
-        else:
-            invoice.amount = round(
-                base_amount / (1 + (instance.tax_percentage / 100)), 2
-            )
-        invoice.save()
-
-
-def update_invoices(instance, original):
-    unpaid_invoices = InvoiceSchedule.objects.filter(contract=instance, is_paid=False)
-    if unpaid_invoices.exists():
-        total_invoices = InvoiceSchedule.objects.filter(contract=instance).count()
-        new_invoice_amount = instance.contract_price_value / total_invoices
-        for invoice in unpaid_invoices:
-            base_amount = new_invoice_amount
-            invoice.amount = round(
-                base_amount * (1 + (instance.tax_percentage / 100) if instance.is_taxed else 1), 2
-            )
-            invoice.save()
-

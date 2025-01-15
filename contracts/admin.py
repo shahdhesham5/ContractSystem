@@ -22,6 +22,7 @@ class ContractAdmin(admin.ModelAdmin):
         'damgh_price',
         'image',
         'pdf',
+        'renewed',
     ]
     
     # Search fields to allow searching by company name or contract ID
@@ -53,6 +54,7 @@ class ContractAdmin(admin.ModelAdmin):
                 'damgh_price',
                 'image',
                 'pdf',
+                'renewed',
             )
         }),
     )

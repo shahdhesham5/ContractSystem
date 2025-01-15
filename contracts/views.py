@@ -15,6 +15,8 @@ from .decorators import allowed_users
 from django.utils.translation import gettext_lazy as _   
 from django.core.management import call_command
 from io import StringIO
+from django.utils.timezone import now
+
 
 def generate_schedule(request):
     """View to trigger schedule generation"""
@@ -286,22 +288,27 @@ def dashboard_view(request):
 @allowed_users(allowed_roles=['admin','alex','cairo'])
 def contract_table_view(request):
     is_admin = request.user.groups.filter(name='admin').exists()
+    today = timezone.now().date()  
+    
     if request.user.groups.exists():
         group = request.user.groups.all()[0].name
 
-    contracts = Contract.objects.all()
+    # contracts = Contract.objects.filter(end_date__gte=now().date())
+    contracts = Contract.objects.filter()
 
     if group == 'admin':
         branch = request.GET.get('branch')
         branch_site = request.GET.get('branch_site')
         company_id = request.GET.get('company_name') 
-        contracts = Contract.objects.all()
         
         if branch:
+            # contracts = contracts.filter(branch=branch,end_date__gte=now().date())
             contracts = contracts.filter(branch=branch)
         if branch_site:
+            # contracts = contracts.filter(branch_site=branch_site,end_date__gte=now().date())
             contracts = contracts.filter(branch_site=branch_site)
         if company_id:
+            # contracts = contracts.filter(company__id=company_id,end_date__gte=now().date())  
             contracts = contracts.filter(company__id=company_id)  
 
             
@@ -322,10 +329,12 @@ def contract_table_view(request):
         })
         
     elif group == 'alex':
+        #    contracts = Contract.objects.filter(branch_site="Alexandria",end_date__gte=now().date())
            contracts = Contract.objects.filter(branch_site="Alexandria")
            return render(request, 'pages/contracts.html', {'contracts': contracts, 'segment':'contracts', 'is_admin': is_admin,})
        
     elif group == 'cairo':
+        #    contracts = Contract.objects.filter(branch_site="Cairo",end_date__gte=now().date())
            contracts = Contract.objects.filter(branch_site="Cairo")
            return render(request, 'pages/contracts.html', {'contracts': contracts, 'segment':'contracts', 'is_admin': is_admin,})
     
@@ -387,17 +396,21 @@ def contracts_expiring_soon_view(request):
         group = request.user.groups.all()[0].name
 
     if group == 'alex':
-        contracts_expiring_soon = Contract.objects.filter(end_date__lte=one_month_later, end_date__gte=today, branch_site="Alexandria")   
-        return render(request, 'pages/expiring_soon.html', {'contracts_expiring_soon': contracts_expiring_soon, 'segment':'expire'})
+        contracts_expiring_soon = Contract.objects.filter(end_date__lte=one_month_later, end_date__gte=today, branch_site="Alexandria")    
+        contracts_expired = Contract.objects.filter(auto_renew=False, end_date__lt=now().date(), branch_site="Alexandria")    
+        return render(request, 'pages/expiring_soon.html', {'contracts_expiring_soon': contracts_expiring_soon,'contracts_expired': contracts_expired, 'segment':'expire'})
        
     elif group == 'cairo':
         contracts_expiring_soon = Contract.objects.filter(end_date__lte=one_month_later, end_date__gte=today, branch_site="Cairo")
-        return render(request, 'pages/expiring_soon.html', {'contracts_expiring_soon': contracts_expiring_soon, 'segment':'expire'})
+        contracts_expired = Contract.objects.filter(auto_renew=False, end_date__lt=now().date(), branch_site="Cairo")
+        return render(request, 'pages/expiring_soon.html', {'contracts_expiring_soon': contracts_expiring_soon,'contracts_expired': contracts_expired, 'segment':'expire'})
     
     else:
+        contracts_expired = Contract.objects.filter(auto_renew=False, end_date__lt=now().date())
         contracts_expiring_soon = Contract.objects.filter(end_date__lte=one_month_later, end_date__gte=today)
         context = {
             'contracts_expiring_soon': contracts_expiring_soon,
+            'contracts_expired': contracts_expired,
             'segment':'expire'
         }
         return render(request, 'pages/expiring_soon.html', context)

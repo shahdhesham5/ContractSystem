@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-12 14:19+0200\n"
+"POT-Creation-Date: 2025-01-15 09:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1400,7 +1400,7 @@ msgstr "إضافة شركة رئيسية جديدة"
 
 #: templates/pages/companies.html:21 templates/pages/company_invoices.html:18
 #: templates/pages/contracts.html:40 templates/pages/contracts.html:72
-#: templates/pages/expiring_soon.html:18
+#: templates/pages/expiring_soon.html:18 templates/pages/expiring_soon.html:167
 #: templates/pages/invoice_schedule.html:39
 #: templates/pages/invoice_schedule.html:103 templates/pages/sites.html:24
 #: templates/pages/subcompanies.html:21
@@ -1455,7 +1455,7 @@ msgstr ""
 #: templates/pages/company_emrgencyvisits.html:18
 #: templates/pages/company_visits.html:18 templates/pages/contracts.html:83
 #: templates/pages/emergency_visits.html:21
-#: templates/pages/expiring_soon.html:27
+#: templates/pages/expiring_soon.html:27 templates/pages/expiring_soon.html:176
 #: templates/pages/maintenance_schedule.html:106
 msgid "Company"
 msgstr "الشركة"
@@ -1556,12 +1556,14 @@ msgid "Invoice PDF"
 msgstr "فايل الفاتورة"
 
 #: templates/pages/company_profile.html:53 templates/pages/contracts.html:73
-#: templates/pages/expiring_soon.html:19 templates/pages/new.html:53
+#: templates/pages/expiring_soon.html:19 templates/pages/expiring_soon.html:168
+#: templates/pages/new.html:53
 msgid "Start Date"
 msgstr ""
 
 #: templates/pages/company_profile.html:54 templates/pages/contracts.html:74
-#: templates/pages/expiring_soon.html:20 templates/pages/new.html:54
+#: templates/pages/expiring_soon.html:20 templates/pages/expiring_soon.html:169
+#: templates/pages/new.html:54
 msgid "End Date"
 msgstr ""
 
@@ -1634,6 +1636,7 @@ msgid "Apply Filters"
 msgstr "بحث"
 
 #: templates/pages/contracts.html:75 templates/pages/expiring_soon.html:21
+#: templates/pages/expiring_soon.html:170
 msgid "Contract Price Value"
 msgstr "قيمة العقد"
 
@@ -1646,57 +1649,68 @@ msgid "Tax Percentage"
 msgstr ""
 
 #: templates/pages/contracts.html:78 templates/pages/expiring_soon.html:22
+#: templates/pages/expiring_soon.html:171
 msgid "Invoice Frequency"
 msgstr "الفواتير"
 
 #: templates/pages/contracts.html:79 templates/pages/expiring_soon.html:23
+#: templates/pages/expiring_soon.html:172
 msgid "Invoice Calculated Date"
 msgstr " الفاتورة كل"
 
 #: templates/pages/contracts.html:80 templates/pages/expiring_soon.html:24
+#: templates/pages/expiring_soon.html:173
 msgid "Maintenance Frequency"
 msgstr "الزيارات"
 
 #: templates/pages/contracts.html:81 templates/pages/expiring_soon.html:25
+#: templates/pages/expiring_soon.html:174
 msgid "Emergency Visit Price"
 msgstr "سعر الزيارة الطارئة"
 
 #: templates/pages/contracts.html:82 templates/pages/emergency_visits.html:24
-#: templates/pages/expiring_soon.html:26
+#: templates/pages/expiring_soon.html:26 templates/pages/expiring_soon.html:175
 msgid "Emergency Visit within"
 msgstr " زيارة طارئة في خلال"
 
 #: templates/pages/contracts.html:84 templates/pages/expiring_soon.html:28
+#: templates/pages/expiring_soon.html:177
 msgid "Company Branch"
 msgstr "فرع الشركة"
 
 #: templates/pages/contracts.html:85 templates/pages/expiring_soon.html:29
+#: templates/pages/expiring_soon.html:178
 msgid "Annual Percentage"
 msgstr ""
 
 #: templates/pages/contracts.html:86 templates/pages/expiring_soon.html:30
+#: templates/pages/expiring_soon.html:179
 msgid "Auto Renew"
 msgstr ""
 
 #: templates/pages/contracts.html:87 templates/pages/expiring_soon.html:31
+#: templates/pages/expiring_soon.html:180
 msgid "Damgh Date"
 msgstr ""
 
 #: templates/pages/contracts.html:88 templates/pages/expiring_soon.html:32
+#: templates/pages/expiring_soon.html:181
 msgid "Damgh Price"
 msgstr ""
 
 #: templates/pages/contracts.html:89 templates/pages/expiring_soon.html:33
+#: templates/pages/expiring_soon.html:182
 msgid "Contract Image"
 msgstr " صورة العقد"
 
 #: templates/pages/contracts.html:90 templates/pages/expiring_soon.html:34
+#: templates/pages/expiring_soon.html:183
 msgid "Contract PDF"
 msgstr "ملف العقد"
 
 #: templates/pages/contracts.html:137 templates/pages/dash.html:184
 #: templates/pages/dashboard.html:183 templates/pages/emergency_visits.html:57
-#: templates/pages/expiring_soon.html:78
+#: templates/pages/expiring_soon.html:78 templates/pages/expiring_soon.html:226
 msgid "hours"
 msgstr "ساعة"
 
@@ -1967,6 +1981,10 @@ msgstr "الزيارات الطارئة"
 #| msgid "Emergency Visits"
 msgid "Emergency Visit PDF"
 msgstr "الزيارات الطارئة"
+
+#: templates/pages/expiring_soon.html:160
+msgid "Contracts Expired"
+msgstr  "العقود المنتهية"
 
 #: templates/pages/invoice_schedule.html:52
 #: templates/pages/invoice_schedule.html:54

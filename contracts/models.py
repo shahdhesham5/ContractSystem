@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 from datetime import timedelta
 from django.utils.translation import gettext_lazy as _
 from threading import local
-
+from django.utils import timezone 
 # extension validations
 allowed_image_extensions = ['jpg', 'png', 'jpeg', 'gif', 'svg']
 allowed_pdf_extensions = ['pdf']
@@ -148,6 +148,9 @@ class Contract(models.Model):
     )
     _local = local()
     
+    renewed = models.BooleanField(default=False, verbose_name=_("Renewed"))
+    
+    
     @property
     def skip_update(self):
         return getattr(self._local, "skip_update", False)
@@ -161,7 +164,44 @@ class Contract(models.Model):
         if not self.end_date and self.start_date:
             self.end_date = self.start_date + relativedelta(years=1) - timedelta(days=1)
         super(Contract, self).save(*args, **kwargs)
-   
+    
+    def auto_renew_contract(self):
+        if self.auto_renew and self.annual_increase and self.end_date < timezone.now().date():
+            if self.renewed:  # Skip if already renewed
+                return None
+            new_start_date = self.end_date + timedelta(days=1)
+            new_end_date = new_start_date + relativedelta(years=1) - timedelta(days=1)
+            new_contract_price_value = self.contract_price_value * (1 + (self.annual_increase / 100))
+
+            # Create the new contract
+            new_contract = Contract.objects.create(
+                company=self.company,
+                start_date=new_start_date,
+                end_date=new_end_date,
+                contract_price_value=new_contract_price_value,
+                annual_increase=self.annual_increase,
+                auto_renew=self.auto_renew,
+                emergency_visit_price=self.emergency_visit_price,
+                emergency_within_period=self.emergency_within_period,
+                invoice_frequency=self.invoice_frequency,
+                invoice_date_calculation=self.invoice_date_calculation,
+                maintenance_frequency=self.maintenance_frequency,
+                branch=self.branch,
+                branch_site=self.branch_site,
+                damgh_date=self.damgh_date,
+                damgh_price=self.damgh_price,
+                is_taxed=self.is_taxed,
+                tax_percentage=self.tax_percentage,
+                image=self.image,
+                pdf=self.pdf,
+            )
+            # Mark the original contract as renewed
+            self.renewed = True
+            self.save()
+            # Trigger the signals for generating invoices for the new contract
+            return new_contract
+        return None
+    
     def __str__(self):
         return f"{self.company}"
 
