@@ -37,6 +37,17 @@ LOGOUT_REDIRECT_URL = 'login'
 DEBUG = os.getenv('DEBUG') 
 # ALLOWED_HOSTS = ['ictcoegyptstock.com', 'www.ictcoegyptstock.com', '195.35.38.155']
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(",")
+
+CORS_ALLOWED_ORIGINS = [
+    # "http://localhost:8000",  
+    "https://ictcoegyptstock.com",
+    "https://www.ictcoegyptstock.com",
+]
+CORS_ALLOW_ALL_ORIGINS = True
+CSRF_TRUSTED_ORIGINS = [
+    "https://ictcoegyptstock.com",
+    "https://www.ictcoegyptstock.com",
+]
 # Application definition
 INSTALLED_APPS = [
     'admin_soft.apps.AdminSoftDashboardConfig',
@@ -46,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'django_celery_beat',
     'home',
@@ -57,6 +69,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -95,20 +108,9 @@ CSRF_COOKIE_SECURE = False
 
 
 # Load environment variables from .env file
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
+#         'ENGINE': 'django.db.backends.mysql',
 #         'NAME': os.getenv('DB_NAME'),
 #         'USER': os.getenv('DB_USER'),
 #         'PASSWORD': os.getenv('DB_PASSWORD'),
@@ -116,6 +118,17 @@ DATABASES = {
 #         'PORT': os.getenv('DB_PORT'),
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+    }
+}
 
 
 # Password validation
