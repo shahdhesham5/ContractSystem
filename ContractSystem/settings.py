@@ -35,6 +35,7 @@ LOGIN_REDIRECT_URL = 'dashboard'  # Redirect to dashboard after login
 LOGOUT_REDIRECT_URL = 'login'
 
 DEBUG = os.getenv('DEBUG') 
+
 # ALLOWED_HOSTS = ['ictcoegyptstock.com', 'www.ictcoegyptstock.com', '195.35.38.155']
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(",")
 
@@ -48,6 +49,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://ictcoegyptstock.com",
     "https://www.ictcoegyptstock.com",
 ]
+
 # Application definition
 INSTALLED_APPS = [
     'admin_soft.apps.AdminSoftDashboardConfig',
