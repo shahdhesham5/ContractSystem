@@ -1,15 +1,16 @@
 services:
   db:
-    image: postgres:13
+    image: mysql:8.0
     container_name: django_contracts_db
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./docker-mysql-data:/var/lib/mysql
     env_file:
       - .env
     ports:
-      - "5435:5432"
-
-
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=230223  # Set this password
+      - MYSQL_DATABASE=contracts_db
   django:
     build: .
     container_name: django_contracts
@@ -27,35 +28,9 @@ services:
     env_file:
       - .env
     depends_on:
-      - db 
-      - redis
-      - celery_worker
-      - celery_beat
+      - db
 
-  redis:
-    image: redis:latest
-    ports:
-      - "6379:6379"
 
-  celery_worker:
-    build: .
-    command: celery -A ContractSystem worker --loglevel=info
-    volumes:
-      - .:/ContractSystem
-    depends_on:
-      - redis
-    env_file:
-      - .env
-
-  celery_beat:
-    build: .
-    command: celery -A ContractSystem beat --loglevel=info
-    volumes:
-      - .:/ContractSystem
-    depends_on:
-      - redis
-    env_file:
-      - .env
-
-volumes:
-  postgres_data:
+networks:
+  default:
+    driver: bridge
