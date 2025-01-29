@@ -21,4 +21,4 @@ celery==5.4.0
 redis==5.1.
 django-celery-beat==2.7.0 
 django-cors-headers==4.6.0
-mysqlclient==2.1.1
+# mysqlclient==2.1.1
