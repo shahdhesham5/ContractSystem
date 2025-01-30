@@ -1,0 +1,8 @@
+mysqldump: [ERROR] mysqldump: unknown option '-U'.
+Error: Failed to create database backup!
+mysqldump: [ERROR] mysqldump: unknown option '-U'.
+Error: Failed to create database backup!
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
+mysqldump: Error: 'Access denied; you need (at least one of) the PROCESS privilege(s) for this operation' when trying to dump tablespaces
+Backup created and compressed successfully: /srv/Millennium/ContractSystem/Backups/contracts_db_backup_20250130_094601.sql.gz
+Old backups (older than 7 days) cleaned up.
