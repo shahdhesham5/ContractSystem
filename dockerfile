@@ -8,25 +8,23 @@ WORKDIR /ContractSystem
 
 # Install system dependencies, including pkg-config
 RUN apt-get update && apt-get install -y \
-    default-libmysqlclient-dev \
+    gcc\
     libpq-dev \
     build-essential \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-# RUN apt-get update && apt-get install -y nginx
 # Copy the requirements file into the container
 COPY requirements.txt /ContractSystem/
-
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code into the 
+# Copy the rest of the application code into the container
 COPY . /ContractSystem
+
 # Expose the port that Django will run on
 EXPOSE 8000
-# EXPOSE 80 443
 
 # Command to run the Django application (using Gunicorn for production)
 CMD ["gunicorn", "ContractSystem.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "2"]

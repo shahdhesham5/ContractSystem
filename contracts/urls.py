@@ -1,16 +1,18 @@
 from django.urls import path
-from .views import contract_table_view, edit_contract_view, maintenence_schedule_table_view, edit_visit_view, edit_invoice_view, invoice_schedule_table_view, create_contract_view, contracts_expiring_soon_view, dashboard_view,update_maintenance_visit, emergency_visits_view, create_emergency_visit_request_view, update_invoice_view, delete_contract_view,delete_Invoice_view, delete_Visit_view, delete_emergency_visit_view, update_emergency_visit_view, edit_emergency_visit_request_view, generate_schedule, schedule_page
+from .views import contract_table_view, edit_contract_view, maintenence_schedule_table_view, edit_visit_view, edit_invoice_view, invoice_schedule_table_view, create_contract_view, contracts_expiring_soon_view, dashboard_view,update_maintenance_visit, emergency_visits_view, create_emergency_visit_request_view, update_invoice_view, delete_contract_view,delete_Invoice_view, delete_Visit_view, delete_emergency_visit_view, update_emergency_visit_view, edit_emergency_visit_request_view, generate_schedule, schedule_page, delete_expired_contract
 from . import views
 
 urlpatterns = [
     
     path('dashboard', dashboard_view, name='dashboard'),
     path('contracts-list/', contract_table_view, name='contract-table'), 
-    path('contracts-expire-list/', contracts_expiring_soon_view, name='contract-expire-table'), 
     path('contract/create', create_contract_view, name='create-contract'),
     path('contract/edit/<uuid:pk>/', edit_contract_view, name='edit-contract'),
     path('contract/delete/<uuid:pk>/',delete_contract_view, name='delete-contract'),
-    
+    path('contracts-expire-list/', contracts_expiring_soon_view, name='contract-expire-table'), 
+    path('contract-expire/delete/<uuid:pk>/', delete_expired_contract, name='contract-expire-delete'),
+    path('contract/renew/<uuid:pk>/', views.renew_contract_view, name='renew-contract'),
+
     path('maintenence-schedule/', maintenence_schedule_table_view, name='maintenence-schedule'),
     path('maintenence-schedule/edit/<int:pk>/', edit_visit_view, name='edit-visit'),
     path('update-visit/', update_maintenance_visit, name='update_maintenance_visit'),

@@ -13,7 +13,7 @@
             <div class="col-md-3">
             <div class="form-group">
                 <label for="branch">{% trans 'Branch' %}</label>
-                <select id="branch" name="branch" class="form-control" onchange="submitFilterForm()">
+                <select id="branch" name="branch" class="form-control select2" onchange="submitFilterForm()">
                     <option value="">{% trans 'All Branches' %}</option>
                     {% for branch in branches %}
                         <option value="{{ branch }}" {% if branch == selected_branch %}selected{% endif %}>{{ branch }}</option>
@@ -25,7 +25,7 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label for="branch_site">{% trans 'Branch Site' %}</label>
-                    <select id="branch_site" name="branch_site" class="form-control" onchange="submitFilterForm()">
+                    <select id="branch_site" name="branch_site" class="form-control select2" onchange="submitFilterForm()">
                         <option value="">{% trans 'All Branch Sites' %}</option>
                         {% for site in branch_sites %}
                             <option value="{{ site }}" {% if site == selected_branch_site %}selected{% endif %}>{{ site }}</option>
@@ -37,7 +37,7 @@
             <!-- Company Name -->
             <div class="col-md-3">
               <label for="company_name">{% trans 'Company Name' %}</label>
-              <select id="company_name" name="company_name" class="form-control" onchange="submitFilterForm()">
+              <select id="company_name" name="company_name" class="form-control select2" onchange="submitFilterForm()">
                   <option value="">{% trans 'All Companies' %}</option>
                   {% for company in company_names %}
                       <option value="{{ company.id }}" {% if company.id == selected_company_name %}selected{% endif %}>

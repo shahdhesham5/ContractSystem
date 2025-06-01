@@ -23,6 +23,7 @@ class ContractAdmin(admin.ModelAdmin):
         'image',
         'pdf',
         'renewed',
+        'is_deleted',
     ]
     
     # Search fields to allow searching by company name or contract ID
@@ -55,6 +56,7 @@ class ContractAdmin(admin.ModelAdmin):
                 'image',
                 'pdf',
                 'renewed',
+                'is_deleted',
             )
         }),
     )

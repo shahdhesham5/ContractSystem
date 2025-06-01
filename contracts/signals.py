@@ -6,41 +6,6 @@ from dateutil.relativedelta import relativedelta
 from datetime import timedelta
 import datetime
 
-# @receiver(post_save, sender=Contract)
-# def generate_maintenance_schedule(sender, instance, created, **kwargs):
-#     if created:
-#         start_date = instance.start_date
-#         end_date = instance.end_date
-#         maintenance_mapping = {
-#             "Every Month": 1,
-#             "Every 2 Months": 2,
-#             "Every 3 Months": 3,
-#             "Every 4 Months": 4,
-#             "Every 6 Months": 6,
-#         }
-        
-#         visit_interval = maintenance_mapping.get(instance.maintenance_frequency, 1)
-
-#         current_date = start_date
-#         next_date = current_date + relativedelta(months=visit_interval)
-        
-#         sites = Site.objects.filter(company=instance.company)
-
-#         while current_date <= end_date:
-#             for site in sites:
-#                 MaintenanceSchedule.objects.create(
-#                     contract=instance,
-#                     site=site,
-#                     visit_date=current_date,
-#                     due_date=min(next_date, end_date)
-#                 )
-#             current_date = next_date
-#             next_date = current_date + relativedelta(months=visit_interval)
-
-#         # Ensure no extra visits are generated past the end date
-#         if current_date > end_date:
-#             current_date = end_date
-
 @receiver(post_save, sender=Contract)
 def generate_maintenance_schedule(sender, instance, created, **kwargs):
     if created:
@@ -78,72 +43,6 @@ def generate_maintenance_schedule(sender, instance, created, **kwargs):
         if current_date == end_date:
             return
   
-
-# @receiver(post_save, sender=Contract)
-# def generate_invoice_schedule(sender, instance, created, **kwargs):
-#     if created:
-#         start_date = instance.start_date
-#         end_date = instance.end_date
-#         invoice_frequency = instance.invoice_frequency
-#         invoice_date_calculation = instance.invoice_date_calculation
-#         contract_price_value = instance.contract_price_value
-#         is_taxed = instance.is_taxed
-#         tax_percentage = instance.tax_percentage
-         
-#         frequency_map = {
-#             "Every Month": 1,
-#             "Every 2 Months": 2,
-#             "Every 3 Months": 3,
-#             "Every 4 Months": 4,
-#             "Every 6 Months": 6,
-#         }
-
-#         visit_interval = frequency_map[invoice_frequency]
-#         if start_date.month == end_date.month:
-#             total_invoices = ((end_date.year - start_date.year) * 12 + end_date.month - start_date.month) // visit_interval
-#         else:
-#             total_invoices = ((end_date.year - start_date.year) * 12 + end_date.month - start_date.month) // visit_interval +1
-        
-        
-#         sub_companies = instance.company.sub_companies.all() 
-#         if sub_companies.exists():
-#             companies_to_invoice = sub_companies  
-#         else:
-#             companies_to_invoice = [instance.company]
-
-
-#         num_companies = len(companies_to_invoice)
-#         invoice_amount_per_invoice = contract_price_value / (total_invoices * num_companies)
-#         invoice_amount_with_tax = invoice_amount_per_invoice * (1 + (tax_percentage / 100)) if is_taxed else invoice_amount_per_invoice
-        
-#         if invoice_date_calculation == 'start':
-#             current_date = start_date
-#         else:
-#             current_date = start_date + relativedelta(months=visit_interval) - timedelta(days=1)
-
-#         while current_date <= end_date:
-#             for company in companies_to_invoice:
-#                 if isinstance(company, SubCompany):
-#                     InvoiceSchedule.objects.create(
-#                         contract=instance,
-#                         company=instance.company,
-#                         sub_company=company,  
-#                         invoice_date=current_date,
-#                         amount=invoice_amount_with_tax  
-#                     )
-#                 else:
-#                     InvoiceSchedule.objects.create(
-#                         contract=instance,
-#                         company=company,  
-#                         invoice_date=current_date,
-#                         amount=invoice_amount_with_tax  
-#                     )
-
-#             # Move to the next invoice date based on the interval
-#             current_date += relativedelta(months=visit_interval)
-#             if invoice_date_calculation == 'end':
-#                 current_date -= timedelta(days=1)  # Adjust to the end of the next period
-
 @receiver(post_save, sender=Contract)
 def generate_invoice_schedule(sender, instance, created, **kwargs):
     if created:
@@ -221,26 +120,45 @@ def generate_invoice_schedule(sender, instance, created, **kwargs):
 @receiver(pre_save, sender=Contract)
 def handle_contract_update(sender, instance, **kwargs):
     if getattr(instance, "skip_update", False):
-        return  # Skip updates if flagged
-    if instance.pk:  # Ensure this is an update, not a new creation
-        try:
-            original = Contract.objects.get(pk=instance.pk)
+        return
 
-            # Recalculate invoices only if relevant fields have changed
-            fields_changed = (
-                instance.contract_price_value != original.contract_price_value or
-                instance.is_taxed != original.is_taxed or
-                instance.tax_percentage != original.tax_percentage or
-                instance.invoice_frequency != original.invoice_frequency or
-                instance.start_date != original.start_date or
-                instance.end_date != original.end_date
-            )
+    if not instance.pk:
+        return  # Skip creation
 
-            if fields_changed:
-                recalculate_invoices(instance)
+    try:
+        original = Contract.objects.get(pk=instance.pk)
 
-        except Contract.DoesNotExist:
-            pass  # If the instance doesn't exist, no update is needed
+        # Set custom flags on instance to detect changes
+        instance._recalculate_invoices = any([
+            instance.contract_price_value != original.contract_price_value,
+            instance.is_taxed != original.is_taxed,
+            instance.tax_percentage != original.tax_percentage,
+            instance.invoice_frequency != original.invoice_frequency,
+            instance.start_date != original.start_date,
+            instance.end_date != original.end_date,
+        ])
+
+        instance._recalculate_visits = any([
+            instance.maintenance_frequency != original.maintenance_frequency,
+            instance.start_date != original.start_date,
+            instance.end_date != original.end_date,
+        ])
+
+    except Contract.DoesNotExist:
+        # No previous data
+        instance._recalculate_invoices = False
+        instance._recalculate_visits = False
+
+@receiver(post_save, sender=Contract)
+def perform_contract_update(sender, instance, created, **kwargs):
+    if created:
+        return  # Already handled by your `generate_*` signals
+
+    if getattr(instance, "_recalculate_invoices", False):
+        recalculate_invoices(instance)
+
+    if getattr(instance, "_recalculate_visits", False):
+        recalculate_maintenance_schedule(instance)
 
 def recalculate_invoices(contract):
     # Remove all unpaid invoices
@@ -307,8 +225,38 @@ def recalculate_invoices(contract):
             if invoice_date_calculation == 'end':
                 current_date -= timedelta(days=1)
 
+def recalculate_maintenance_schedule(contract):
+    MaintenanceSchedule.objects.filter(contract=contract, done=False).delete()
 
+    start_date = contract.start_date
+    end_date = contract.end_date
 
+    maintenance_mapping = {
+        "Every Week": timedelta(weeks=1),
+        "Every 2 Weeks": timedelta(weeks=2),
+        "Every Month": relativedelta(months=1),
+        "Every 2 Months": relativedelta(months=2),
+        "Every 3 Months": relativedelta(months=3),
+        "Every 4 Months": relativedelta(months=4),
+        "Every 6 Months": relativedelta(months=6),
+    }
+
+    visit_interval = maintenance_mapping.get(contract.maintenance_frequency, relativedelta(months=1))
+    current_date = start_date
+    next_date = start_date + visit_interval
+
+    sites = Site.objects.filter(company=contract.company)
+
+    while current_date < end_date:
+        for site in sites:
+            MaintenanceSchedule.objects.create(
+                contract=contract,
+                site=site,
+                visit_date=current_date,
+                due_date=min(next_date, end_date)
+            )
+        current_date = next_date
+        next_date = current_date + visit_interval
 
 
 @receiver(post_save, sender=Site)

@@ -121,6 +121,7 @@ class Contract(models.Model):
     
     is_taxed = models.BooleanField(default=False, verbose_name=_("Is Taxed"))  # New Field
     tax_percentage = models.FloatField(default=14.0, validators=[MinValueValidator(0.0), MaxValueValidator(100.0)], verbose_name=_("Tax Percentage"))  # Optional field for dynamic tax rates
+    is_deleted = models.BooleanField(default=False, verbose_name=_("Is Deleted"))
 
     image = ResizedImageField(
         upload_to=get_contract_image_upload_path,

@@ -89,22 +89,26 @@ def dashboard_view(request):
     
     getinvoices_done = InvoiceSchedule.objects.filter(
         invoice_date__month=current_date.month,
+        invoice_date__year=current_date.year,
         is_paid=True
     ).count()
     
     getinvoices_not_done = InvoiceSchedule.objects.filter(
         invoice_date__month=current_date.month,
+        invoice_date__year=current_date.year,
         is_paid=False
     ).count()
 
     total_invoice_amount_done = InvoiceSchedule.objects.filter(
         is_paid=True,
         invoice_date__month=current_date.month,
+        invoice_date__year=current_date.year,
     ).aggregate(total=Sum('amount'))['total'] or 0
     
     total_invoice_amount_not_done = InvoiceSchedule.objects.filter(
         is_paid=False,
         invoice_date__month=current_date.month,
+        invoice_date__year=current_date.year,
     ).aggregate(total=Sum('amount'))['total'] or 0
 
     getinvoices = InvoiceSchedule.objects.filter(invoice_date__month=current_date.month,is_paid=False) 
@@ -145,12 +149,14 @@ def dashboard_view(request):
         getinvoices_done = InvoiceSchedule.objects.filter(
             contract__branch_site='Alexandria',
             invoice_date__month=current_date.month,
+            invoice_date__year=current_date.year,
             is_paid=True
         ).count()
 
         getinvoices_not_done = InvoiceSchedule.objects.filter(
             contract__branch_site='Alexandria',
             invoice_date__month=current_date.month,
+            invoice_date__year=current_date.year,
             is_paid=False
         ).count()
 
@@ -158,12 +164,14 @@ def dashboard_view(request):
             contract__branch_site='Alexandria',
             is_paid=True,
             invoice_date__month=current_date.month,
+            invoice_date__year=current_date.year,
         ).aggregate(total=Sum('amount'))['total'] or 0
 
         total_invoice_amount_not_done = InvoiceSchedule.objects.filter(
             contract__branch_site='Alexandria',
             is_paid=False,
             invoice_date__month=current_date.month,
+            invoice_date__year=current_date.year,
         ).aggregate(total=Sum('amount'))['total'] or 0
 
         getinvoices = getinvoices.filter(contract__branch_site='Alexandria')
@@ -200,12 +208,14 @@ def dashboard_view(request):
         getinvoices_done = InvoiceSchedule.objects.filter(
             contract__branch_site='Cairo',
             invoice_date__month=current_date.month,
+            invoice_date__year=current_date.year,
             is_paid=True
         ).count()
 
         getinvoices_not_done = InvoiceSchedule.objects.filter(
             contract__branch_site='Cairo',
             invoice_date__month=current_date.month,
+            invoice_date__year=current_date.year,
             is_paid=False
         ).count()
 
@@ -213,12 +223,14 @@ def dashboard_view(request):
             contract__branch_site='Cairo',
             is_paid=True,
             invoice_date__month=current_date.month,
+            invoice_date__year=current_date.year,
         ).aggregate(total=Sum('amount'))['total'] or 0
 
         total_invoice_amount_not_done = InvoiceSchedule.objects.filter(
             contract__branch_site='Cairo',
             is_paid=False,
             invoice_date__month=current_date.month,
+            invoice_date__year=current_date.year,
         ).aggregate(total=Sum('amount'))['total'] or 0
 
         getinvoices = getinvoices.filter(contract__branch_site='Cairo')
@@ -288,13 +300,11 @@ def dashboard_view(request):
 @allowed_users(allowed_roles=['admin','alex','cairo'])
 def contract_table_view(request):
     is_admin = request.user.groups.filter(name='admin').exists()
-    today = timezone.now().date()  
-    
-    if request.user.groups.exists():
-        group = request.user.groups.all()[0].name
+    today = timezone.now().date()
+    group = request.user.groups.first().name if request.user.groups.exists() else None
 
-    # contracts = Contract.objects.filter(end_date__gte=now().date())
-    contracts = Contract.objects.filter()
+    contracts = Contract.objects.filter(end_date__gte=today)
+    # contracts = Contract.objects.filter()
 
     if group == 'admin':
         branch = request.GET.get('branch')
@@ -347,6 +357,13 @@ def edit_contract_view(request, pk):
 
     if request.method == 'POST':
         form = ContractForm(request.POST, request.FILES, instance=contract)  # request.FILES for handling files
+        has_paid_invoices = contract.invoices_Schedule.filter(is_paid=True).exists()
+        has_completed_visits = contract.schedules.filter(done=True).exists()
+
+        if has_paid_invoices or has_completed_visits:
+            messages.error(request, _("This contract has paid invoices or completed visits and cannot be edited."))
+            return redirect('edit-contract', pk=pk)
+
         if form.is_valid():
             form.save()
             return redirect('contract-table')
@@ -397,16 +414,16 @@ def contracts_expiring_soon_view(request):
 
     if group == 'alex':
         contracts_expiring_soon = Contract.objects.filter(end_date__lte=one_month_later, end_date__gte=today, branch_site="Alexandria")    
-        contracts_expired = Contract.objects.filter(auto_renew=False, end_date__lt=now().date(), branch_site="Alexandria")    
+        contracts_expired = Contract.objects.filter(auto_renew=False, end_date__lt=now().date(), branch_site="Alexandria", is_deleted=False,)    
         return render(request, 'pages/expiring_soon.html', {'contracts_expiring_soon': contracts_expiring_soon,'contracts_expired': contracts_expired, 'segment':'expire'})
        
     elif group == 'cairo':
         contracts_expiring_soon = Contract.objects.filter(end_date__lte=one_month_later, end_date__gte=today, branch_site="Cairo")
-        contracts_expired = Contract.objects.filter(auto_renew=False, end_date__lt=now().date(), branch_site="Cairo")
+        contracts_expired = Contract.objects.filter(auto_renew=False, end_date__lt=now().date(), branch_site="Cairo", is_deleted=False,)
         return render(request, 'pages/expiring_soon.html', {'contracts_expiring_soon': contracts_expiring_soon,'contracts_expired': contracts_expired, 'segment':'expire'})
     
     else:
-        contracts_expired = Contract.objects.filter(auto_renew=False, end_date__lt=now().date())
+        contracts_expired = Contract.objects.filter(auto_renew=False, end_date__lt=now().date(), is_deleted=False,)
         contracts_expiring_soon = Contract.objects.filter(end_date__lte=one_month_later, end_date__gte=today)
         context = {
             'contracts_expiring_soon': contracts_expiring_soon,
@@ -414,6 +431,64 @@ def contracts_expiring_soon_view(request):
             'segment':'expire'
         }
         return render(request, 'pages/expiring_soon.html', context)
+
+#Renew Expired Contracts
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def renew_contract_view(request, pk):
+    original_contract = get_object_or_404(Contract, pk=pk)
+
+    # Initialize form with original contract data
+    initial_data = {
+        'company': original_contract.company,
+        'contract_price_value': original_contract.contract_price_value,
+        'is_taxed': original_contract.is_taxed,
+        'tax_percentage': original_contract.tax_percentage,
+        'invoice_frequency': original_contract.invoice_frequency,
+        'invoice_date_calculation': original_contract.invoice_date_calculation,
+        'maintenance_frequency': original_contract.maintenance_frequency,
+        'emergency_visit_price': original_contract.emergency_visit_price,
+        'emergency_within_period': original_contract.emergency_within_period,
+        'branch': original_contract.branch,
+        'branch_site': original_contract.branch_site,
+        'annual_increase': original_contract.annual_increase,
+        'auto_renew': original_contract.auto_renew,
+        'damgh_date': original_contract.damgh_date,
+        'damgh_price': original_contract.damgh_price,
+        'image': original_contract.image,
+        'pdf': original_contract.pdf,
+    }
+
+    if request.method == 'POST':
+        form = ContractForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_contract = form.save(commit=False)  
+            new_contract.id = None  
+            new_contract.save()
+            original_contract.is_deleted = True
+            original_contract.save()
+            messages.success(request, "Contract renewed and original contract marked as deleted.")
+            return redirect('contract-table')
+
+    else:
+        form = ContractForm(initial=initial_data)
+
+    return render(request, 'pages/renew_contract.html', {'form': form, 'original': original_contract})
+
+#Deleting Non Renewable Expired Contracts 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def delete_expired_contract(request, pk):
+    contract = get_object_or_404(Contract, id=pk)
+
+    if contract.auto_renew:
+        messages.error(request, "You can't delete a contract that is set to auto-renew.")
+        return redirect('contract-expire-table')
+
+    contract.is_deleted = True
+    contract.save()
+    messages.success(request, "Contract is deleted.")
+    return redirect('contract-expire-table')
 
 
 # List Maintenance Visits

@@ -17,7 +17,7 @@
           <!-- Branch and Branch Site -->
           <div class="col-lg-4 col-md-6 mb-3">
               <label for="branch">{% trans 'Branch' %}</label>
-              <select id="branch" name="branch" class="form-control">
+              <select id="branch" name="branch" class="form-control select2">
                   <option value="">{% trans 'All Branches' %}</option>
                   {% for branch in branches %}
                       <option value="{{ branch }}" {% if branch == selected_branch %}selected{% endif %}>{{ branch }}</option>
@@ -27,7 +27,7 @@
           
           <div class="col-lg-4 col-md-6 mb-3">
               <label for="branch_site">{% trans 'Branch Site' %}</label>
-              <select id="branch_site" name="branch_site" class="form-control">
+              <select id="branch_site" name="branch_site" class="form-control select2">
                   <option value="">{% trans 'All Branch Sites' %}</option>
                   {% for site in branch_sites %}
                       <option value="{{ site }}" {% if site == selected_branch_site %}selected{% endif %}>{{ site }}</option>
@@ -38,14 +38,15 @@
           <!-- Company Name -->
           <div class="col-lg-4 col-md-6 mb-3">
               <label for="company_name">{% trans 'Company Name' %}</label>
-              <select id="company_name" name="company_name" class="form-control" onchange="submitFilterForm()">
-                  <option value="">{% trans 'All Companies' %}</option>
-                  {% for company in company_names %}
-                      <option value="{{ company.id }}" {% if company.id == selected_company_name %}selected{% endif %}>
-                          {{ company.company_name }}
-                      </option>
-                  {% endfor %}
-              </select>
+              <select id="company_name" name="company_name" class="form-control select2">
+                <option value="">{% trans 'All Companies' %}</option>
+                {% for company in company_names %}
+                    <option value="{{ company.id }}" {% if company.id == selected_company_name %}selected{% endif %}>
+                        {{ company.company_name }}
+                    </option>
+                {% endfor %}
+            </select>
+            
           </div>
 
           <!-- Submit Button -->
@@ -219,5 +220,24 @@
       </div>
     </div>
   </div>
-    {% endblock content %}
+{% endblock content %}
+{% block extrascript %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+   
+    $('#branch').select2({
+      placeholder: "Select a branch",
+      allowClear: true
+    });
+    $('#branch_site').select2({
+      placeholder: "Select a branch site",
+      allowClear: true
+    });
+    $('#company_name').select2({
+      placeholder: "Select a company",
+      allowClear: true
+    });
+  });
+</script>
 
+{% endblock extrascript %}

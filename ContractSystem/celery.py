@@ -13,8 +13,8 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     "check-expired-contracts-daily": {
         "task": "contracts.tasks.renew_expired_contracts",
-        # "schedule": crontab(minute="*"),
-        "schedule": crontab(hour=0, minute=0),
+        "schedule": crontab(minute="*"),
+        # "schedule": crontab(hour=0, minute=0),
     },
 }
 # Automatically discover tasks in your installed apps
